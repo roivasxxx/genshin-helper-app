@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import ENV from "@/utils/env-utils";
 import cmsRequest from "@/utils/fetchUtils";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
     const [state, setState] = useState({ email: "", password: "" });
@@ -10,16 +11,7 @@ export default function LoginForm() {
     const onSubmit = (event: FormEvent) => {
         event.preventDefault();
         console.log(process.env.NEXT_PUBLIC_BACKEND_URL, ENV.BACKEND_URL);
-        cmsRequest({
-            path: "/api/public-users/login",
-            method: "POST",
-            body: state,
-        })
-            .then(async (res) => {
-                const json = await res.json();
-                console.log(alert);
-            })
-            .catch((e) => console.error(e));
+        signIn("credentials", state);
     };
 
     return (
