@@ -10,6 +10,7 @@ import { buildConfig } from "payload/config";
 const mockModulePath = path.resolve(__dirname, "../src/mocks/emptyFunction.ts");
 
 import Users from "./collections/Users";
+import PublicUsers from "./collections/PublicUsers";
 
 export default buildConfig({
     admin: {
@@ -29,7 +30,7 @@ export default buildConfig({
         }),
     },
     editor: slateEditor({}),
-    collections: [Users],
+    collections: [Users, PublicUsers],
     typescript: {
         outputFile: path.resolve(__dirname, "payload-types.ts"),
     },
