@@ -1,9 +1,9 @@
 export type RequestUtilsBody =
     | {
-          body: object | undefined | null;
+          body?: object | undefined | null;
           method: "POST" | "PATCH" | "PUT";
       }
     | {
-          body: undefined | null;
+          body?: undefined | null;
           method: "GET" | "DELETE";
       };
