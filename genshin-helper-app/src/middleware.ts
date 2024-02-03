@@ -1,5 +1,11 @@
+import { encode } from "next-auth/jwt";
 import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+
+const sessionCookie = process.env.NEXTAUTH_URL?.startsWith("https://")
+    ? "__Secure-next-auth.session-token"
+    : "next-auth.session-token";
 
 export default withAuth(
     async (req: NextRequestWithAuth) => {
@@ -13,7 +19,6 @@ export default withAuth(
                     req.url
                 )
             );
-
             response.cookies.delete("payload-token");
             response.cookies.delete(
                 `${isProd ? "__Secure-" : ""}next-auth.session-token`

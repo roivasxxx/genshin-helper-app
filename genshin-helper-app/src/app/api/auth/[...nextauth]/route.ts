@@ -7,6 +7,23 @@ import { cookies as nextCookies } from "next/headers";
 import cookie from "cookie";
 import { AuthErrors } from "@/index.d";
 
+export const setPayloadCookie = (resCookies: string[]) => {
+    for (const c of resCookies) {
+        if (c.includes("payload-token")) {
+            const parsedCookie = cookie.parse(c);
+            // get expire and return it as timestamp
+            const { "payload-token": value, ...rest } = parsedCookie;
+            nextCookies().set("payload-token", value, {
+                ...rest,
+                httpOnly: true,
+                secure: true,
+                expires: new Date(rest["Expires"]),
+            });
+        }
+    }
+    return null;
+};
+
 export const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
@@ -26,23 +43,10 @@ export const authOptions: AuthOptions = {
                         const user = await res.json();
                         const cookies = res.headers.getSetCookie();
                         if (cookies) {
-                            for (const c of cookies) {
-                                if (c.includes("payload-token")) {
-                                    const parsedCookie = cookie.parse(c);
-                                    // get expire and return it as timestamp
-                                    const { "payload-token": value, ...rest } =
-                                        parsedCookie;
-                                    nextCookies().set(
-                                        "payload-token",
-                                        value,
-                                        rest
-                                    );
-                                }
-                            }
+                            setPayloadCookie(cookies);
                         }
                         const { email, id, createdAt } = user.user;
                         // user.exp is in seconds, convert to ms by * 1000
-                        console.log(user);
                         return {
                             email,
                             id,
@@ -59,28 +63,26 @@ export const authOptions: AuthOptions = {
             },
         }),
     ],
-    session: {
-        strategy: "jwt",
-    },
-    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         jwt: async ({ token, user }: { token: JWT; user?: User }) => {
             if (token && token.authToken && token.expires) {
                 try {
-                    console.log("sending refresh req", token.authToken);
                     const res = await cmsRequest({
                         path: "/api/public-users/refresh-token",
                         method: "POST",
                         headers: {
-                            // Authorization: `Bearer ${token.authToken}`,
+                            Authorization: `Bearer ${token.authToken}`,
                         },
                         body: {
-                            // token: token.authToken,
+                            token: token.authToken,
                         },
                     });
 
                     const refreshedUser = await res.json();
-                    console.log("refreshed:", refreshedUser);
+                    const cookies = res.headers.getSetCookie();
+                    if (cookies) {
+                        setPayloadCookie(cookies);
+                    }
                     if (refreshedUser.user) {
                         const { email, id, createdAt } = refreshedUser;
                         return {
@@ -116,8 +118,8 @@ export const authOptions: AuthOptions = {
             token: JWT;
         }) => {
             // remove token and expiration from session
-            const { authToken, expires, ...rest } = _token;
-            session.user = rest;
+            // const { authToken, expires, ...rest } = _token;
+            session.user = _token;
             return session;
         },
         redirect: async ({
@@ -154,8 +156,18 @@ export const authOptions: AuthOptions = {
         signOut: "/",
     },
     events: {
-        signOut: async ({ session, token }) => {},
+        signOut: async ({ session, token }) => {
+            // manually remove payload cookie because next-auth doesnt do it for some reason
+            nextCookies().delete("payload-token");
+        },
     },
+    jwt: {
+        secret: process.env.NEXTAUTH_SECRET,
+    },
+    session: {
+        strategy: "jwt",
+    },
+    secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
