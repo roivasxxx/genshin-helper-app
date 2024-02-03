@@ -1,4 +1,4 @@
-import { RequestUtilsBody } from "@/types";
+import { RequestUtilsBody } from "../../types";
 import ENV from "./env-utils";
 
 /**
@@ -31,7 +31,6 @@ const cmsRequest = (
     if (params.headers) {
         fetchOptions.headers = { ...fetchOptions.headers, ...params.headers };
     }
-    console.log(ENV.BACKEND_URL);
     const path =
         ENV.BACKEND_URL +
         (params.path[0] === "/" ? params.path : "/" + params.path);

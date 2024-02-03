@@ -1,11 +1,11 @@
 import cmsRequest from "@/utils/fetchUtils";
 import NextAuth from "next-auth";
-import type { AuthOptions, NextAuthOptions, User } from "next-auth";
+import type { AuthOptions, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies as nextCookies } from "next/headers";
 import cookie from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
+import { AuthErrors } from "@/index.d";
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -80,6 +80,7 @@ export const authOptions: AuthOptions = {
                     });
 
                     const refreshedUser = await res.json();
+                    console.log("refreshed:", refreshedUser);
                     if (refreshedUser.user) {
                         const { email, id, createdAt } = refreshedUser;
                         return {
@@ -94,6 +95,12 @@ export const authOptions: AuthOptions = {
                             ...user,
                         };
                     } else {
+                        // user cookie is not valid anymore
+                        return {
+                            ...token,
+                            user,
+                            error: AuthErrors.INVALID_SESSION,
+                        };
                     }
                 } catch (error) {
                     console.error(error);

@@ -7,3 +7,7 @@ export type RequestUtilsBody =
           body?: undefined | null;
           method: "GET" | "DELETE";
       };
+
+export enum AuthErrors {
+    INVALID_SESSION = "INVALID_SESSION",
+}
