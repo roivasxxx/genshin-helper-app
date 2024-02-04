@@ -51,8 +51,6 @@ export const authOptions: AuthOptions = {
                             email,
                             id,
                             createdAt,
-                            authToken: user.token,
-                            expires: user.exp * 1000,
                         };
                     } catch (error) {
                         return null;
@@ -65,34 +63,33 @@ export const authOptions: AuthOptions = {
     ],
     callbacks: {
         jwt: async ({ token, user }: { token: JWT; user?: User }) => {
-            if (token && token.authToken && token.expires) {
+            const payloadToken = nextCookies().get("payload-token");
+            if (payloadToken) {
                 try {
                     const res = await cmsRequest({
                         path: "/api/public-users/refresh-token",
                         method: "POST",
                         headers: {
-                            Authorization: `Bearer ${token.authToken}`,
+                            Authorization: `Bearer ${payloadToken.value}`,
                         },
                         body: {
-                            token: token.authToken,
+                            token: payloadToken.value,
                         },
                     });
 
                     const refreshedUser = await res.json();
                     const cookies = res.headers.getSetCookie();
-                    if (cookies) {
-                        setPayloadCookie(cookies);
-                    }
                     if (refreshedUser.user) {
-                        const { email, id, createdAt } = refreshedUser;
+                        if (cookies) {
+                            setPayloadCookie(cookies);
+                        }
+                        const { email, id, createdAt } = refreshedUser.user;
                         return {
                             ...{
                                 ...token,
                                 email,
                                 id,
                                 createdAt,
-                                authToken: refreshedUser.refreshedToken,
-                                expires: refreshedUser.exp * 1000,
                             },
                             ...user,
                         };
@@ -110,16 +107,10 @@ export const authOptions: AuthOptions = {
             }
             return { ...token, ...user };
         },
-        session: async ({
-            session,
-            token: _token,
-        }: {
-            session: any;
-            token: JWT;
-        }) => {
-            // remove token and expiration from session
-            // const { authToken, expires, ...rest } = _token;
-            session.user = _token;
+        session: async ({ session, token }: { session: any; token: JWT }) => {
+            const { email, id, createdAt } = token;
+            // need to destructure token, because it keeps returning the tokens jti, iat, exp and sub
+            session.user = { email, id, createdAt };
             return session;
         },
         redirect: async ({
