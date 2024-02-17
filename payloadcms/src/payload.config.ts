@@ -5,12 +5,15 @@ import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { webpackBundler } from "@payloadcms/bundler-webpack";
 import { slateEditor } from "@payloadcms/richtext-slate";
 import { buildConfig } from "payload/config";
+import cloudinaryPlugin from "payload-cloudinary-plugin/dist/plugins";
 
 // webpack
 const mockModulePath = path.resolve(__dirname, "../src/mocks/emptyFunction.ts");
 
 import Users from "./collections/Users";
 import PublicUsers from "./collections/PublicUsers";
+import { Media } from "./collections/Media";
+import GenshinElements from "./collections/GenshinElements";
 
 export default buildConfig({
     admin: {
@@ -30,14 +33,14 @@ export default buildConfig({
         }),
     },
     editor: slateEditor({}),
-    collections: [Users, PublicUsers],
+    collections: [Users, PublicUsers, Media, GenshinElements],
     typescript: {
         outputFile: path.resolve(__dirname, "payload-types.ts"),
     },
     graphQL: {
         disable: true,
     },
-    plugins: [payloadCloud()],
+    plugins: [payloadCloud(), cloudinaryPlugin()],
     db: mongooseAdapter({
         url: process.env.DATABASE_URI,
     }),
