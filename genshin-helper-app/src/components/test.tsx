@@ -7,14 +7,14 @@ import { useEffect } from "react";
 export default function Test() {
     useEffect(() => {
         cmsRequest({ path: "/api/public-users/me", method: "GET" }).then(
-            (res) => console.log(res)
+            async (res) => console.log(await res.json())
         );
     }, []);
     return (
         <>
             <button
-                onClick={() => {
-                    signOut({ redirect: true, callbackUrl: "/login" });
+                onClick={async () => {
+                    await signOut({ redirect: true, callbackUrl: "/login" });
                 }}
             >
                 Sign out
