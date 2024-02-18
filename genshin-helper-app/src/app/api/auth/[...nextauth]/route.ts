@@ -150,6 +150,7 @@ const authOptions: AuthOptions = {
     events: {
         signOut: async ({ session, token }) => {
             // manually remove payload cookie because next-auth doesnt do it for some reason
+            console.log("signign the user out!");
             nextCookies().delete("payload-token");
         },
     },

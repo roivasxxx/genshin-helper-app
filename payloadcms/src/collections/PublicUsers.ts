@@ -7,8 +7,7 @@ const PublicUsers: CollectionConfig = {
         cookies: {
             secure: process.env.PAYLOAD_ENV !== "development",
             // samesite - domain specific - frontend on vercel?
-            sameSite:
-                process.env.PAYLOAD_ENV !== "development" ? "none" : "lax",
+            sameSite: "none",
         },
         // 30 days
         tokenExpiration: 60 * 60 * 24 * 30,
