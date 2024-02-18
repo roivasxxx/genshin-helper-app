@@ -15,6 +15,7 @@ export default function Test() {
         <>
             <button
                 onClick={async () => {
+                    console.log("client side signing out");
                     await signOut({
                         redirect: true,
                         callbackUrl: ENV.FE_URL + "/",
