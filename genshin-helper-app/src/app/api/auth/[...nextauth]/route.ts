@@ -7,7 +7,7 @@ import { cookies as nextCookies } from "next/headers";
 import cookie from "cookie";
 import { AuthErrors } from "@/index.d";
 
-export const setPayloadCookie = (resCookies: string[]) => {
+const setPayloadCookie = (resCookies: string[]) => {
     for (const c of resCookies) {
         if (c.includes("payload-token")) {
             const parsedCookie = cookie.parse(c);
@@ -143,6 +143,7 @@ export const authOptions: AuthOptions = {
     },
     pages: {
         signIn: "/login",
+        newUser: "/register",
         error: "/login",
         signOut: "/",
     },
