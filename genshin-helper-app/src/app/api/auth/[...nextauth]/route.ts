@@ -24,7 +24,7 @@ const setPayloadCookie = (resCookies: string[]) => {
     return null;
 };
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
