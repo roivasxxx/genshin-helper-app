@@ -8,8 +8,8 @@ export default async function middleware(req: NextRequest) {
         token,
         payloadCookie,
         process.env.NEXTAUTH_URL + "/me",
-        "REQ URL=",
-        req.url,
+        "NEXT URL URL=",
+        req.nextUrl,
         req.url.includes(process.env.NEXTAUTH_URL + "/me")
     );
     if (
