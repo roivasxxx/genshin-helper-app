@@ -4,19 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export default async function middleware(req: NextRequest) {
     const token = await getToken({ req });
     const payloadCookie = req.cookies.get("payload-token");
-    console.log(
-        token,
-        payloadCookie,
-        process.env.NEXTAUTH_URL + "/me",
-        "NEXT URL URL=",
-        req.nextUrl,
-        req.url.includes(process.env.NEXTAUTH_URL + "/me")
-    );
-    if (
-        (!token || !payloadCookie) &&
-        req.url.includes(process.env.NEXTAUTH_URL + "/me")
-    ) {
-        console.log("redirecting to login");
+    if ((!token || !payloadCookie) && req.nextUrl.pathname.startsWith("/me")) {
         // only redirect to login if user is not authenticated
         // and trying to access /me
         return NextResponse.redirect(new URL("/login", req.url));
@@ -25,9 +13,7 @@ export default async function middleware(req: NextRequest) {
         const isProd = process.env.NODE_ENV === "production";
         const response = NextResponse.redirect(
             new URL(
-                req.url.includes(process.env.NEXTAUTH_URL + "/me")
-                    ? "/login"
-                    : "",
+                req.nextUrl.pathname.startsWith("/me") ? "/login" : "",
                 req.url
             )
         );
