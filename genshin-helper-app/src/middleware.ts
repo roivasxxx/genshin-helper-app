@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export default async function middleware(req: NextRequest) {
     const token = await getToken({ req });
     if (!token && req.url.includes(process.env.NEXTAUTH_URL + "/me")) {
+        // only redirect to login if user is not authenticated
+        // and trying to access /me
         return NextResponse.redirect(new URL("/login", req.url));
     }
     if (token && token.error) {
