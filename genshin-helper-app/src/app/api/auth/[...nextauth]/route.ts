@@ -138,7 +138,7 @@ const authOptions: AuthOptions = {
                 }
             }
 
-            return baseUrl + "/me";
+            return baseUrl;
         },
     },
     pages: {
