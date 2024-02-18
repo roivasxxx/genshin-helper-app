@@ -5,7 +5,7 @@ const PublicUsers: CollectionConfig = {
     slug: "public-users",
     auth: {
         cookies: {
-            secure: process.env.PAYLOAD_ENV !== "development",
+            secure: true,
             // samesite - domain specific - frontend on vercel?
             sameSite: "none",
         },
