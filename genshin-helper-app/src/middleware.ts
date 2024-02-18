@@ -4,7 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 export default async function middleware(req: NextRequest) {
     const token = await getToken({ req });
     const payloadCookie = req.cookies.get("payload-token");
-    console.log(token, payloadCookie);
+    console.log(
+        token,
+        payloadCookie,
+        process.env.NEXTAUTH_URL + "/me",
+        "REQ URL=",
+        req.url,
+        req.url.includes(process.env.NEXTAUTH_URL + "/me")
+    );
     if (
         (!token || !payloadCookie) &&
         req.url.includes(process.env.NEXTAUTH_URL + "/me")
