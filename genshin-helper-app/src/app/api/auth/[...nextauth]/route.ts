@@ -18,6 +18,7 @@ const setPayloadCookie = (resCookies: string[]) => {
                 httpOnly: true,
                 secure: true,
                 expires: new Date(rest["Expires"]),
+                domain: `.${process.env.ROOT_DOMAIN}`,
             });
         }
     }
