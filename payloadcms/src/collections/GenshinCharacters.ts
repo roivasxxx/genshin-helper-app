@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import elementField from "../fields/ElementField";
 
 const GenshinCharacters: CollectionConfig = {
     slug: "genshin-characters",
@@ -6,11 +7,9 @@ const GenshinCharacters: CollectionConfig = {
         {
             name: "name",
             type: "text",
+            required: true,
         },
-        {
-            name: "element_type",
-            type: "text",
-        },
+        elementField,
     ],
 };
 
