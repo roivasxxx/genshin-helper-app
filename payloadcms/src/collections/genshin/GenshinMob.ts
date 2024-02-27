@@ -1,7 +1,7 @@
 import { CollectionConfig } from "payload/types";
 
 const GenshinMob: CollectionConfig = {
-    slug: "genshin-mob",
+    slug: "genshin-mobs",
     fields: [
         {
             name: "name",

@@ -1,7 +1,7 @@
 import { CollectionConfig } from "payload/types";
 
 const GenshinDomain: CollectionConfig = {
-    slug: "genshin-domain",
+    slug: "genshin-domains",
     fields: [
         {
             name: "name",
@@ -42,7 +42,7 @@ const GenshinDomain: CollectionConfig = {
                 {
                     name: "enemyId",
                     type: "relationship",
-                    relationTo: "genshin-mob",
+                    relationTo: "genshin-mobs",
                 },
             ],
             validate: (value, options) => {

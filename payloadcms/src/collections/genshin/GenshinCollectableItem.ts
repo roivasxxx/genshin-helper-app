@@ -1,7 +1,7 @@
 import { CollectionConfig } from "payload/types";
 
 const GenshinCollectableItem: CollectionConfig = {
-    slug: "genshin-collectable-item",
+    slug: "genshin-collectable-items",
     fields: [
         {
             name: "name",
@@ -27,7 +27,7 @@ const GenshinCollectableItem: CollectionConfig = {
                 {
                     name: "npcId",
                     type: "relationship",
-                    relationTo: "genshin-npc",
+                    relationTo: "genshin-npcs",
                     required: true,
                 },
             ],

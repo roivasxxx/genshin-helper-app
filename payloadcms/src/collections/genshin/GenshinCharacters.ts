@@ -12,6 +12,8 @@ const GenshinCharacters: CollectionConfig = {
         },
         elementField,
         weaponField,
+        // TODO: create other fields
+        // books, talentMat, collectibleItem, bossDrop, trounceDrop, autoattack, skill, burst, ascension, c1,...c6, passives
     ],
 };
 

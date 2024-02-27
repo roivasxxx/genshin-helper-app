@@ -1,3 +1,4 @@
+import Events from "./collections/genshin/Events";
 import GenshinArtifact from "./collections/genshin/GenshinArtifact";
 import GenshinCharacters from "./collections/genshin/GenshinCharacters";
 import GenshinCollectableItem from "./collections/genshin/GenshinCollectableItem";
@@ -24,4 +25,5 @@ export const collections = [
     GenshinCollectableItem,
     GenshinNPC,
     GenshinArtifact,
+    Events,
 ];

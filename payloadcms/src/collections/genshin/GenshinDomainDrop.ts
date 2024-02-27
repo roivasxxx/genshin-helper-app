@@ -1,7 +1,7 @@
 import { CollectionConfig } from "payload/types";
 
 const GenshinDomainItem: CollectionConfig = {
-    slug: "genshin-domain-item",
+    slug: "genshin-domain-items",
     fields: [
         {
             name: "name",
@@ -33,7 +33,7 @@ const GenshinDomainItem: CollectionConfig = {
         {
             name: "domain",
             type: "relationship",
-            relationTo: "genshin-domain",
+            relationTo: "genshin-domains",
             required: true,
         },
         {

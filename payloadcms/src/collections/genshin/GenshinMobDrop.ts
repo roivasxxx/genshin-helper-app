@@ -1,7 +1,7 @@
 import { CollectionConfig } from "payload/types";
 
 const GenshinMob: CollectionConfig = {
-    slug: "genshin-mob-drop",
+    slug: "genshin-mob-drops",
     fields: [
         {
             name: "name",
@@ -20,7 +20,7 @@ const GenshinMob: CollectionConfig = {
                 {
                     name: "mobId",
                     type: "relationship",
-                    relationTo: "genshin-mob",
+                    relationTo: "genshin-mobs",
                     required: true,
                 },
             ],
