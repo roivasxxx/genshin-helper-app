@@ -44,7 +44,7 @@ const Events: CollectionConfig = {
                 },
             },
         },
-        characterField(),
+        characterField({}),
         // {
         //     name: "icon",
         //     type: "upload",

@@ -18,3 +18,7 @@ endpoints: [
         },
     ],
 ```
+
+https://www.youtube.com/watch?v=HYO8OuLuTFw
+
+# payloadcms json field - nested object => type:"group", fields:[...]
