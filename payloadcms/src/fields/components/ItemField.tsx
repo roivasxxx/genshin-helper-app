@@ -1,40 +1,22 @@
 import React, { useEffect, useState } from "react";
-// we'll re-use the built in Label component directly from Payload
-import { Label } from "payload/components/forms";
-
-import { PaginatedDocs } from "payload/database";
 import { useConfig } from "payload/dist/admin/components/utilities/Config";
-import "./styles.scss";
-import ReactSelect, { MultiValue, components } from "react-select";
+import ReactSelect, { components } from "react-select";
+import { Label, useFieldType } from "payload/components/forms";
+import { PaginatedDocs } from "payload/database";
+import qs from "qs";
 import ImageWithFallback from "./ImageWithFallback";
 
-type SelectProps = {
-    maxSelectable: number;
-    setFieldState: (...args: any) => any;
-    collection: string;
-    path: string;
-    label: string | Record<string, string>;
-    required: boolean;
-    fieldValue: string[];
-};
+export default function ItemField(props) {
+    const { path, label, required, hasMany, filter: itemType } = props;
+    const isMulti = hasMany || false;
+    const _itemType = itemType || "";
 
-const Select: React.FC<SelectProps> = (props) => {
-    const {
+    const { value = !isMulti ? "" : [], setValue } = useFieldType({
         path,
-        label,
-        required,
-        fieldValue: value,
-        setFieldState: setValue,
-        collection,
-    } = props;
-
-    const [selected, setSelected] = useState<
-        {
-            label: string;
-            value: string;
-            image: { alt: string; url: string };
-        }[]
-    >([]);
+    });
+    const [selected, setSelected] = useState(
+        typeof value === "string" ? "" : []
+    );
 
     const [options, setOptions] = useState<
         {
@@ -46,13 +28,29 @@ const Select: React.FC<SelectProps> = (props) => {
 
     const config = useConfig();
 
-    const { serverURL } = config;
-
     useEffect(() => {
         const getElements = async () => {
-            const req = await fetch(`${serverURL}/api/${collection}`, {
-                credentials: "include",
-            });
+            let stringifiedQuery = "";
+            if (_itemType) {
+                const query = {
+                    name: {
+                        equals: _itemType,
+                    },
+                };
+                stringifiedQuery = qs.stringify(
+                    {
+                        where: query,
+                    },
+                    { addQueryPrefix: true }
+                );
+            }
+            const req = await fetch(
+                `${serverURL}/api/genshin-elements${stringifiedQuery}`,
+                // `${serverURL}/api/genshin-items${stringifiedQuery}`,
+                {
+                    credentials: "include",
+                }
+            );
             const res = await req.json();
             const docs: PaginatedDocs = res;
             const newOptions = docs.docs.map((el) => {
@@ -75,43 +73,42 @@ const Select: React.FC<SelectProps> = (props) => {
                               value: el.id,
                               image: el.image,
                           }))
-                    : []
+                    : ""
             );
         };
         getElements();
     }, []);
 
-    const onClick = (
-        ids: MultiValue<{
-            value: string;
-            label: string;
-            image: { alt: string; url: string };
-        }>
-    ) => {
-        setValue([...ids.map((el) => el.value)]);
-        setSelected([...ids]);
+    const onClick = (e) => {
+        setValue(!isMulti ? e.value : [...e.map((el) => el.value)]);
+        setSelected(!isMulti ? e : [...e]);
     };
 
     const onRemoveClick = (id: string) => {
-        setValue(value.filter((el) => el !== id));
-        setSelected(selected.filter((el) => el.value !== id));
+        setValue(
+            isMulti && Array.isArray(value)
+                ? value.filter((el) => el !== id)
+                : ""
+        );
+        setSelected(
+            isMulti && Array.isArray(selected)
+                ? selected.filter((el) => el.value !== id)
+                : ""
+        );
     };
 
+    const { serverURL } = config;
     return (
         <div>
             <Label htmlFor={path} label={label} required={required} />
             <div className="element-picker__wrapper">
                 <ReactSelect
                     value={selected}
-                    isMulti
-                    // disables selected values
-                    controlShouldRenderValue={false}
+                    isMulti={isMulti}
+                    controlShouldRenderValue={!isMulti}
                     onChange={(e) => {
                         onClick(e);
                     }}
-                    isOptionDisabled={() =>
-                        selected.length >= props.maxSelectable
-                    }
                     options={options.map((el) => {
                         return {
                             value: el.id,
@@ -139,6 +136,24 @@ const Select: React.FC<SelectProps> = (props) => {
                                 <span>{props.data.label}</span>
                             </components.Option>
                         ),
+                        SingleValue: (props) => (
+                            <components.SingleValue {...props}>
+                                <div className="character-picker__item--selected">
+                                    <div className="character-picker__item--image-wrapper">
+                                        <ImageWithFallback
+                                            src={props.data.image.url}
+                                            alt={
+                                                props.data.image.alt ||
+                                                props.data.label
+                                            }
+                                            className="character-picker__item--image-img"
+                                            fallbackClassName="character-picker__item--image-fallback"
+                                        />
+                                    </div>
+                                    <span>{props.data.label}</span>
+                                </div>
+                            </components.SingleValue>
+                        ),
                     }}
                     styles={{
                         container: (baseStyles, styles) => ({
@@ -152,6 +167,7 @@ const Select: React.FC<SelectProps> = (props) => {
                             ...baseStyles,
                             backgroundColor: "rgb(34, 34, 34)",
                             width: "100%",
+                            color: "rgb(235, 235, 235)",
                             borderColor: styles.isFocused
                                 ? "rgb(141, 141, 141)"
                                 : "rgb(60, 60, 60)",
@@ -194,40 +210,47 @@ const Select: React.FC<SelectProps> = (props) => {
                             color: "rgb(235, 235, 235)",
                             backgroundColor: "rgb(34, 34, 34)",
                         }),
+                        singleValue: (baseStyles, styles) => ({
+                            ...baseStyles,
+                            color: "rgb(235, 235, 235)",
+                        }),
                     }}
                 />
             </div>
-            <div className="character-picker__selected-items">
-                {selected.map((char) => {
-                    return (
-                        <div
-                            className={`character-picker__selected-item`}
-                            onClick={() => onRemoveClick(char.value)}
-                            key={`select-${collection}-${char.value}`}
-                        >
-                            <img
-                                src={char.image.url}
-                                alt={char.image.alt || char.label}
-                                title={char.image.alt || char.label}
-                                width={60}
-                                height={60}
-                            />
-                            <svg
-                                height="40"
-                                width="40"
-                                viewBox="0 0 20 20"
-                                aria-hidden="true"
-                                focusable="false"
-                                className="character-picker__selected-item--cross"
+
+            {isMulti && Array.isArray(selected) ? (
+                <div className="character-picker__selected-items">
+                    {selected.map((char) => {
+                        return (
+                            <div
+                                className={`character-picker__selected-item`}
+                                onClick={() => onRemoveClick(char.value)}
+                                key={`select-${itemType}-${char.value}`}
                             >
-                                <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"></path>
-                            </svg>
-                        </div>
-                    );
-                })}
-            </div>
+                                <img
+                                    src={char.image.url}
+                                    alt={char.image.alt || char.label}
+                                    title={char.image.alt || char.label}
+                                    width={60}
+                                    height={60}
+                                />
+                                <svg
+                                    height="40"
+                                    width="40"
+                                    viewBox="0 0 20 20"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                    className="character-picker__selected-item--cross"
+                                >
+                                    <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"></path>
+                                </svg>
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
-};
-
-export default Select;
+}

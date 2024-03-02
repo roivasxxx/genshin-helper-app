@@ -8,14 +8,20 @@ const ImageWithFallback = (props: {
     const { fallbackClassName, ...rest } = props;
 
     const [errored, setIsErrored] = useState(true);
-    return errored ? (
-        <div className={fallbackClassName} />
-    ) : (
-        <img
-            {...rest}
-            onError={() => setIsErrored(true)}
-            onLoad={() => setIsErrored(false)}
-        />
+
+    return (
+        <div className="character-picker__item--image-relative">
+            <div
+                className={`${fallbackClassName} ${errored ? "" : "hidden"}`}
+            />
+            <img
+                className={`${props.className} ${errored ? "hidden" : ""}`}
+                src={props.src}
+                alt={props.alt}
+                onError={() => setIsErrored(true)}
+                onLoad={() => setIsErrored(false)}
+            />
+        </div>
     );
 };
 export default ImageWithFallback;

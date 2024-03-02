@@ -1,6 +1,6 @@
 import { CollectionConfig } from "payload/types";
 
-const GenshinMob: CollectionConfig = {
+const GenshinMobDrop: CollectionConfig = {
     slug: "genshin-mob-drops",
     fields: [
         {
@@ -28,4 +28,4 @@ const GenshinMob: CollectionConfig = {
     ],
 };
 
-export default GenshinMob;
+export default GenshinMobDrop;

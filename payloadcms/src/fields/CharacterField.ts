@@ -10,9 +10,11 @@ import CharacterField from "./components/CharacterField";
 const characterField = ({
     min = 1,
     max = 4,
+    visible = () => true,
 }: {
     min?: number;
     max?: number;
+    visible: (...args) => boolean;
 }): Field => {
     return {
         name: "characterIds",
@@ -22,6 +24,7 @@ const characterField = ({
         minRows: min,
         maxRows: max,
         admin: {
+            condition: visible,
             components: {
                 Field: CharacterField,
             },

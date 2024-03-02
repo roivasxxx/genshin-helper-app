@@ -1,6 +1,6 @@
 import { CollectionConfig } from "payload/types";
 import elementField from "../../fields/ElementField";
-import weaponField from "../../fields/WeaponField";
+import weaponTypeField from "../../fields/WeaponTypeField";
 
 const GenshinCharacters: CollectionConfig = {
     slug: "genshin-characters",
@@ -11,7 +11,7 @@ const GenshinCharacters: CollectionConfig = {
             required: true,
         },
         elementField,
-        weaponField,
+        weaponTypeField,
         // TODO: create other fields
         // books, talentMat, collectibleItem, bossDrop, trounceDrop, autoattack, skill, burst, ascension, c1,...c6, passives
     ],
