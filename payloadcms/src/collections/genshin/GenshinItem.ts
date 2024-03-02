@@ -10,6 +10,7 @@ const GenshinItems: CollectionConfig = {
         {
             name: "type",
             type: "select",
+            // use genshinItemConfig whenever selecting from GenshinItems based on a type (so always)
             options: [
                 {
                     label: "Collectable", // plants,..., open world

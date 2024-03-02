@@ -9,6 +9,9 @@ type ItemConfigProps = {
     filter?: any;
 };
 
+/**
+ * Filter -> depends on type from GenshinItem collection
+ */
 export const genshinItemConfig = ({
     fieldName,
     max = 1,
