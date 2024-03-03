@@ -3,7 +3,7 @@ import characterField from "../../fields/CharacterField";
 import weaponField from "../../fields/WeaponField";
 
 const Events: CollectionConfig = {
-    slug: "events",
+    slug: "genshin-events",
     fields: [
         {
             name: "name",
@@ -26,6 +26,7 @@ const Events: CollectionConfig = {
             options: [
                 { label: "Weapon", value: "weapon" },
                 { label: "Character", value: "character" },
+                { label: "Standard", value: "standard" },
             ],
             admin: {
                 condition: (data) => {

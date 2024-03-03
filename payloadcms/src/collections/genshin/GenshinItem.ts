@@ -49,6 +49,10 @@ const GenshinItems: CollectionConfig = {
                     label: "Weapon XP Ore",
                     value: "expOre",
                 },
+                {
+                    label: "Fish",
+                    value: "fish",
+                },
             ],
         },
     ],

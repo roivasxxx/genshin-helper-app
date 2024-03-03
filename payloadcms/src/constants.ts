@@ -9,3 +9,12 @@ export const GENSHIN_SUBSTATS = [
     { label: "Crit DMG %", value: "critDmg" },
     { label: "Physical DMG %", value: "physicalDmg" },
 ];
+
+// icons are not needed so no need to create a collection
+export const GENSHIN_REGIONS = [
+    { label: "Mondstadt", value: "mondstadt" },
+    { label: "Liyue", value: "liyue" },
+    { label: "Inazuma", value: "inazuma" },
+    { label: "Sumeru", value: "sumeru" },
+    { label: "Fontaine", value: "fontaine" },
+];

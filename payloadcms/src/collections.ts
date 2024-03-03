@@ -1,4 +1,5 @@
 import Events from "./collections/genshin/Events";
+import GenshinArticles from "./collections/genshin/GenshinArticles";
 import GenshinArtifact from "./collections/genshin/GenshinArtifact";
 import GenshinCharacters from "./collections/genshin/GenshinCharacters";
 import GenshinCollectableItem from "./collections/genshin/GenshinCollectableItem";
@@ -9,7 +10,9 @@ import GenshinItems from "./collections/genshin/GenshinItem";
 import GenshinMob from "./collections/genshin/GenshinMob";
 import GenshinMobDrop from "./collections/genshin/GenshinMobDrop";
 import GenshinNPC from "./collections/genshin/GenshinNpc";
+import GenshinQuests from "./collections/genshin/GenshinQuests";
 import GenshinWeaponTypes from "./collections/genshin/GenshinWeaponTypes";
+import GenshinWishes from "./collections/genshin/GenshinWishes";
 import GenshinWeapons from "./collections/GenshinWeapon";
 import { Media } from "./collections/Media";
 import PublicUsers from "./collections/PublicUsers";
@@ -32,4 +35,7 @@ export const collections = [
     Events,
     GenshinWeapons,
     GenshinItems,
+    GenshinQuests,
+    GenshinWishes,
+    GenshinArticles,
 ];
