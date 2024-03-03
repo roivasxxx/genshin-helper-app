@@ -7,7 +7,14 @@ import qs from "qs";
 import ImageWithFallback from "./ImageWithFallback";
 
 export default function ItemField(props) {
-    const { path, label, required, hasMany, filter: itemType } = props;
+    const {
+        path,
+        label,
+        required,
+        hasMany,
+        filter: itemType,
+        collection,
+    } = props;
     const isMulti = hasMany || false;
     const _itemType = itemType || "";
 
@@ -45,7 +52,7 @@ export default function ItemField(props) {
                 );
             }
             const req = await fetch(
-                `${serverURL}/api/genshin-elements${stringifiedQuery}`,
+                `${serverURL}/api/${collection}${stringifiedQuery}`,
                 // `${serverURL}/api/genshin-items${stringifiedQuery}`,
                 {
                     credentials: "include",

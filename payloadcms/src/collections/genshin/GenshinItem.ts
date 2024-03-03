@@ -11,6 +11,7 @@ const GenshinItems: CollectionConfig = {
             name: "type",
             type: "select",
             // use genshinItemConfig whenever selecting from GenshinItems based on a type (so always)
+            // artifacts and weapons have their own collections, because otherwise this one would become very unreadable
             options: [
                 {
                     label: "Collectable", // plants,..., open world

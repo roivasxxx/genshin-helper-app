@@ -1,5 +1,4 @@
 import { CollectionConfig } from "payload/types";
-import { genshinItemConfig } from "../../fields/fieldsConfig";
 
 const GenshinElements: CollectionConfig = {
     slug: "genshin-elements",
@@ -14,8 +13,6 @@ const GenshinElements: CollectionConfig = {
             relationTo: "media",
             required: true,
         },
-
-        genshinItemConfig({ fieldName: "test" }),
     ],
 };
 
