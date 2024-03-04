@@ -13,7 +13,7 @@ import GenshinNPC from "./collections/genshin/GenshinNpc";
 import GenshinQuests from "./collections/genshin/GenshinQuests";
 import GenshinWeaponTypes from "./collections/genshin/GenshinWeaponTypes";
 import GenshinWishes from "./collections/genshin/GenshinWishes";
-import GenshinWeapons from "./collections/GenshinWeapon";
+import GenshinWeapons from "./collections/genshin/GenshinWeapon";
 import { Media } from "./collections/Media";
 import PublicUsers from "./collections/PublicUsers";
 import Users from "./collections/Users";

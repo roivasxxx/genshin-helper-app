@@ -4,16 +4,6 @@ const GenshinDomainItem: CollectionConfig = {
     slug: "genshin-domain-items",
     fields: [
         {
-            name: "name",
-            type: "text",
-        },
-        {
-            name: "icon",
-            type: "upload",
-            relationTo: "media",
-            required: false,
-        },
-        {
             // item type
             // book, weapon
             name: "type",
@@ -35,6 +25,21 @@ const GenshinDomainItem: CollectionConfig = {
             type: "relationship",
             relationTo: "genshin-domains",
             required: true,
+        },
+        {
+            name: "items",
+            type: "array",
+            fields: [
+                {
+                    name: "name",
+                    type: "text",
+                },
+                {
+                    name: "icon",
+                    type: "upload",
+                    relationTo: "media",
+                },
+            ],
         },
         {
             // dropped on

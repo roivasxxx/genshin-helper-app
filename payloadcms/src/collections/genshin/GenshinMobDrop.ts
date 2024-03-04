@@ -5,14 +5,19 @@ const GenshinMobDrop: CollectionConfig = {
     slug: "genshin-mob-drops",
     fields: [
         {
-            name: "name",
-            type: "text",
-        },
-        {
-            name: "icon",
-            type: "upload",
-            relationTo: "media",
-            required: false,
+            name: "items",
+            type: "array",
+            fields: [
+                {
+                    name: "name",
+                    type: "text",
+                },
+                {
+                    name: "icon",
+                    type: "upload",
+                    relationTo: "media",
+                },
+            ],
         },
         genshinSelectField({
             fieldName: "mobIds",

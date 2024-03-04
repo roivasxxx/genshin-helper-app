@@ -4,10 +4,6 @@ const GenshinItems: CollectionConfig = {
     slug: "genshin-items",
     fields: [
         {
-            name: "name",
-            type: "text",
-        },
-        {
             name: "type",
             type: "select",
             // use genshinItemConfig whenever selecting from GenshinItems based on a type (so always)
@@ -22,14 +18,11 @@ const GenshinItems: CollectionConfig = {
                     value: "food",
                 },
                 {
-                    label: "Mob Drop",
-                    value: "mobDrop",
-                },
-                {
-                    label: "Character Ascension", // dropped by bosses - fragment, chunk, gem, separate because of travele
+                    label: "Character Ascension", // dropped by bosses - fragment, chunk, gem, separate because of traveler
                     value: "characterAscension",
                 },
                 {
+                    // the collectible books
                     label: "Book",
                     value: "book",
                 },
@@ -53,6 +46,20 @@ const GenshinItems: CollectionConfig = {
                     label: "Fish",
                     value: "fish",
                 },
+            ],
+        },
+        {
+            // some item types exist in multiple variations -> use an array
+            // for example: books in weapon ascension, character ascension, etc
+            // those that only exist in one variation -> one item
+            name: "items",
+            type: "array",
+            fields: [
+                {
+                    name: "name",
+                    type: "text",
+                },
+                { name: "icon", type: "upload", relationTo: "media" },
             ],
         },
     ],

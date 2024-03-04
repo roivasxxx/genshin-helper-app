@@ -1,7 +1,7 @@
 import { CollectionConfig } from "payload/types";
-import weaponTypeField from "../fields/WeaponTypeField";
-import { GENSHIN_SUBSTATS } from "../constants";
-import { genshinSelectField } from "../fields/fieldsConfig";
+import weaponTypeField from "../../fields/WeaponTypeField";
+import { GENSHIN_SUBSTATS } from "../../constants";
+import { genshinSelectField } from "../../fields/fieldsConfig";
 
 const GenshinWeapons: CollectionConfig = {
     slug: "genshin-weapons",
