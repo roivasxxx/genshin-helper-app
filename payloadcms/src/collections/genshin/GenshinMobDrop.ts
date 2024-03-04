@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import { genshinSelectField } from "../../fields/fieldsConfig";
 
 const GenshinMobDrop: CollectionConfig = {
     slug: "genshin-mob-drops",
@@ -13,17 +14,17 @@ const GenshinMobDrop: CollectionConfig = {
             relationTo: "media",
             required: false,
         },
+        genshinSelectField({
+            fieldName: "mobIds",
+            collection: "genshin-mobs",
+            hasMany: true,
+        }),
         {
             name: "mobIds",
-            type: "array",
-            fields: [
-                {
-                    name: "mobId",
-                    type: "relationship",
-                    relationTo: "genshin-mobs",
-                    required: true,
-                },
-            ],
+            type: "relationship",
+            relationTo: "genshin-mobs",
+            required: true,
+            hasMany: true,
         },
     ],
 };

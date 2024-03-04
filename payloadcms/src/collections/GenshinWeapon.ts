@@ -1,7 +1,7 @@
 import { CollectionConfig } from "payload/types";
 import weaponTypeField from "../fields/WeaponTypeField";
 import { GENSHIN_SUBSTATS } from "../constants";
-import { genshinItemConfig } from "../fields/fieldsConfig";
+import { genshinSelectField } from "../fields/fieldsConfig";
 
 const GenshinWeapons: CollectionConfig = {
     slug: "genshin-weapons",
@@ -49,7 +49,7 @@ const GenshinWeapons: CollectionConfig = {
                     name: "cost",
                     type: "array",
                     fields: [
-                        genshinItemConfig({
+                        genshinSelectField({
                             fieldName: "fishId",
                             collection: "genshin-items",
                             filter: "fish",
@@ -67,7 +67,7 @@ const GenshinWeapons: CollectionConfig = {
                 },
             },
         },
-        genshinItemConfig({
+        genshinSelectField({
             fieldName: "questId",
             collection: "genshin-quests",
             visible: (data) => data.obtainedBy === "crafting",

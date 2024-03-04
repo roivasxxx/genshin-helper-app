@@ -1,5 +1,5 @@
 import { CollectionConfig } from "payload/types";
-import { genshinItemConfig } from "../../fields/fieldsConfig";
+import { genshinSelectField } from "../../fields/fieldsConfig";
 
 const isGuide = (data) => {
     return data.type === "guide";
@@ -60,7 +60,7 @@ const GenshinArticles: CollectionConfig = {
             // hidden since it only has one option at this moment
             hidden: true,
         },
-        genshinItemConfig({
+        genshinSelectField({
             fieldName: "characterId",
             collection: "genshin-characters",
             visible: isGuide,
@@ -85,7 +85,7 @@ const GenshinArticles: CollectionConfig = {
                             name: "description",
                             type: "richText",
                         },
-                        genshinItemConfig({
+                        genshinSelectField({
                             fieldName: "characterIds",
                             collection: "genshin-characters",
                             max: 3,
@@ -119,7 +119,7 @@ const GenshinArticles: CollectionConfig = {
                     name: "weapon",
                     type: "group",
                     fields: [
-                        genshinItemConfig({
+                        genshinSelectField({
                             fieldName: "weaponId",
                             collection: "genshin-weapons",
                         }),
@@ -142,7 +142,7 @@ const GenshinArticles: CollectionConfig = {
                     name: "artifact",
                     type: "group",
                     fields: [
-                        genshinItemConfig({
+                        genshinSelectField({
                             fieldName: "artifactId",
                             collection: "genshin-artifacts",
                             // for combinations of 2/2

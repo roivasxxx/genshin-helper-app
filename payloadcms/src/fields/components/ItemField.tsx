@@ -7,16 +7,9 @@ import qs from "qs";
 import ImageWithFallback from "./ImageWithFallback";
 
 export default function ItemField(props) {
-    const {
-        path,
-        label,
-        required,
-        hasMany,
-        filter: itemType,
-        collection,
-    } = props;
+    const { path, label, required, hasMany, filter, collection } = props;
     const isMulti = hasMany || false;
-    const _itemType = itemType || "";
+    const _filter = filter || undefined;
 
     const { value = !isMulti ? "" : [], setValue } = useFieldType({
         path,
@@ -38,12 +31,13 @@ export default function ItemField(props) {
     useEffect(() => {
         const getElements = async () => {
             let stringifiedQuery = "";
-            if (_itemType) {
-                const query = {
-                    name: {
-                        equals: _itemType,
-                    },
-                };
+            if (_filter) {
+                const query = _filter;
+                // {
+                //     name: {
+                //         equals: _itemType,
+                //     },
+                // };
                 stringifiedQuery = qs.stringify(
                     {
                         where: query,
@@ -53,7 +47,6 @@ export default function ItemField(props) {
             }
             const req = await fetch(
                 `${serverURL}/api/${collection}${stringifiedQuery}`,
-                // `${serverURL}/api/genshin-items${stringifiedQuery}`,
                 {
                     credentials: "include",
                 }
@@ -232,7 +225,7 @@ export default function ItemField(props) {
                             <div
                                 className={`character-picker__selected-item`}
                                 onClick={() => onRemoveClick(char.value)}
-                                key={`select-${itemType}-${char.value}`}
+                                key={`select-${char.value}`}
                             >
                                 <img
                                     src={char.image.url}
