@@ -18,3 +18,10 @@ export const GENSHIN_REGIONS = [
     { label: "Sumeru", value: "sumeru" },
     { label: "Fontaine", value: "fontaine" },
 ];
+
+// returns options from start to end
+export const RARITY_LABELS = (start: number, end: number) => {
+    return new Array(end - start + 1)
+        .fill(0)
+        .map((i) => ({ label: String(start + i), value: String(start + i) }));
+};
