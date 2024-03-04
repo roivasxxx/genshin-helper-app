@@ -10,7 +10,7 @@
         "rootDir": "./",
         "jsx": "react",
         "paths": {
-            "payload/generated-types": ["./types/payload-types.ts"]
+            "payload/generated-types": ["./src/payload-types.ts"]
         }
     },
     "include": ["src","types"],
