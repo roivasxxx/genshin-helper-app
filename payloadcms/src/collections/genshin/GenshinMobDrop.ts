@@ -19,13 +19,6 @@ const GenshinMobDrop: CollectionConfig = {
             collection: "genshin-mobs",
             hasMany: true,
         }),
-        {
-            name: "mobIds",
-            type: "relationship",
-            relationTo: "genshin-mobs",
-            required: true,
-            hasMany: true,
-        },
     ],
 };
 

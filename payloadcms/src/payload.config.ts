@@ -33,7 +33,7 @@ export default buildConfig({
     editor: slateEditor({}),
     collections: collections,
     typescript: {
-        outputFile: path.resolve(__dirname, "payload-types.ts"),
+        outputFile: path.resolve(__dirname, "../types/payload-types.ts"),
     },
     graphQL: {
         disable: true,

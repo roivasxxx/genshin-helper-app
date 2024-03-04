@@ -1,9 +1,10 @@
 import { Field } from "payload/types";
 import ItemField from "./components/ItemField";
+import { GenshinCollectionNames } from "../../types/payload-types";
 
-type ItemConfigProps = {
+type ItemConfigProps<T extends GenshinCollectionNames> = {
     fieldName: string;
-    collection: string;
+    collection: T;
     max?: number;
     min?: number;
     visible?: (...args: any) => boolean;
@@ -15,7 +16,7 @@ type ItemConfigProps = {
  * Filter -> depends on type from GenshinItem collection, should be an object, eg: {name: {equals: "fish"}};
  *
  */
-export const genshinSelectField = ({
+export const genshinSelectField = <T extends GenshinCollectionNames>({
     fieldName,
     collection,
     max = 1,
@@ -23,7 +24,7 @@ export const genshinSelectField = ({
     visible = () => true,
     filter = undefined,
     hasMany = false,
-}: ItemConfigProps): Field => {
+}: ItemConfigProps<T>): Field => {
     const hasMax = max > 1;
 
     const extraProps: any = {};
