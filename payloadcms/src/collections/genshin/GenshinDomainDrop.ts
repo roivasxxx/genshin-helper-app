@@ -3,6 +3,7 @@ import { CollectionConfig } from "payload/types";
 const GenshinDomainItem: CollectionConfig = {
     slug: "genshin-domain-items",
     fields: [
+        { name: "name", type: "text" },
         {
             // item type
             // book, weapon
