@@ -6,7 +6,7 @@ import { PaginatedDocs } from "payload/database";
 import qs from "qs";
 import ImageWithFallback from "./ImageWithFallback";
 
-export default function ItemField(props) {
+export default function MultiItemField(props) {
     const {
         path,
         label,
@@ -29,7 +29,7 @@ export default function ItemField(props) {
         {
             name: string;
             id: string;
-            image: { alt: string; url: string };
+            images: { alt: string; url: string }[];
         }[]
     >([]);
 
@@ -56,13 +56,16 @@ export default function ItemField(props) {
             const res = await req.json();
             const docs: PaginatedDocs = res;
             const newOptions = docs.docs.map((el) => {
+                const items = el.items || [];
+                const itemNamesJoined = items.map((el) => el.name).join("-");
+                const itemImages = items.map((el) => ({
+                    alt: el?.icon?.alt,
+                    url: el?.icon?.cloudinary?.secure_url,
+                }));
                 return {
-                    name: el.name,
+                    name: itemNamesJoined || el.name,
                     id: el.id,
-                    image: {
-                        alt: el?.icon?.alt || "",
-                        url: el?.icon?.cloudinary?.secure_url || "",
-                    },
+                    images: itemImages,
                 };
             });
             setOptions(newOptions);
@@ -73,7 +76,7 @@ export default function ItemField(props) {
                           .map((el) => ({
                               label: el.name,
                               value: el.id,
-                              image: el.image,
+                              images: el.images,
                           }))
                     : ""
             );
@@ -115,25 +118,23 @@ export default function ItemField(props) {
                         return {
                             value: el.id,
                             label: el.name,
-                            image: {
-                                alt: el.image.alt,
-                                url: el.image.url,
-                            },
+                            images: el.images,
                         };
                     })}
                     components={{
                         Option: (props) => (
                             <components.Option {...props}>
                                 <div className="genshin-picker__item--image-wrapper">
-                                    <ImageWithFallback
-                                        src={props.data.image.url}
-                                        alt={
-                                            props.data.image.alt ||
-                                            props.data.label
-                                        }
-                                        className="genshin-picker__item--image-img"
-                                        fallbackClassName="genshin-picker__item--image-fallback"
-                                    />
+                                    {props.data.images.map((image) => {
+                                        return (
+                                            <ImageWithFallback
+                                                src={image.url}
+                                                alt={image.alt}
+                                                className="genshin-picker__item--image-img"
+                                                fallbackClassName="genshin-picker__item--image-fallback"
+                                            />
+                                        );
+                                    })}
                                 </div>
                                 <span>{props.data.label}</span>
                             </components.Option>
@@ -142,15 +143,16 @@ export default function ItemField(props) {
                             <components.SingleValue {...props}>
                                 <div className="genshin-picker__item--selected">
                                     <div className="genshin-picker__item--image-wrapper">
-                                        <ImageWithFallback
-                                            src={props.data.image.url}
-                                            alt={
-                                                props.data.image.alt ||
-                                                props.data.label
-                                            }
-                                            className="genshin-picker__item--image-img"
-                                            fallbackClassName="genshin-picker__item--image-fallback"
-                                        />
+                                        {props.data.images.map((image) => {
+                                            return (
+                                                <ImageWithFallback
+                                                    src={image.url}
+                                                    alt={image.alt}
+                                                    className="genshin-picker__item--image-img"
+                                                    fallbackClassName="genshin-picker__item--image-fallback"
+                                                />
+                                            );
+                                        })}
                                     </div>
                                     <span>{props.data.label}</span>
                                 </div>
@@ -220,29 +222,28 @@ export default function ItemField(props) {
                 />
             </div>
 
-            {hasMany && Array.isArray(selected) ? (
+            {hasMany && Array.isArray(selected) && selected.length > 0 ? (
                 <div className="genshin-picker__selected-items">
                     {selected.map((char) => {
                         return (
                             <div
-                                className={`genshin-picker__selected-item`}
+                                className={`genshin-picker__multi-selected-item`}
                                 onClick={() => onRemoveClick(char.value)}
                                 key={`select-${char.value}`}
                             >
-                                <img
+                                {char.label}
+                                {/* <img
                                     src={char.image.url}
                                     alt={char.image.alt || char.label}
                                     title={char.image.alt || char.label}
                                     width={60}
                                     height={60}
-                                />
+                                /> */}
                                 <svg
-                                    height="40"
-                                    width="40"
                                     viewBox="0 0 20 20"
                                     aria-hidden="true"
                                     focusable="false"
-                                    className="genshin-picker__selected-item--cross"
+                                    className="genshin-picker__multi-selected-item--cross"
                                 >
                                     <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"></path>
                                 </svg>

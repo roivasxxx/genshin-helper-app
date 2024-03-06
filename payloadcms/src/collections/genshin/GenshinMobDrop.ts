@@ -27,7 +27,10 @@ const GenshinMobDrop: CollectionConfig = {
         {
             name: "mobType",
             type: "text",
-            hidden: true,
+            admin: {
+                // setting hidden:true does not expose the field to api requests
+                condition: () => false,
+            },
         },
         genshinSelectField({
             fieldName: "mobIds",

@@ -27,7 +27,24 @@ const GenshinCharacters: CollectionConfig = {
         genshinSelectField({
             collection: "genshin-mob-drops",
             fieldName: "talentMobDrop",
-            filter: { type: { not_equals: "boss" } },
+            // regular mob drops only
+            filter: { mobType: { equals: "regular" } },
+            isMultiSelect: true,
+            hasMany: true,
+        }),
+        genshinSelectField({
+            collection: "genshin-mob-drops",
+            fieldName: "bossMobDrop",
+            // regular mob drops only
+            filter: { mobType: { equals: "boss" } },
+            isMultiSelect: true,
+        }),
+        genshinSelectField({
+            collection: "genshin-mob-drops",
+            fieldName: "trounceMobDrop",
+            // regular mob drops only
+            filter: { mobType: { equals: "trounce" } },
+            isMultiSelect: true,
         }),
         // TODO: create other fields
         // books, talentMat, collectibleItem, bossDrop, trounceDrop, autoattack, skill, burst, ascension, c1,...c6, passives

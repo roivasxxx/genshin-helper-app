@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import { genshinSelectField } from "../../fields/fieldsConfig";
 
 const GenshinDomain: CollectionConfig = {
     slug: "genshin-domains",
@@ -30,29 +31,15 @@ const GenshinDomain: CollectionConfig = {
                 },
                 {
                     label: "Trounce",
-                    value: "trouble",
+                    value: "Trounce",
                 },
             ],
         },
-        {
-            name: "enemies",
-            type: "array",
-            minRows: 1,
-            fields: [
-                {
-                    name: "enemyId",
-                    type: "relationship",
-                    relationTo: "genshin-mobs",
-                },
-            ],
-            validate: (value, options) => {
-                if (options?.parent?.type === "trounce" && value.length > 1) {
-                    // max rows for trounce domains should be 1 - needs to be done via ui
-                    return "Too many enemies for trounce domain!";
-                }
-                return true;
-            },
-        },
+        genshinSelectField({
+            collection: "genshin-mobs",
+            fieldName: "enemies",
+            hasMany: true,
+        }),
     ],
 };
 

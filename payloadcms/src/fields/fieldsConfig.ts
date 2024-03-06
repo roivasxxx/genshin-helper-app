@@ -1,20 +1,35 @@
 import { Field } from "payload/types";
 import ItemField from "./components/ItemField";
 import { GenshinCollectionNames } from "../../types/payload-types";
+import MultiItemField from "./components/MultiItemField";
 
-type ItemConfigProps<T extends GenshinCollectionNames> = {
+type CommonItemConfigProps<T extends GenshinCollectionNames> = {
     fieldName: string;
     collection: T;
-    max?: number;
-    min?: number;
     visible?: (...args: any) => boolean;
     filter?: any;
-    hasMany?: boolean;
 };
+
+type ItemConfigProps<T extends GenshinCollectionNames> =
+    CommonItemConfigProps<T> &
+        (
+            | {
+                  max?: number;
+                  min?: number;
+                  hasMany?: boolean;
+                  isMultiSelect?: false;
+              }
+            | {
+                  max?: undefined;
+                  min?: undefined;
+                  hasMany?: boolean;
+                  isMultiSelect?: true;
+              }
+        );
 
 /**
  * Filter -> depends on type from GenshinItem collection, should be an object, eg: {name: {equals: "fish"}};
- *
+ * isMultiSelect -> if true -> use a different component
  */
 export const genshinSelectField = <T extends GenshinCollectionNames>({
     fieldName,
@@ -24,6 +39,7 @@ export const genshinSelectField = <T extends GenshinCollectionNames>({
     visible = () => true,
     filter = undefined,
     hasMany = false,
+    isMultiSelect = false,
 }: ItemConfigProps<T>): Field => {
     const hasMax = max > 1;
 
@@ -39,6 +55,13 @@ export const genshinSelectField = <T extends GenshinCollectionNames>({
         extraProps.hasMany = true;
     }
 
+    const components = {
+        Field: (fieldProps) =>
+            isMultiSelect
+                ? MultiItemField({ ...fieldProps, filter, collection })
+                : ItemField({ ...fieldProps, filter, collection }),
+    };
+
     return {
         ...{
             name: fieldName,
@@ -46,10 +69,7 @@ export const genshinSelectField = <T extends GenshinCollectionNames>({
             relationTo: collection,
             admin: {
                 condition: visible,
-                components: {
-                    Field: (fieldProps) =>
-                        ItemField({ ...fieldProps, filter, collection }),
-                },
+                components,
             },
         },
         ...extraProps,

@@ -125,15 +125,15 @@ const Select: React.FC<SelectProps> = (props) => {
                     components={{
                         Option: (props) => (
                             <components.Option {...props}>
-                                <div className="character-picker__item--image-wrapper">
+                                <div className="genshin-picker__item--image-wrapper">
                                     <ImageWithFallback
                                         src={props.data.image.url}
                                         alt={
                                             props.data.image.alt ||
                                             props.data.label
                                         }
-                                        className="character-picker__item--image-img"
-                                        fallbackClassName="character-picker__item--image-fallback"
+                                        className="genshin-picker__item--image-img"
+                                        fallbackClassName="genshin-picker__item--image-fallback"
                                     />
                                 </div>
                                 <span>{props.data.label}</span>
@@ -197,11 +197,11 @@ const Select: React.FC<SelectProps> = (props) => {
                     }}
                 />
             </div>
-            <div className="character-picker__selected-items">
+            <div className="genshin-picker__selected-items">
                 {selected.map((char) => {
                     return (
                         <div
-                            className={`character-picker__selected-item`}
+                            className={`genshin-picker__selected-item`}
                             onClick={() => onRemoveClick(char.value)}
                             key={`select-${collection}-${char.value}`}
                         >
@@ -218,7 +218,7 @@ const Select: React.FC<SelectProps> = (props) => {
                                 viewBox="0 0 20 20"
                                 aria-hidden="true"
                                 focusable="false"
-                                className="character-picker__selected-item--cross"
+                                className="genshin-picker__selected-item--cross"
                             >
                                 <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"></path>
                             </svg>

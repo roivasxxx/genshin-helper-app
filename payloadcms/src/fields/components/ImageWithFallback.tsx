@@ -10,7 +10,7 @@ const ImageWithFallback = (props: {
     const [errored, setIsErrored] = useState(true);
 
     return (
-        <div className="character-picker__item--image-relative">
+        <div className="genshin-picker__item--image-relative">
             <div
                 className={`${fallbackClassName} ${errored ? "" : "hidden"}`}
             />
