@@ -16,6 +16,7 @@ const Events: CollectionConfig = {
             options: [
                 { label: "Banner", value: "banner" },
                 { label: "Event", value: "event" },
+                // add resin event - domain - books / leylines
             ],
             index: true,
         },

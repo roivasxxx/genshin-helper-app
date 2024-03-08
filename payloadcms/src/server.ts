@@ -26,10 +26,15 @@ const start = async () => {
             payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`);
         },
     });
+
     // auth middleware
     // https://payloadcms.com/docs/authentication/using-middleware#using-the-payload-auth-middleware
     // Add your own express routes here
     app.listen(process.env.PAYLOAD_PUBLIC_PORT);
+    // create cron jobs here
+    // payload.find({ collection: "public-users" }).then((docs) => {
+    //     console.log(`FOUND ${docs.docs.length} public users!`);
+    // });
 };
 
 start();
