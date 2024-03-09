@@ -18,6 +18,51 @@ const PublicUsers: CollectionConfig = {
     fields: [
         // Email added by default
         // Add more fields as needed
+        {
+            // wish history, used for creating unique ids for genshin wishes
+            name: "wishInfo",
+            type: "group",
+            fields: [
+                {
+                    name: "standard",
+                    type: "number",
+                },
+                {
+                    name: "weapon",
+                    type: "number",
+                },
+                {
+                    name: "character",
+                    type: "number",
+                },
+            ],
+        },
+        {
+            name: "genshinTracking",
+            type: "group",
+            fields: [
+                {
+                    // domain tracking, used for notifications, only use book/weapon
+                    type: "relationship",
+                    name: "domains",
+                    relationTo: "genshin-domains",
+                    hasMany: true,
+                    filterOptions: () => {
+                        return {
+                            type: { in: ["book", "weapon"] },
+                        };
+                    },
+                },
+                {
+                    // enabled event notifications
+                    // banner, events
+                    // on start and end
+                    type: "text",
+                    name: "events",
+                    hasMany: true,
+                },
+            ],
+        },
     ],
     endpoints: [
         {

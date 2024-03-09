@@ -23,5 +23,8 @@ export const GENSHIN_REGIONS = [
 export const RARITY_LABELS = (start: number, end: number) => {
     return new Array(end - start + 1)
         .fill(0)
-        .map((i) => ({ label: String(start + i), value: String(start + i) }));
+        .map((_, i) => ({
+            label: String(start + i),
+            value: String(start + i),
+        }));
 };

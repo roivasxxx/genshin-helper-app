@@ -54,6 +54,15 @@ const GenshinWishes: CollectionConfig = {
                 };
             },
         },
+        {
+            // userId + bannerType + wishNumber - userId-standard-0, userId-weapon-1,...
+            // use for querying, sorting
+            name: "wishId",
+            type: "text",
+            admin: {
+                condition: () => false,
+            },
+        },
     ],
 };
 

@@ -24,3 +24,5 @@ https://www.youtube.com/watch?v=HYO8OuLuTFw
 # payloadcms json field - nested object => type:"group", fields:[...]
 
 # payloadcms getting current document fields from a custom field using: const [fields, dispatchFields] = useAllFormFields();
+
+# create an async queue when uploading wishes, we need to ensure to keep their order!!

@@ -17,6 +17,7 @@ import GenshinWeapons from "./collections/genshin/GenshinWeapon";
 import { Media } from "./collections/Media";
 import PublicUsers from "./collections/PublicUsers";
 import Users from "./collections/Users";
+import GenshinPatches from "./collections/genshin/GenshinPatches";
 
 export const collections = [
     Users,
@@ -38,4 +39,5 @@ export const collections = [
     GenshinQuests,
     GenshinWishes,
     GenshinArticles,
+    GenshinPatches,
 ];
