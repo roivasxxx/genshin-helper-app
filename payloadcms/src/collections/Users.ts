@@ -16,6 +16,11 @@ const Users: CollectionConfig = {
     fields: [
         // Email added by default
         // Add more fields as needed
+        {
+            name: "role",
+            type: "text",
+            defaultValue: "user",
+        },
     ],
     endpoints: [],
 };

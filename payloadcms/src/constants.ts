@@ -21,10 +21,19 @@ export const GENSHIN_REGIONS = [
 
 // returns options from start to end
 export const RARITY_LABELS = (start: number, end: number) => {
-    return new Array(end - start + 1)
-        .fill(0)
-        .map((_, i) => ({
-            label: String(start + i),
-            value: String(start + i),
-        }));
+    return new Array(end - start + 1).fill(0).map((_, i) => ({
+        label: String(start + i),
+        value: String(start + i),
+    }));
 };
+
+export enum ALLOWED_EVENT_NOTIFICATIONS {
+    DOMAINS = "domains",
+    EVENTS = "events",
+}
+
+export enum WISH_HISTORY {
+    WEAPON = "weapon",
+    STANDARD = "standard",
+    CHARACTER = "character",
+}
