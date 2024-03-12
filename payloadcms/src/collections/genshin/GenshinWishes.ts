@@ -7,18 +7,6 @@ const GenshinWishes: CollectionConfig = {
     slug: "genshin-wishes",
     fields: [
         {
-            name: "userId",
-            type: "relationship",
-            relationTo: "public-users",
-        },
-        {
-            // id of character/weapon document
-            // getWishHistory has to reduce information obtained from this relationship
-            name: "itemId",
-            type: "relationship",
-            relationTo: ["genshin-characters", "genshin-weapons"],
-        },
-        {
             name: "bannerType",
             type: "select",
             options: [
@@ -41,6 +29,16 @@ const GenshinWishes: CollectionConfig = {
             type: "date",
         },
         {
+            // 1 for 3 stars, 2-10 for 4 stars, 2-90 for 5 stars
+            name: "pity",
+            type: "number",
+        },
+        {
+            // returned from hoyo api
+            name: "hoyoId",
+            type: "text",
+        },
+        {
             // this will be filled in based on the date -> find which banner was active during specified date
             // only for non-standard pulls
             name: "banner",
@@ -56,6 +54,18 @@ const GenshinWishes: CollectionConfig = {
                     type: { equals: "banner" },
                 };
             },
+        },
+        {
+            name: "genshinAccount",
+            type: "relationship",
+            relationTo: "genshin-accounts",
+        },
+        {
+            // id of character/weapon document
+            // getWishHistory has to reduce information obtained from this relationship
+            name: "itemId",
+            type: "relationship",
+            relationTo: ["genshin-characters", "genshin-weapons"],
         },
         {
             // userId + bannerType + wishNumber - userId-standard-0, userId-weapon-1,...

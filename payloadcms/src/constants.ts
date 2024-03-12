@@ -37,3 +37,16 @@ export enum WISH_HISTORY {
     STANDARD = "standard",
     CHARACTER = "character",
 }
+
+// used for fetching data from hoyo wish history
+export enum WISH_BANNER_CODES {
+    STANDARD = 200,
+    CHARACTER = 301,
+    WEAPON = 302,
+}
+export enum WISH_REGIONS {
+    EUROPE = "os_euro",
+    ASIA = "os_asia",
+    AMERICA = "os_usa",
+    CHINA = "os_cht",
+}

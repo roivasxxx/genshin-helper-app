@@ -18,10 +18,12 @@ import { Media } from "./collections/Media";
 import PublicUsers from "./collections/PublicUsers";
 import Users from "./collections/Users";
 import GenshinPatches from "./collections/genshin/GenshinPatches";
+import GenshinAccounts from "./collections/genshin/GenshinAccounts";
 
 export const collections = [
     Users,
     PublicUsers,
+    GenshinAccounts,
     Media,
     GenshinCharacters,
     GenshinElements,

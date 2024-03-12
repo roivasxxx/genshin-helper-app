@@ -22,28 +22,6 @@ const PublicUsers: CollectionConfig = {
         // Email added by default
         // Add more fields as needed
         {
-            // wish history, used for creating unique ids for genshin wishes
-            name: "wishInfo",
-            type: "group",
-            fields: [
-                {
-                    name: "standard",
-                    type: "number",
-                    defaultValue: 0,
-                },
-                {
-                    name: "weapon",
-                    type: "number",
-                    defaultValue: 0,
-                },
-                {
-                    name: "character",
-                    type: "number",
-                    defaultValue: 0,
-                },
-            ],
-        },
-        {
             name: "genshinTracking",
             type: "group",
             fields: [
@@ -70,6 +48,13 @@ const PublicUsers: CollectionConfig = {
                     hasMany: true,
                 },
             ],
+        },
+        {
+            // support multiple accounts per user, these can be on different regions
+            name: "genshinAccounts",
+            type: "relationship",
+            relationTo: "genshin-accounts",
+            hasMany: true,
         },
         // do not show in requests
         { name: "expoPushToken", type: "text", hidden: true },
