@@ -1,7 +1,7 @@
 import { Response } from "express";
-import payload from "payload";
 import { CollectionConfig, PayloadRequest } from "payload/types";
 import { ALLOWED_EVENT_NOTIFICATIONS } from "../constants";
+import authMiddleware from "../authMiddleware";
 
 const PublicUsers: CollectionConfig = {
     slug: "public-users",
@@ -65,7 +65,7 @@ const PublicUsers: CollectionConfig = {
             method: "post",
             handler: (req: PayloadRequest, res: Response) => {
                 const { email, password } = req.body;
-                console.log("email", email, "password", password);
+
                 req.payload.create({
                     collection: "public-users",
                     data: { email, password },
@@ -77,118 +77,169 @@ const PublicUsers: CollectionConfig = {
             // setting expoPushToken for push notifications
             path: "/setExpoPushToken",
             method: "post",
-            handler: async (req: PayloadRequest, res: Response) => {
-                if (!req.user) {
-                    res.status(401).send("Unauthorized");
-                }
-                if (
-                    typeof req?.body !== "object" ||
-                    !req?.body?.expoPushToken
-                ) {
-                    return res.status(400).send("Invalid body");
-                }
-                try {
-                    await req.payload.update({
-                        collection: "public-users",
-                        where: {
-                            id: { equals: req.user.id },
-                        },
-                        data: {
-                            expoPushToken: req.body.expoPushToken,
-                        },
-                    });
-                } catch (error) {
-                    console.log(
-                        "public-users/setExpoPushToken threw an exception when saving token: ",
-                        error
-                    );
-                }
-                res.send("OK");
-            },
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    if (
+                        typeof req?.body !== "object" ||
+                        !req?.body?.expoPushToken
+                    ) {
+                        return res.status(400).send("Invalid body");
+                    }
+                    try {
+                        await req.payload.update({
+                            collection: "public-users",
+                            where: {
+                                id: { equals: req.user.id },
+                            },
+                            data: {
+                                expoPushToken: req.body.expoPushToken,
+                            },
+                        });
+                    } catch (error) {
+                        console.error(
+                            "public-users/setExpoPushToken threw an exception when saving token: ",
+                            error
+                        );
+                    }
+                    res.send("OK");
+                },
+            ],
         },
         {
             path: "/setNotificationSettings",
             method: "post",
-            handler: async (req: PayloadRequest, res: Response) => {
-                if (!req.user) {
-                    res.status(401).send("Unauthorized");
-                }
-
-                const body = req.body;
-                if (typeof body !== "object") {
-                    return res.status(400).send("Invalid body");
-                }
-
-                const notifications = {};
-                const events = [];
-                const domains = [];
-                if (body.events && Array.isArray(body.events)) {
-                    // filter allowed notifications
-                    for (const notif of body.events) {
-                        if (
-                            typeof notif === "string" &&
-                            ALLOWED_EVENT_NOTIFICATIONS[notif.toUpperCase()]
-                        ) {
-                            events.push(notif);
-                        }
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    const body = req.body;
+                    if (typeof body !== "object") {
+                        return res.status(400).send("Invalid body");
                     }
-                }
-                if (body.domains && Array.isArray(body.domains)) {
-                    try {
-                        const domainsReq = await payload.find({
-                            collection: "genshin-domains",
-                        });
-                        const allDomains = domainsReq.docs;
-                        // check valid domains
-                        for (const domain of body.domains) {
+
+                    const notifications = {};
+                    const events = [];
+                    const domains = [];
+                    if (body.events && Array.isArray(body.events)) {
+                        // filter allowed notifications
+                        for (const notif of body.events) {
                             if (
-                                typeof domain === "string" &&
-                                allDomains.some((d) => d.id === domain)
+                                typeof notif === "string" &&
+                                ALLOWED_EVENT_NOTIFICATIONS[notif.toUpperCase()]
                             ) {
-                                domains.push(domain);
+                                events.push(notif);
                             }
                         }
+                    }
+                    if (body.domains && Array.isArray(body.domains)) {
+                        try {
+                            const domainsReq = await req.payload.find({
+                                collection: "genshin-domains",
+                            });
+                            const allDomains = domainsReq.docs;
+                            // check valid domains
+                            for (const domain of body.domains) {
+                                if (
+                                    typeof domain === "string" &&
+                                    allDomains.some((d) => d.id === domain)
+                                ) {
+                                    domains.push(domain);
+                                }
+                            }
+                        } catch (error) {
+                            console.error(
+                                "public-users/setNotificationSettings threw an exception when trying to find domains: ",
+                                error
+                            );
+                        }
+                    }
+
+                    if (events.length > 0) {
+                        notifications["events"] = events;
+                    }
+                    if (domains.length > 0) {
+                        notifications["domains"] = domains;
+                    }
+
+                    try {
+                        await req.payload.update({
+                            collection: "public-users",
+                            where: {
+                                id: {
+                                    equals: req.user.id,
+                                },
+                            },
+                            data: { genshinTracking: { events: events } },
+                        });
                     } catch (error) {
                         console.error(
-                            "public-users/setNotificationSettings threw an exception when trying to find domains: ",
+                            "public-users/setNotificationSettings threw an exception when saving notification settings: ",
+                            error
+                        );
+                        res.status(500).send(error);
+                    }
+                    res.send("OK");
+                },
+            ],
+        },
+        {
+            path: "/create-genshin-account",
+            method: "post",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    const { region, hoyoId } = req.body;
+                    if (!region) {
+                        res.status(400).send("Invalid body");
+                    }
+                    try {
+                        const account = await req.payload.create({
+                            collection: "genshin-accounts",
+                            data: {
+                                region,
+                                hoyoId: hoyoId || "",
+                                wishInfo: {
+                                    standard: 0,
+                                    weapon: 0,
+                                    character: 0,
+                                },
+                            },
+                        });
+
+                        const currentUser = await req.payload.findByID({
+                            collection: "public-users",
+                            id: req.user.id,
+                            // returns relationships as strings - uuids
+                            depth: 0,
+                        });
+                        const currentAccounts = (currentUser.genshinAccounts ||
+                            []) as string[];
+
+                        req.payload.update({
+                            id: req.user.id,
+                            collection: "public-users",
+                            data: {
+                                genshinAccounts: [
+                                    ...currentAccounts,
+                                    account.id,
+                                ],
+                            },
+                        });
+                        res.send("OK");
+                    } catch (error) {
+                        console.error(
+                            "public-users//create-genshin-account threw an error: ",
                             error
                         );
                     }
-                }
-
-                if (events.length > 0) {
-                    notifications["events"] = events;
-                }
-                if (domains.length > 0) {
-                    notifications["domains"] = domains;
-                }
-
-                try {
-                    await payload.update({
-                        collection: "public-users",
-                        where: {
-                            id: {
-                                equals: req.user.id,
-                            },
-                        },
-                        data: { genshinTracking: { events: events } },
-                    });
-                } catch (error) {
-                    console.error(
-                        "public-users/setNotificationSettings threw an exception when saving notification settings: ",
-                        error
-                    );
-                    res.status(500).send(error);
-                }
-                res.send("OK");
-            },
+                },
+            ],
         },
     ],
     access: {
         create: () => true,
         read: () => true,
         update: ({ req }) => {
-            console.log(req.user);
             return true;
         },
         delete: () => false,

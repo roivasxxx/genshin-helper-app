@@ -2,6 +2,7 @@ import { Response } from "express";
 import { CollectionConfig, PayloadRequest, Where } from "payload/types";
 import { WISH_HISTORY } from "../../constants";
 import payload from "payload";
+import authMiddleware from "../../authMiddleware";
 
 const GenshinWishes: CollectionConfig = {
     slug: "genshin-wishes",
@@ -79,63 +80,68 @@ const GenshinWishes: CollectionConfig = {
     ],
     endpoints: [
         {
-            path: "/getWishHistory/:type",
+            path: "/getWishHistory",
             method: "get",
-            handler: async (req: PayloadRequest, res: Response) => {
-                if (!req.user) {
-                    return res.status(401).send("Unauthorized");
-                }
-                const userId = req.user.id;
-
-                const query = req.query;
-                // pagination and limit
-                let limit = 100;
-                let offset = 0;
-
-                if (query.limit) {
-                    if (typeof query.limit === "string") {
-                        limit = parseInt(query.limit);
-                    } else if (
-                        Array.isArray(query.limit) &&
-                        typeof query.limit[0] === "string"
-                    ) {
-                        limit = parseInt(query.limit[0]);
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    if (!req.params.accountId) {
+                        return res.status(401).send("Unauthorized");
                     }
-                }
-                if (query.offset) {
-                    if (typeof query.offset === "string") {
-                        offset = parseInt(query.offset);
-                    } else if (
-                        Array.isArray(query.offset) &&
-                        typeof query.offset[0] === "string"
-                    ) {
-                        offset = parseInt(query.offset[0]);
+
+                    const query = req.query;
+                    const accountId = query.accountId;
+                    // pagination and limit
+                    let limit = 100;
+                    let offset = 0;
+
+                    if (query.limit) {
+                        if (typeof query.limit === "string") {
+                            limit = parseInt(query.limit);
+                        } else if (
+                            Array.isArray(query.limit) &&
+                            typeof query.limit[0] === "string"
+                        ) {
+                            limit = parseInt(query.limit[0]);
+                        }
                     }
-                }
+                    if (query.offset) {
+                        if (typeof query.offset === "string") {
+                            offset = parseInt(query.offset);
+                        } else if (
+                            Array.isArray(query.offset) &&
+                            typeof query.offset[0] === "string"
+                        ) {
+                            offset = parseInt(query.offset[0]);
+                        }
+                    }
 
-                const type = req.params.type || WISH_HISTORY.STANDARD;
+                    const type = query.type || WISH_HISTORY.STANDARD;
 
-                const where: Where = {
-                    and: [{ userId: { equals: userId } }],
-                };
+                    const where: Where = {
+                        and: [
+                            { genshinAccount: { equals: accountId } },
+                            { bannerType: { equals: type } },
+                        ],
+                    };
 
-                where.and.push({ bannerType: { equals: type } });
-                try {
-                    const wishesReq = await payload.find({
-                        collection: "genshin-wishes",
-                        where: where,
-                        limit: limit,
-                        page: offset,
-                    });
+                    try {
+                        const wishesReq = await payload.find({
+                            collection: "genshin-wishes",
+                            where: where,
+                            limit: limit,
+                            page: offset,
+                        });
 
-                    res.send(wishesReq.docs);
-                } catch (error) {
-                    console.error(
-                        `/getWishHistory/${type} threw an exception: `,
-                        error
-                    );
-                }
-            },
+                        res.send(wishesReq.docs);
+                    } catch (error) {
+                        console.error(
+                            `/getWishHistory/${type} threw an exception: `,
+                            error
+                        );
+                    }
+                },
+            ],
         },
     ],
 };

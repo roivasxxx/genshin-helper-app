@@ -9,8 +9,8 @@ const GenshinAccounts: CollectionConfig = {
             name: "region",
             type: "select",
             options: Object.keys(WISH_REGIONS).map((key) => ({
-                label: WISH_REGIONS[key],
-                value: key,
+                label: key.toLowerCase(),
+                value: WISH_REGIONS[key],
             })),
         },
         {
@@ -37,6 +37,10 @@ const GenshinAccounts: CollectionConfig = {
                     name: "character",
                     type: "number",
                     defaultValue: 0,
+                },
+                {
+                    name: "lastUpdate",
+                    type: "date",
                 },
             ],
         },
