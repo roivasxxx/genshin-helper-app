@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { CollectionConfig, PayloadRequest } from "payload/types";
 import { ALLOWED_EVENT_NOTIFICATIONS } from "../constants";
-import authMiddleware from "../authMiddleware";
+import authMiddleware from "../api/authMiddleware";
 
 const PublicUsers: CollectionConfig = {
     slug: "public-users",
@@ -179,59 +179,6 @@ const PublicUsers: CollectionConfig = {
                         res.status(500).send(error);
                     }
                     res.send("OK");
-                },
-            ],
-        },
-        {
-            path: "/create-genshin-account",
-            method: "post",
-            handler: [
-                authMiddleware,
-                async (req: PayloadRequest, res: Response) => {
-                    const { region, hoyoId } = req.body;
-                    if (!region) {
-                        res.status(400).send("Invalid body");
-                    }
-                    try {
-                        const account = await req.payload.create({
-                            collection: "genshin-accounts",
-                            data: {
-                                region,
-                                hoyoId: hoyoId || "",
-                                wishInfo: {
-                                    standard: 0,
-                                    weapon: 0,
-                                    character: 0,
-                                },
-                            },
-                        });
-
-                        const currentUser = await req.payload.findByID({
-                            collection: "public-users",
-                            id: req.user.id,
-                            // returns relationships as strings - uuids
-                            depth: 0,
-                        });
-                        const currentAccounts = (currentUser.genshinAccounts ||
-                            []) as string[];
-
-                        req.payload.update({
-                            id: req.user.id,
-                            collection: "public-users",
-                            data: {
-                                genshinAccounts: [
-                                    ...currentAccounts,
-                                    account.id,
-                                ],
-                            },
-                        });
-                        res.send("OK");
-                    } catch (error) {
-                        console.error(
-                            "public-users//create-genshin-account threw an error: ",
-                            error
-                        );
-                    }
                 },
             ],
         },

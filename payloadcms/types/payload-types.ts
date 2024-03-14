@@ -7,403 +7,511 @@
  */
 
 export interface Config {
-    collections: {
-        users: User;
-        "public-users": PublicUser;
-        media: Media;
-        "genshin-characters": GenshinCharacter;
-        "genshin-elements": GenshinElement;
-        "genshin-weapon-types": GenshinWeaponType;
-        "genshin-domains": GenshinDomain;
-        "genshin-domain-items": GenshinDomainItem;
-        "genshin-mobs": GenshinMob;
-        "genshin-mob-drops": GenshinMobDrop;
-        "genshin-collectable-items": GenshinCollectableItem;
-        "genshin-npcs": GenshinNpc;
-        "genshin-artifacts": GenshinArtifact;
-        "genshin-events": GenshinEvent;
-        "genshin-weapons": GenshinWeapon;
-        "genshin-items": GenshinItem;
-        "genshin-quests": GenshinQuest;
-        "genshin-wishes": GenshinWish;
-        "genshin-articles": GenshinArticle;
-        "payload-preferences": PayloadPreference;
-        "payload-migrations": PayloadMigration;
-    };
-    globals: {};
+  collections: {
+    users: User;
+    'public-users': PublicUser;
+    'genshin-accounts': GenshinAccount;
+    media: Media;
+    'genshin-characters': GenshinCharacter;
+    'genshin-elements': GenshinElement;
+    'genshin-weapon-types': GenshinWeaponType;
+    'genshin-domains': GenshinDomain;
+    'genshin-domain-items': GenshinDomainItem;
+    'genshin-mobs': GenshinMob;
+    'genshin-mob-drops': GenshinMobDrop;
+    'genshin-collectable-items': GenshinCollectableItem;
+    'genshin-npcs': GenshinNpc;
+    'genshin-artifacts': GenshinArtifact;
+    'genshin-events': GenshinEvent;
+    'genshin-weapons': GenshinWeapon;
+    'genshin-items': GenshinItem;
+    'genshin-quests': GenshinQuest;
+    'genshin-wishes': GenshinWish;
+    'genshin-articles': GenshinArticle;
+    'genshin-patches': GenshinPatch;
+    'payload-preferences': PayloadPreference;
+    'payload-migrations': PayloadMigration;
+  };
+  globals: {};
 }
-
-export type GenshinCollectionNames = keyof Config["collections"];
-
 export interface User {
-    id: string;
-    updatedAt: string;
-    createdAt: string;
-    email: string;
-    resetPasswordToken?: string | null;
-    resetPasswordExpiration?: string | null;
-    salt?: string | null;
-    hash?: string | null;
-    loginAttempts?: number | null;
-    lockUntil?: string | null;
-    password?: string | null;
+  id: string;
+  role?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
 }
 export interface PublicUser {
-    id: string;
-    updatedAt: string;
-    createdAt: string;
-    email: string;
-    resetPasswordToken?: string | null;
-    resetPasswordExpiration?: string | null;
-    salt?: string | null;
-    hash?: string | null;
-    loginAttempts?: number | null;
-    lockUntil?: string | null;
-    password?: string | null;
-}
-export interface Media {
-    id: string;
-    alt?: string | null;
-    cloudinary?: {
-        public_id?: string | null;
-        original_filename?: string | null;
-        format?: string | null;
-        secure_url?: string | null;
-        resource_type?: string | null;
-    };
-    updatedAt: string;
-    createdAt: string;
-    url?: string | null;
-    filename?: string | null;
-    mimeType?: string | null;
-    filesize?: number | null;
-    width?: number | null;
-    height?: number | null;
-}
-export interface GenshinCharacter {
-    id: string;
-    name: string;
-    element: string | GenshinElement;
-    "weapon-type": string | GenshinWeaponType;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinElement {
-    id: string;
-    name?: string | null;
-    icon: string | Media;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinWeaponType {
-    id: string;
-    name?: string | null;
-    icon?: string | Media | null;
-    updatedAt: string;
-    createdAt: string;
+  id: string;
+  genshinTracking?: {
+    domains?: (string | GenshinDomain)[] | null;
+    events?: string[] | null;
+  };
+  genshinAccounts?: (string | GenshinAccount)[] | null;
+  expoPushToken?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
 }
 export interface GenshinDomain {
-    id: string;
-    name?: string | null;
-    location?: string | null;
-    type?: ("artifact" | "book" | "weapon" | "trouble") | null;
-    enemies?:
-        | {
-              enemyId?: (string | null) | GenshinMob;
-              id?: string | null;
-          }[]
-        | null;
-    updatedAt: string;
-    createdAt: string;
+  id: string;
+  name?: string | null;
+  location?: string | null;
+  type?: ('artifact' | 'book' | 'weapon' | 'Trounce') | null;
+  enemies?: (string | GenshinMob)[] | null;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface GenshinMob {
-    id: string;
-    name?: string | null;
-    icon?: string | Media | null;
-    location?: string | null;
-    type?: ("regular" | "boss" | "trouble") | null;
-    updatedAt: string;
-    createdAt: string;
+  id: string;
+  name?: string | null;
+  icon?: string | Media | null;
+  location?: string | null;
+  type?: ('regular' | 'boss' | 'trouble') | null;
+  updatedAt: string;
+  createdAt: string;
 }
-export interface GenshinDomainItem {
-    id: string;
-    name?: string | null;
-    icon?: string | Media | null;
-    type: "book" | "weapon";
-    domain: string | GenshinDomain;
-    droppedOn?: ("1" | "2" | "3" | "4" | "5" | "6" | "7")[] | null;
-    updatedAt: string;
-    createdAt: string;
+export interface Media {
+  id: string;
+  alt?: string | null;
+  cloudinary?: {
+    public_id?: string | null;
+    original_filename?: string | null;
+    format?: string | null;
+    secure_url?: string | null;
+    resource_type?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
 }
-export interface GenshinMobDrop {
-    id: string;
-    name?: string | null;
-    icon?: string | Media | null;
-    mobIds?: (string | GenshinMob)[] | null;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinCollectableItem {
-    id: string;
-    name?: string | null;
-    icon: string | Media;
-    location: string;
-    npcs?:
-        | {
-              npcId: string | GenshinNpc;
-              id?: string | null;
-          }[]
-        | null;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinNpc {
-    id: string;
-    name?: string | null;
-    icon: string | Media;
-    location: string;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinArtifact {
-    id: string;
-    name?: string | null;
-    icon?: string | Media | null;
-    domain: string | GenshinDomain;
-    rarity?: "1" | null;
-    "2pc"?:
-        | {
-              [k: string]: unknown;
-          }[]
-        | null;
-    "4pc"?:
-        | {
-              [k: string]: unknown;
-          }[]
-        | null;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinEvent {
-    id: string;
-    name?: string | null;
-    type?: ("banner" | "event") | null;
-    bannerType?: ("weapon" | "character" | "standard") | null;
-    characterIds?: (string | GenshinCharacter)[] | null;
-    weaponIds?: (string | GenshinWeapon)[] | null;
-    start?: string | null;
-    end?: string | null;
-    eventDescription?:
-        | {
-              [k: string]: unknown;
-          }[]
-        | null;
-    rewards?: string | null;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinWeapon {
-    id: string;
-    name?: string | null;
-    obtainedBy?:
-        | ("gacha" | "event" | "batlepass" | "crafting" | "fishing")
-        | null;
-    fishingDetails?: {
-        npc?: (string | null) | GenshinNpc;
-        cost?:
-            | {
-                  fishId?: (string | null) | GenshinItem;
-                  quantity?: number | null;
-                  id?: string | null;
-              }[]
-            | null;
+export interface GenshinAccount {
+  id: string;
+  region?: ('os_euro' | 'os_asia' | 'os_usa' | 'os_cht') | null;
+  hoyoId?: string | null;
+  wishInfo?: {
+    standard?: {
+      pullCount?: number | null;
+      pity?: number | null;
     };
-    questId?: (string | null) | GenshinQuest;
-    wishId?: string | null;
-    rarity?: ("1" | "2" | "3" | "4" | "5") | null;
-    "weapon-type": string | GenshinWeaponType;
-    ascensionMaterials?: {
-        domainDrop?: {
-            domainDropId?: (string | null) | GenshinItem;
-            quantity?: number | null;
-        };
-        mobDrop?: {
-            mobDropId?: (string | null) | GenshinItem;
-            quantity?: number | null;
-        };
+    weapon?: {
+      pullCount?: number | null;
+      pity?: number | null;
     };
-    refinementMaterial?: (string | null) | GenshinItem;
-    baseAttack?: number | null;
-    substat?:
-        | (
-              | "atk"
-              | "hp"
-              | "def"
-              | "em"
-              | "er"
-              | "critRate"
-              | "critDmg"
-              | "physicalDmg"
-          )
-        | null;
-    passive?:
-        | {
-              [k: string]: unknown;
-          }[]
-        | null;
-    icon?: string | Media | null;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinItem {
-    id: string;
-    name?: string | null;
-    type?:
-        | (
-              | "collectable"
-              | "food"
-              | "mobDrop"
-              | "characterAscension"
-              | "book"
-              | "weaponAscension"
-              | "weaponAscensionMaterial"
-              | "expBook"
-              | "expOre"
-              | "fish"
-          )
-        | null;
-    updatedAt: string;
-    createdAt: string;
-}
-export interface GenshinQuest {
-    id: string;
-    name?: string | null;
-    region?: ("mondstadt" | "liyue" | "inazuma" | "sumeru" | "fontaine") | null;
-    description?:
-        | {
-              [k: string]: unknown;
-          }[]
-        | null;
-    questIds?: (string | GenshinQuest)[] | null;
-    updatedAt: string;
-    createdAt: string;
+    character?: {
+      pullCount?: number | null;
+      pity?: number | null;
+    };
+    lastUpdate?: string | null;
+    last4Star?: (string | null) | GenshinWish;
+    last5Star?: (string | null) | GenshinWish;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 export interface GenshinWish {
-    id: string;
-    userId?: (string | null) | PublicUser;
-    itemId?:
-        | ({
-              relationTo: "genshin-characters";
-              value: string | GenshinCharacter;
-          } | null)
-        | ({
-              relationTo: "genshin-weapons";
-              value: string | GenshinWeapon;
-          } | null);
-    bannerType?: ("character" | "weapon" | "standard") | null;
-    date?: string | null;
-    banner?: (string | null) | GenshinEvent;
-    updatedAt: string;
-    createdAt: string;
+  id: string;
+  bannerType?: ('character' | 'weapon' | 'standard') | null;
+  date?: string | null;
+  pity?: number | null;
+  hoyoId?: string | null;
+  banner?: (string | null) | GenshinEvent;
+  genshinAccount?: (string | null) | GenshinAccount;
+  itemId?:
+    | ({
+        relationTo: 'genshin-characters';
+        value: string | GenshinCharacter;
+      } | null)
+    | ({
+        relationTo: 'genshin-weapons';
+        value: string | GenshinWeapon;
+      } | null);
+  wishId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinEvent {
+  id: string;
+  name?: string | null;
+  type?: ('banner' | 'event') | null;
+  bannerType?: ('weapon' | 'character' | 'standard') | null;
+  characterIds?: (string | GenshinCharacter)[] | null;
+  weaponIds?: (string | GenshinWeapon)[] | null;
+  start?: string | null;
+  end?: string | null;
+  eventDescription?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
+  rewards?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinCharacter {
+  id: string;
+  name: string;
+  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
+  rarity?: ('4' | '5') | null;
+  element: string | GenshinElement;
+  'weapon-type': string | GenshinWeaponType;
+  released?: (string | null) | GenshinPatch;
+  drops?: {
+    talentBook?: (string | null) | GenshinDomainItem;
+    talentMobDrop?: (string | GenshinMobDrop)[] | null;
+    bossMobDrop?: (string | null) | GenshinMobDrop;
+    trounceMobDrop?: (string | null) | GenshinMobDrop;
+  };
+  talents?: {
+    autoattack?:
+      | {
+          [k: string]: unknown;
+        }[]
+      | null;
+    elementalSkill?:
+      | {
+          [k: string]: unknown;
+        }[]
+      | null;
+    elementalBurst?:
+      | {
+          [k: string]: unknown;
+        }[]
+      | null;
+  };
+  ascensionSkils?:
+    | {
+        name?:
+          | {
+              [k: string]: unknown;
+            }[]
+          | null;
+        unlockedAt?: number | null;
+        description?:
+          | {
+              [k: string]: unknown;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  constellation?: {
+    constellations?:
+      | {
+          constellation?: number | null;
+          name?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          icon?: string | Media | null;
+          id?: string | null;
+        }[]
+      | null;
+    image?: string | Media | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinElement {
+  id: string;
+  name?: string | null;
+  icon: string | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinWeaponType {
+  id: string;
+  name?: string | null;
+  icon?: string | Media | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinPatch {
+  id: string;
+  patchNumber?: string | null;
+  releaseDate?: string | null;
+  changes?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinDomainItem {
+  id: string;
+  name?: string | null;
+  type: 'book' | 'weapon';
+  domain: string | GenshinDomain;
+  items?:
+    | {
+        name?: string | null;
+        icon?: string | Media | null;
+        id?: string | null;
+      }[]
+    | null;
+  droppedOn?: ('1' | '2' | '3' | '4' | '5' | '6' | '7')[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinMobDrop {
+  id: string;
+  name?: string | null;
+  items?:
+    | {
+        name?: string | null;
+        icon?: string | Media | null;
+        id?: string | null;
+      }[]
+    | null;
+  mobType?: string | null;
+  mobIds?: (string | GenshinMob)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinWeapon {
+  id: string;
+  name?: string | null;
+  obtainedBy?: ('gacha' | 'event' | 'batlepass' | 'crafting' | 'fishing') | null;
+  fishingDetails?: {
+    npc?: (string | null) | GenshinNpc;
+    cost?:
+      | {
+          fishId?: (string | null) | GenshinItem;
+          quantity?: number | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  questId?: (string | null) | GenshinQuest;
+  wishId?: string | null;
+  rarity?: ('1' | '2' | '3' | '4' | '5') | null;
+  'weapon-type': string | GenshinWeaponType;
+  ascensionMaterials?: {
+    domainDrop?: {
+      domainDropId?: (string | null) | GenshinItem;
+      quantity?: number | null;
+    };
+    mobDrop?: {
+      mobDropId?: (string | null) | GenshinItem;
+      quantity?: number | null;
+    };
+  };
+  refinementMaterial?: (string | null) | GenshinItem;
+  baseAttack?: number | null;
+  substat?: ('atk' | 'hp' | 'def' | 'em' | 'er' | 'critRate' | 'critDmg' | 'physicalDmg') | null;
+  passive?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
+  icon?: string | Media | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinNpc {
+  id: string;
+  name?: string | null;
+  icon: string | Media;
+  location: string;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinItem {
+  id: string;
+  type?:
+    | (
+        | 'collectable'
+        | 'food'
+        | 'characterAscension'
+        | 'book'
+        | 'weaponAscension'
+        | 'weaponAscensionMaterial'
+        | 'expBook'
+        | 'expOre'
+        | 'fish'
+      )
+    | null;
+  items?:
+    | {
+        name?: string | null;
+        icon?: string | Media | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinQuest {
+  id: string;
+  name?: string | null;
+  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
+  description?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
+  questIds?: (string | GenshinQuest)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinCollectableItem {
+  id: string;
+  name?: string | null;
+  icon: string | Media;
+  location: string;
+  npcs?:
+    | {
+        npcId: string | GenshinNpc;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinArtifact {
+  id: string;
+  name?: string | null;
+  icon?: string | Media | null;
+  domain: string | GenshinDomain;
+  rarity?: ('1' | '2' | '3' | '4' | '5') | null;
+  '2pc'?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
+  '4pc'?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface GenshinArticle {
-    id: string;
-    title?: string | null;
-    changes?:
-        | {
-              date?: string | null;
-              description?:
-                  | {
-                        [k: string]: unknown;
-                    }[]
-                  | null;
-              author?: (string | null) | PublicUser;
-              id?: string | null;
-          }[]
-        | null;
-    author?: (string | null) | PublicUser;
-    type?: "guide" | null;
-    characterId?: (string | null) | GenshinCharacter;
-    content?:
-        | {
+  id: string;
+  title?: string | null;
+  changes?:
+    | {
+        date?: string | null;
+        description?:
+          | {
               [k: string]: unknown;
-          }[]
-        | null;
-    comps?:
-        | {
-              comp?: {
-                  compName?: string | null;
-                  description?:
-                      | {
-                            [k: string]: unknown;
-                        }[]
-                      | null;
-                  characterIds?: (string | GenshinCharacter)[] | null;
-              };
-              id?: string | null;
-          }[]
-        | null;
-    weapons?:
-        | {
-              weapon?: {
-                  weaponId?: (string | null) | GenshinWeapon;
-                  description?:
-                      | {
-                            [k: string]: unknown;
-                        }[]
-                      | null;
-              };
-              id?: string | null;
-          }[]
-        | null;
-    artifacts?:
-        | {
-              artifact?: {
-                  artifactId?: (string | GenshinArtifact)[] | null;
-                  description?:
-                      | {
-                            [k: string]: unknown;
-                        }[]
-                      | null;
-              };
-              id?: string | null;
-          }[]
-        | null;
-    updatedAt: string;
-    createdAt: string;
+            }[]
+          | null;
+        author?: (string | null) | PublicUser;
+        id?: string | null;
+      }[]
+    | null;
+  author?: (string | null) | PublicUser;
+  type?: 'guide' | null;
+  characterId?: (string | null) | GenshinCharacter;
+  content?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
+  comps?:
+    | {
+        comp?: {
+          compName?: string | null;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          characterIds?: (string | GenshinCharacter)[] | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  weapons?:
+    | {
+        weapon?: {
+          weaponId?: (string | null) | GenshinWeapon;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  artifacts?:
+    | {
+        artifact?: {
+          artifactId?: (string | GenshinArtifact)[] | null;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface PayloadPreference {
-    id: string;
-    user:
-        | {
-              relationTo: "users";
-              value: string | User;
-          }
-        | {
-              relationTo: "public-users";
-              value: string | PublicUser;
-          };
-    key?: string | null;
-    value?:
-        | {
-              [k: string]: unknown;
-          }
-        | unknown[]
-        | string
-        | number
-        | boolean
-        | null;
-    updatedAt: string;
-    createdAt: string;
+  id: string;
+  user:
+    | {
+        relationTo: 'users';
+        value: string | User;
+      }
+    | {
+        relationTo: 'public-users';
+        value: string | PublicUser;
+      };
+  key?: string | null;
+  value?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface PayloadMigration {
-    id: string;
-    name?: string | null;
-    batch?: number | null;
-    updatedAt: string;
-    createdAt: string;
+  id: string;
+  name?: string | null;
+  batch?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 
-declare module payload {
-    export interface GeneratedTypes extends Config {}
+
+declare module 'payload' {
+  export interface GeneratedTypes extends Config {}
 }
