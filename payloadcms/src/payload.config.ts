@@ -29,7 +29,7 @@ export default buildConfig({
                 alias: {
                     ...config.resolve.alias,
                     fs: mockModulePath,
-                    dotenv: mockModulePath,
+                    // dotenv: mockModulePath,
                     [agendaPath]: agendaMockModulePath,
                     Agenda: false,
                     agenda: false,
