@@ -1,7 +1,7 @@
 import express from "express";
 import payload from "payload";
 import { mediaManagement } from "payload-cloudinary-plugin";
-import { initAgenda } from "./agenda";
+// import { initAgenda } from "./agenda";
 
 require("dotenv").config();
 const app = express();
@@ -33,7 +33,7 @@ const start = async () => {
     // https://payloadcms.com/docs/authentication/using-middleware#using-the-payload-auth-middleware
     // Add your own express routes here
     app.listen(process.env.PAYLOAD_PUBLIC_PORT);
-    await initAgenda();
+    // await initAgenda();
     // create cron jobs here
     // payload.find({ collection: "public-users" }).then((docs) => {
     //     console.log(`FOUND ${docs.docs.length} public users!`);
