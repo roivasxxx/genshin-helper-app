@@ -3,7 +3,7 @@ import { WISH_HISTORY, WISH_REGIONS } from "../../constants";
 import { Response } from "express";
 import authMiddleware from "../../api/authMiddleware";
 import { GenshinAccount, PublicUser } from "../../../types/payload-types";
-// import { agenda } from "../../agenda";
+import { agenda } from "../../agenda";
 
 const GenshinAccounts: CollectionConfig = {
     slug: "genshin-accounts",
@@ -318,10 +318,10 @@ const GenshinAccounts: CollectionConfig = {
                     //     },
                     // });
 
-                    // await agenda.now("wishImporter", {
-                    //     cmsJob: newJob.id,
-                    //     link: query.link,
-                    // });
+                    await agenda.now("wishImporter", {
+                        cmsJob: newJob.id,
+                        link: query.link,
+                    });
 
                     res.send("OK");
                 },
