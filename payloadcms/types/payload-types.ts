@@ -29,6 +29,7 @@ export interface Config {
     'genshin-wishes': GenshinWish;
     'genshin-articles': GenshinArticle;
     'genshin-patches': GenshinPatch;
+    jobs: Job;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -125,6 +126,7 @@ export interface GenshinAccount {
     last4Star?: (string | null) | GenshinWish;
     last5Star?: (string | null) | GenshinWish;
   };
+  importJob?: (string | null) | Job;
   updatedAt: string;
   createdAt: string;
 }
@@ -158,6 +160,7 @@ export interface GenshinEvent {
   weaponIds?: (string | GenshinWeapon)[] | null;
   start?: string | null;
   end?: string | null;
+  patch?: (string | null) | GenshinPatch;
   eventDescription?:
     | {
         [k: string]: unknown;
@@ -377,6 +380,12 @@ export interface GenshinQuest {
       }[]
     | null;
   questIds?: (string | GenshinQuest)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface Job {
+  id: string;
+  status?: ('NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED') | null;
   updatedAt: string;
   createdAt: string;
 }

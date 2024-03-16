@@ -50,3 +50,6 @@ export enum WISH_REGIONS {
     AMERICA = "os_usa",
     CHINA = "os_cht",
 }
+
+export const HOYO_WISH_API_URL =
+    "https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog";

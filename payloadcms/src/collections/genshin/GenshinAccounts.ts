@@ -3,6 +3,7 @@ import { WISH_HISTORY, WISH_REGIONS } from "../../constants";
 import { Response } from "express";
 import authMiddleware from "../../api/authMiddleware";
 import { GenshinAccount, PublicUser } from "../../../types/payload-types";
+import { agenda } from "../../agenda";
 
 const GenshinAccounts: CollectionConfig = {
     slug: "genshin-accounts",
@@ -84,6 +85,11 @@ const GenshinAccounts: CollectionConfig = {
                 },
             ],
         },
+        {
+            name: "importJob",
+            type: "relationship",
+            relationTo: "jobs",
+        },
     ],
     endpoints: [
         {
@@ -155,12 +161,30 @@ const GenshinAccounts: CollectionConfig = {
             handler: [
                 authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
-                    if (!req.query.accountId) {
+                    const user: PublicUser = await req.payload.findByID({
+                        collection: "public-users",
+                        id: req.user.id,
+                        depth: 0,
+                    });
+                    let accountId = "";
+
+                    if (typeof req.query.accountId === "string") {
+                        accountId = req.query.accountId;
+                    } else if (
+                        Array.isArray(req.query.accountId) &&
+                        typeof req.query.accountId[0] === "string"
+                    ) {
+                        accountId = req.query.accountId[0];
+                    }
+
+                    if (
+                        !accountId ||
+                        !user.genshinAccounts.includes(accountId)
+                    ) {
                         return res.status(401).send("Unauthorized");
                     }
 
                     const query = req.query;
-                    const accountId = query.accountId;
                     // pagination and limit
                     let limit = 100;
                     let offset = 0;
@@ -268,6 +292,38 @@ const GenshinAccounts: CollectionConfig = {
                         );
                         res.status(500).send(error);
                     }
+                },
+            ],
+        },
+        {
+            path: "/importHistory",
+            method: "post",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    const query = req.body;
+                    // create cms job
+                    const newJob = await req.payload.create({
+                        collection: "jobs",
+                        data: {
+                            status: "NEW",
+                        },
+                    });
+                    // save cms job id
+                    // await req.payload.update({
+                    //     collection: "genshin-accounts",
+                    //     id: query.accountId,
+                    //     data: {
+                    //         importJob: newJob.id,
+                    //     },
+                    // });
+
+                    await agenda.now("wishImporter", {
+                        cmsJob: newJob.id,
+                        link: query.link,
+                    });
+
+                    res.send("OK");
                 },
             ],
         },

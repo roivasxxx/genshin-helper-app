@@ -25,6 +25,8 @@ export default buildConfig({
                 alias: {
                     ...config.resolve.alias,
                     fs: mockModulePath,
+                    agenda: mockModulePath,
+                    mongodb: mockModulePath,
                     // add other server modules
                 },
             },

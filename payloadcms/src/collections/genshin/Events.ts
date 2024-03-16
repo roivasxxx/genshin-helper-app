@@ -1,6 +1,7 @@
 import { CollectionConfig } from "payload/types";
 import characterField from "../../fields/CharacterField";
 import weaponField from "../../fields/WeaponField";
+import { genshinSelectField } from "../../fields/fieldsConfig";
 
 const Events: CollectionConfig = {
     slug: "genshin-events",
@@ -57,6 +58,10 @@ const Events: CollectionConfig = {
             type: "date",
             localized: false,
         },
+        genshinSelectField({
+            collection: "genshin-patches",
+            fieldName: "patch",
+        }),
         {
             name: "eventDescription",
             type: "richText",

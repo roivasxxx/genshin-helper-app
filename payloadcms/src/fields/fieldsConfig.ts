@@ -1,7 +1,9 @@
 import { Field } from "payload/types";
 import ItemField from "./components/ItemField";
-import { GenshinCollectionNames } from "../../types/payload-types";
 import MultiItemField from "./components/MultiItemField";
+import { Config } from "../../types/payload-types";
+
+type GenshinCollectionNames = keyof Config["collections"];
 
 type CommonItemConfigProps<T extends GenshinCollectionNames> = {
     fieldName: string;

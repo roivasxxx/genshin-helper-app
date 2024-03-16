@@ -1,16 +1,53 @@
-const qs = require("qs");
-const wishImporter = async (authedLink) => {
+import axios from "axios";
+import { HOYO_WISH_API_URL, WISH_BANNER_CODES } from "../../constants";
+import { sleep } from "../../utils";
+const fs: typeof import("fs").promises = require("fs").promises;
+export const wishImporter = async (authedLink: string) => {
     const originalUrl = new URL(authedLink);
     const searchParams = originalUrl.searchParams;
-    const newUrl = new URL(
-        "https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog"
-    );
+    searchParams.set("gacha_type", "301");
+    const newUrl = new URL(HOYO_WISH_API_URL);
     newUrl.search = searchParams.toString();
 
     // Resulting URL
     console.log(newUrl.href);
+    const history = await getHistory(newUrl, WISH_BANNER_CODES.CHARACTER);
+    console.log(history.length);
+    await fs.writeFile("history.json", JSON.stringify({ history }));
 };
 
-wishImporter(
-    "https://gs.hoyoverse.com/genshin/event/e20190909gacha-v2/index.html?win_mode=fullscreen&authkey_ver=1&sign_type=2&auth_appid=webview_gacha&init_type=301&gacha_id=76a7e27f899288807f4ce128314d45cf984e308e&timestamp=1706656555&lang=en&device_type=pc&game_version=OSRELWin4.4.0_R21147109_S20917735_D21129932&region=os_euro&authkey=jIyZ%2f1z1Vkv6zWUkyjeAOTBhwvcdOrqvj8NZV97JoujvilsVHB36yHupdduSS92WQeL0hxceZrs8YRAJxsHkBh0TShIIXKXWkcUQWx2m1QJP0O3s744%2bCzdd5PVSsdgpfkXhEKFUmJ5bPjV9GTJR25kUiFW8wOsYn7A3hsaJ9x52pW%2bqZ2BANUg8GBnboRwprVCRWQf08TcRitJj3jx4zqRD1B4Hylo881HnK6ypCA573FPUY9PN%2bENbwy3700R97xxhTrJ2B1lcBpfqAZtV%2fJO3yTcJhxXg7dA4klANQ1SMTLTg0Kcz0NCosgZwoyVk2SDXz%2b3nT7WOzwMok7D2sYHvrb09uWm2mnxfpyJMw4seILnA3HCPeCNBVZ3wkXmBXiT%2b%2fBb%2fH%2boLDehCMdqfqR2m8tpQ%2bX1BK9Nxn5%2fsvwHoMlmWCyhuX6CU8Y%2fRLqNth62Ucwq4kQ4aZSNnq3tuaqD%2bB5A07LjkRKRhWyAl9QEHZ1f4doNJJL5WdIuiF1TPV4JqLyLbpqZfgjh9kBjAbrWJ8k5%2bdU05HTrcxzq5udgRujMVbPL3AndJuTwS0DzN4OgfvByCleN8czV6J8lOYLPUOm1o8aHr6jMIiBaNLdvFp5eFTM0vOgzw%2bVfIZotZdDfcqNTZIHFM2IbEJhNwRQ9Y0GOFMu1YRMAav6vBuItEdeK08LfB8MQF0%2bsTcEhmayNqqu%2fo88ivKJv3OpLLxc45yCip%2bKmjulmIFsee9HIbblieBSdWv0jtpa%2foQudFcdpjJoAxvT7T8BsIsrTjFSvDmYDQ6mtWGEX1zE3sVw9K8XiNJp4JOBdBa9g2epShqbEeDaH%2fgGnYQ4QyPmHx39WK9HtGKxEnQLKqobuB9vq6uyYAflS9nFw%2fRxds%2bvXPURsN4ymMT0KIEaqlX9aFi8ufhbg18%2femCoKFE2kxtEDKB7HQIovGxw6lsPe2u%2bSq7E8NUwD1ca5sf2YewscPX%2fwCUYaIuIXebZEkew3bNmDtt5hRfgtiG5RA8DNDtpBnxyiuzaPiNGTUR6iVeS6Wa3PAq3h9ZZeNpikKSTowK1bmAmOGQYsEsnd%2b15Xb6gEK%2bo8jDs0VmoMEHfJUfqUqy9e9Flgd7hc%2f5Y98y8jw0QFjp2qKvrq86BwqO1Aph6C8ncQDxUbYWAQNhgKRm1RKmU1IOZG1yb24%2bfdwT4moVpUc8ZUNvPjoH4%2fTyyDJte7AZL%2bKplz%2fBtlTn1YZcf8kQDbfDUfYOVs1rVgAM805wmbrY4%2bIfYSNC0SuO4wQzVUNTjpZwpHzKgnr%2fFSUTiGtGiO0pV2MofK5Qaushn7z56OHDi7a9sQDEwMdvrqchRuvXyeA0wXSowpSNOtxgRoPLg%3d%3d&game_biz=&gacha_type=100&size=20&lang=en-us&page=1&end_id=0"
-);
+const getHistory = async (url: URL, bannerCode: WISH_BANNER_CODES) => {
+    url.searchParams.set("gacha_type", String(bannerCode));
+    url.searchParams.set("size", "20");
+    try {
+        // initial request
+        const wishes = [];
+        const req = await axios.get(url.href);
+        const result = req.data;
+        // docs should be null
+        if (!result.data || result.retcode === -101) {
+            throw new Error("Invalid link provided");
+        }
+        wishes.push(...result.data.list);
+        console.log(wishes.length);
+        // use this as the end_id
+        let endId = wishes[wishes.length - 1]?.id;
+        console.log(endId);
+        while (endId) {
+            // sleep for 1 second to avoid timeout
+            await sleep(1000);
+            console.log("running with end_id=", endId);
+            url.searchParams.set("end_id", endId);
+            const req = await axios.get(url.href);
+            const result = req.data;
+            if (!result.data || result.retcode === -101) {
+                throw new Error("Invalid link provided");
+            }
+            const resultData = result.data.list;
+            wishes.push(...result.data.list);
+            endId =
+                resultData.length === 0 ? "" : wishes[wishes.length - 1]?.id;
+        }
+        return wishes;
+    } catch (error) {}
+};

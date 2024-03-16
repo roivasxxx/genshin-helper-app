@@ -19,6 +19,7 @@ import PublicUsers from "./collections/PublicUsers";
 import Users from "./collections/Users";
 import GenshinPatches from "./collections/genshin/GenshinPatches";
 import GenshinAccounts from "./collections/genshin/GenshinAccounts";
+import Jobs from "./collections/genshin/Jobs";
 
 export const collections = [
     Users,
@@ -42,4 +43,5 @@ export const collections = [
     GenshinWishes,
     GenshinArticles,
     GenshinPatches,
+    Jobs,
 ];
