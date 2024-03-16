@@ -4,7 +4,7 @@ import payload from "payload";
 require("dotenv").config();
 
 const mongoConnectionString = process.env.AGENDA_URI;
-
+console.log("connection string:", mongoConnectionString);
 export const agenda = new Agenda({
     db: {
         address: mongoConnectionString,
