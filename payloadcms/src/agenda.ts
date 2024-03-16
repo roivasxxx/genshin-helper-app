@@ -1,7 +1,7 @@
 import Agenda from "agenda";
 import payload from "payload";
-import dotenv from "dotenv";
-dotenv.config();
+// import dotenv from "dotenv";
+require("dotenv").config();
 
 const mongoConnectionString = process.env.AGENDA_URI;
 
