@@ -18,6 +18,7 @@ app.use(
 app.get("/", (_, res) => {
     res.redirect("/admin");
 });
+console.log("server url:", process.env.AGENDA_URI);
 const start = async () => {
     // Initialize Payload
     await payload.init({
