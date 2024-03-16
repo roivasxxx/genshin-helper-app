@@ -6,12 +6,16 @@ import { webpackBundler } from "@payloadcms/bundler-webpack";
 import { slateEditor } from "@payloadcms/richtext-slate";
 import { buildConfig } from "payload/config";
 import cloudinaryPlugin from "payload-cloudinary-plugin/dist/plugins";
+import Users from "./collections/Users";
+import { collections } from "./collections";
 
 // webpack
 const mockModulePath = path.resolve(__dirname, "../src/mocks/emptyFunction.ts");
-
-import Users from "./collections/Users";
-import { collections } from "./collections";
+const agendaMockModulePath = path.resolve(
+    __dirname,
+    "../src/mocks/emptyAgenda.ts"
+);
+const agendaPath = path.resolve(__dirname, "../src/agenda");
 
 export default buildConfig({
     admin: {
@@ -25,7 +29,20 @@ export default buildConfig({
                 alias: {
                     ...config.resolve.alias,
                     fs: mockModulePath,
+                    dotenv: mockModulePath,
+                    [agendaPath]: agendaMockModulePath,
+                    Agenda: false,
+                    agenda: false,
+                    mongodb: false,
                     // add other server modules
+                },
+                fallback: {
+                    ...config.resolve.fallback,
+                    fs: false,
+                    [agendaPath]: false,
+                    agenda: false,
+                    Agenda: false,
+                    mongodb: false,
                 },
             },
         }),

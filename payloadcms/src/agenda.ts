@@ -1,13 +1,17 @@
-import Agenda, { Job, JobAttributesData } from "agenda";
+import Agenda from "agenda";
 import payload from "payload";
 import dotenv from "dotenv";
 dotenv.config();
 
 const mongoConnectionString = process.env.AGENDA_URI;
 
-let agenda = new Agenda({ db: { address: mongoConnectionString } });
+export const agenda = new Agenda({
+    db: {
+        address: mongoConnectionString,
+    },
+});
 
-const initAgenda = async () => {
+export const initAgenda = async () => {
     agenda.on("ready", async () => {
         try {
             agenda.define(
@@ -34,5 +38,3 @@ const initAgenda = async () => {
         }
     });
 };
-
-export { agenda, initAgenda };
