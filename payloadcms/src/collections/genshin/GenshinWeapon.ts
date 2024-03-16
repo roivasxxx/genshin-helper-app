@@ -2,6 +2,7 @@ import { CollectionConfig } from "payload/types";
 import weaponTypeField from "../../fields/WeaponTypeField";
 import { GENSHIN_SUBSTATS } from "../../constants";
 import { genshinSelectField } from "../../fields/fieldsConfig";
+import { normalizeName } from "../../utils";
 
 const GenshinWeapons: CollectionConfig = {
     slug: "genshin-weapons",
@@ -79,9 +80,7 @@ const GenshinWeapons: CollectionConfig = {
                 condition: (data) => {
                     if (data.obtainedBy === "gacha") {
                         // only for gacha weapons
-                        data.wishId = data.name
-                            ? data.name.split(" ").join("-").toLowerCase()
-                            : "";
+                        data.wishId = data.name ? normalizeName(data.name) : "";
                     }
                     return false;
                 },

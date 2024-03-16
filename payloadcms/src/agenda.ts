@@ -1,6 +1,7 @@
 import Agenda, { Job, JobAttributesData } from "agenda";
 import payload from "payload";
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 const mongoConnectionString = process.env.AGENDA_URI;
 
