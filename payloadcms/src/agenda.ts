@@ -1,18 +1,18 @@
 import Agenda from "agenda";
 import payload from "payload";
-import dotenv from "dotenv";
-// require("dotenv").config();
-dotenv.config();
+// import dotenv from "dotenv";
+require("dotenv").config();
+// dotenv.config();
 
-const mongoConnectionString = process.env.AGENDA_URI;
-console.log("connection string:", mongoConnectionString);
-export const agenda = new Agenda({
-    db: {
-        address: mongoConnectionString,
-    },
-});
+let agenda: Agenda;
 
-export const initAgenda = async () => {
+const initAgenda = async () => {
+    const mongoConnectionString = process.env.AGENDA_URI;
+    agenda = new Agenda({
+        db: {
+            address: mongoConnectionString,
+        },
+    });
     agenda.on("ready", async () => {
         try {
             agenda.define(
@@ -20,15 +20,15 @@ export const initAgenda = async () => {
                 { shouldSaveResult: false, concurrency: 10 },
                 async (job) => {
                     console.log("wishImporter agenda: ", job.attrs.data);
-                    if (job.attrs.data.cmsJob) {
-                        await payload.update({
-                            collection: "jobs",
-                            id: job.attrs.data.cmsJob,
-                            data: {
-                                status: "IN_PROGRESS",
-                            },
-                        });
-                    }
+                    // if (job.attrs.data.cmsJob) {
+                    //     await payload.update({
+                    //         collection: "jobs",
+                    //         id: job.attrs.data.cmsJob,
+                    //         data: {
+                    //             status: "IN_PROGRESS",
+                    //         },
+                    //     });
+                    // }
                     // await wishImporter(query.link);
                 }
             );
@@ -39,3 +39,5 @@ export const initAgenda = async () => {
         }
     });
 };
+
+export { agenda, initAgenda };
