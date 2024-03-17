@@ -113,18 +113,27 @@ export interface GenshinAccount {
     standard?: {
       pullCount?: number | null;
       pity?: number | null;
+      last4Star?: (string | null) | GenshinWish;
+      last5Star?: (string | null) | GenshinWish;
     };
     weapon?: {
       pullCount?: number | null;
       pity?: number | null;
+      last4Star?: (string | null) | GenshinWish;
+      last5Star?: (string | null) | GenshinWish;
     };
     character?: {
       pullCount?: number | null;
       pity?: number | null;
+      last4Star?: (string | null) | GenshinWish;
+      last5Star?: (string | null) | GenshinWish;
     };
     lastUpdate?: string | null;
-    last4Star?: (string | null) | GenshinWish;
-    last5Star?: (string | null) | GenshinWish;
+    lastIds?: {
+      character?: string | null;
+      standard?: string | null;
+      weapon?: string | null;
+    };
   };
   importJob?: (string | null) | Job;
   updatedAt: string;
@@ -386,6 +395,7 @@ export interface GenshinQuest {
 export interface Job {
   id: string;
   status?: ('NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED') | null;
+  link?: string | null;
   updatedAt: string;
   createdAt: string;
 }

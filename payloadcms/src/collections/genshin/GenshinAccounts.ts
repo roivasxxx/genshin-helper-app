@@ -34,10 +34,24 @@ const GenshinAccounts: CollectionConfig = {
                         {
                             name: "pullCount",
                             type: "number",
+                            required: true,
                         },
                         {
                             name: "pity",
                             type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "last4Star",
+                            type: "relationship",
+                            relationTo: "genshin-wishes",
+                            required: false,
+                        },
+                        {
+                            name: "last5Star",
+                            type: "relationship",
+                            relationTo: "genshin-wishes",
+                            required: false,
                         },
                     ],
                 },
@@ -48,10 +62,24 @@ const GenshinAccounts: CollectionConfig = {
                         {
                             name: "pullCount",
                             type: "number",
+                            required: true,
                         },
                         {
                             name: "pity",
                             type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "last4Star",
+                            type: "relationship",
+                            relationTo: "genshin-wishes",
+                            required: false,
+                        },
+                        {
+                            name: "last5Star",
+                            type: "relationship",
+                            relationTo: "genshin-wishes",
+                            required: false,
                         },
                     ],
                 },
@@ -62,10 +90,24 @@ const GenshinAccounts: CollectionConfig = {
                         {
                             name: "pullCount",
                             type: "number",
+                            required: true,
                         },
                         {
                             name: "pity",
                             type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "last4Star",
+                            type: "relationship",
+                            relationTo: "genshin-wishes",
+                            required: false,
+                        },
+                        {
+                            name: "last5Star",
+                            type: "relationship",
+                            relationTo: "genshin-wishes",
+                            required: false,
                         },
                     ],
                 },
@@ -74,14 +116,22 @@ const GenshinAccounts: CollectionConfig = {
                     type: "date",
                 },
                 {
-                    name: "last4Star",
-                    type: "relationship",
-                    relationTo: "genshin-wishes",
-                },
-                {
-                    name: "last5Star",
-                    type: "relationship",
-                    relationTo: "genshin-wishes",
+                    name: "lastIds",
+                    type: "group",
+                    fields: [
+                        {
+                            type: "text",
+                            name: "character",
+                        },
+                        {
+                            type: "text",
+                            name: "standard",
+                        },
+                        {
+                            type: "text",
+                            name: "weapon",
+                        },
+                    ],
                 },
             ],
         },
@@ -112,16 +162,29 @@ const GenshinAccounts: CollectionConfig = {
                                     standard: {
                                         pullCount: 0,
                                         pity: 0,
+                                        last4Star: "",
+                                        last5Star: "",
                                     },
                                     weapon: {
                                         pullCount: 0,
                                         pity: 0,
+                                        last4Star: "",
+                                        last5Star: "",
                                     },
                                     character: {
                                         pullCount: 0,
                                         pity: 0,
+                                        last4Star: "",
+                                        last5Star: "",
+                                    },
+                                    lastUpdate: "",
+                                    lastIds: {
+                                        character: "",
+                                        standard: "",
+                                        weapon: "",
                                     },
                                 },
+                                importJob: "",
                             },
                         });
 
@@ -278,9 +341,6 @@ const GenshinAccounts: CollectionConfig = {
                             region: acc.region,
                             wishInfo: {
                                 ...acc.wishInfo,
-                                lastUpdated: acc.wishInfo.lastUpdate || null,
-                                last4Star: acc.wishInfo.last4Star || null,
-                                last5Star: acc.wishInfo.last5Star || null,
                             },
                         };
 
@@ -302,28 +362,60 @@ const GenshinAccounts: CollectionConfig = {
                 authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
                     const query = req.body;
-                    // create cms job
-                    const newJob = await req.payload.create({
-                        collection: "jobs",
-                        data: {
-                            status: "NEW",
-                        },
-                    });
-                    // save cms job id
-                    // await req.payload.update({
-                    //     collection: "genshin-accounts",
-                    //     id: query.accountId,
-                    //     data: {
-                    //         importJob: newJob.id,
-                    //     },
-                    // });
+                    try {
+                        const account = await req.payload.findByID({
+                            id: query.accountId,
+                            collection: "genshin-accounts",
+                            depth: 0,
+                        });
+                        if (account.importJob) {
+                            const importJob =
+                                typeof account.importJob === "string"
+                                    ? account.importJob
+                                    : account.importJob.id;
+                            try {
+                                await req.payload.delete({
+                                    collection: "jobs",
+                                    id: importJob,
+                                });
+                            } catch (error) {
+                                // previous job might still exist/being processed
+                                // remove it from the db
+                                console.log("Found invalid job: ", importJob);
+                            }
+                        }
 
-                    await agenda.now("wishImporter", {
-                        cmsJob: newJob.id,
-                        link: query.link,
-                    });
+                        // create cms job
+                        const newJob = await req.payload.create({
+                            collection: "jobs",
+                            data: {
+                                status: "NEW",
+                                link: query.link,
+                            },
+                        });
+                        // save cms job id
+                        const test = await req.payload.update({
+                            collection: "genshin-accounts",
+                            id: query.accountId,
+                            data: {
+                                importJob: newJob.id,
+                            },
+                        });
+                        console.log(test);
 
-                    res.send("OK");
+                        await agenda.now("wishImporter", {
+                            cmsJob: newJob,
+                            account: account,
+                        });
+
+                        res.send("OK");
+                    } catch (error) {
+                        console.error(
+                            "genshin-accounts/importHistory threw an exception: ",
+                            error
+                        );
+                        res.status(500).send(error);
+                    }
                 },
             ],
         },

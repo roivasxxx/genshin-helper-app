@@ -25,6 +25,10 @@ const Jobs: CollectionConfig = {
                 },
             ],
         },
+        {
+            name: "link",
+            type: "text",
+        },
     ],
 };
 
