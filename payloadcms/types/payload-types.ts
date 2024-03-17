@@ -89,6 +89,7 @@ export interface GenshinMob {
 export interface Media {
   id: string;
   alt?: string | null;
+  name?: string | null;
   cloudinary?: {
     public_id?: string | null;
     original_filename?: string | null;
@@ -109,22 +110,22 @@ export interface GenshinAccount {
   id: string;
   region?: ('os_euro' | 'os_asia' | 'os_usa' | 'os_cht') | null;
   hoyoId?: string | null;
-  wishInfo?: {
-    standard?: {
-      pullCount?: number | null;
-      pity?: number | null;
+  wishInfo: {
+    standard: {
+      pullCount: number;
+      pity: number;
       last4Star?: (string | null) | GenshinWish;
       last5Star?: (string | null) | GenshinWish;
     };
-    weapon?: {
-      pullCount?: number | null;
-      pity?: number | null;
+    weapon: {
+      pullCount: number;
+      pity: number;
       last4Star?: (string | null) | GenshinWish;
       last5Star?: (string | null) | GenshinWish;
     };
-    character?: {
-      pullCount?: number | null;
-      pity?: number | null;
+    character: {
+      pullCount: number;
+      pity: number;
       last4Star?: (string | null) | GenshinWish;
       last5Star?: (string | null) | GenshinWish;
     };
@@ -336,7 +337,21 @@ export interface GenshinWeapon {
   };
   refinementMaterial?: (string | null) | GenshinItem;
   baseAttack?: number | null;
-  substat?: ('atk' | 'hp' | 'def' | 'em' | 'er' | 'critRate' | 'critDmg' | 'physicalDmg') | null;
+  substat?: {
+    substat?:
+      | (
+          | 'TK%'
+          | 'HP%'
+          | 'DEF%'
+          | 'Elemental Mastery'
+          | 'Energy Recharge'
+          | 'CRIT Rate'
+          | 'CRIT DMG'
+          | 'Physical DMG Bonus'
+        )
+      | null;
+    value?: number | null;
+  };
   passive?:
     | {
         [k: string]: unknown;

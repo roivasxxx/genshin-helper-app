@@ -1,13 +1,13 @@
 // icons are not needed so no need to create a collection
 export const GENSHIN_SUBSTATS = [
-    { label: "ATK %", value: "atk" },
-    { label: "HP %", value: "hp" },
-    { label: "Def %", value: "def" },
-    { label: "Elemental Mastery", value: "em" },
-    { label: "Elemental Recharge", value: "er" },
-    { label: "Crit %", value: "critRate" },
-    { label: "Crit DMG %", value: "critDmg" },
-    { label: "Physical DMG %", value: "physicalDmg" },
+    { label: "ATK%", value: "TK%" },
+    { label: "HP%", value: "HP%" },
+    { label: "DEF%", value: "DEF%" },
+    { label: "Elemental Mastery", value: "Elemental Mastery" },
+    { label: "Energy Recharge", value: "Energy Recharge" },
+    { label: "CRIT Rate", value: "CRIT Rate" },
+    { label: "CRIT DMG", value: "CRIT DMG" },
+    { label: "Physical DMG Bonus", value: "Physical DMG Bonus" },
 ];
 
 // icons are not needed so no need to create a collection

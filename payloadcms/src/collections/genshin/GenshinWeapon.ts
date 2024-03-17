@@ -158,10 +158,21 @@ const GenshinWeapons: CollectionConfig = {
             type: "number",
         },
         {
+            type: "group",
             name: "substat",
-            type: "select",
-            options: GENSHIN_SUBSTATS,
+            fields: [
+                {
+                    name: "substat",
+                    type: "select",
+                    options: GENSHIN_SUBSTATS,
+                },
+                {
+                    name: "value",
+                    type: "number",
+                },
+            ],
         },
+
         {
             name: "passive",
             type: "richText",

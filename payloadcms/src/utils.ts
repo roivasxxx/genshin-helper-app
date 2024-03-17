@@ -10,5 +10,5 @@ export const normalizeName = (name: string) => {
         .replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "")
         .toLowerCase()
         .split(" ")
-        .join("-");
+        .join("_");
 };
