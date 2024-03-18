@@ -21,5 +21,9 @@ export const Media: CollectionConfig = {
             name: "name",
             type: "text",
         },
+        {
+            name: "type",
+            type: "text",
+        },
     ],
 };
