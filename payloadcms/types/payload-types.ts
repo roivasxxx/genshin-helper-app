@@ -65,28 +65,29 @@ export interface GenshinAccount {
   wishInfo: {
     standard: {
       pullCount: number;
-      pity: number;
       last4Star?: (string | null) | GenshinWish;
       last5Star?: (string | null) | GenshinWish;
+      pity4Star: number;
+      pity5Star: number;
+      lastId?: string | null;
     };
     weapon: {
       pullCount: number;
-      pity: number;
       last4Star?: (string | null) | GenshinWish;
       last5Star?: (string | null) | GenshinWish;
+      pity4Star: number;
+      pity5Star: number;
+      lastId?: string | null;
     };
     character: {
       pullCount: number;
-      pity: number;
       last4Star?: (string | null) | GenshinWish;
       last5Star?: (string | null) | GenshinWish;
+      pity4Star: number;
+      pity5Star: number;
+      lastId?: string | null;
     };
     lastUpdate?: string | null;
-    lastIds?: {
-      character?: string | null;
-      standard?: string | null;
-      weapon?: string | null;
-    };
   };
   importJob?: (string | null) | Job;
   tracking?: {

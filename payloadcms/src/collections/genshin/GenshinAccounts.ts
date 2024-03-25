@@ -1,6 +1,7 @@
 import { CollectionConfig, PayloadRequest, Where } from "payload/types";
 import {
     ALLOWED_EVENT_NOTIFICATIONS,
+    DEFAULT_GENSHIN_WISH_INFO,
     WISH_HISTORY,
     WISH_REGIONS,
 } from "../../constants";
@@ -69,11 +70,6 @@ const GenshinAccounts: CollectionConfig = {
                             required: true,
                         },
                         {
-                            name: "pity",
-                            type: "number",
-                            required: true,
-                        },
-                        {
                             name: "last4Star",
                             type: "relationship",
                             relationTo: "genshin-wishes",
@@ -84,6 +80,20 @@ const GenshinAccounts: CollectionConfig = {
                             type: "relationship",
                             relationTo: "genshin-wishes",
                             required: false,
+                        },
+                        {
+                            name: "pity4Star",
+                            type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "pity5Star",
+                            type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "lastId",
+                            type: "text",
                         },
                     ],
                 },
@@ -97,11 +107,6 @@ const GenshinAccounts: CollectionConfig = {
                             required: true,
                         },
                         {
-                            name: "pity",
-                            type: "number",
-                            required: true,
-                        },
-                        {
                             name: "last4Star",
                             type: "relationship",
                             relationTo: "genshin-wishes",
@@ -112,6 +117,20 @@ const GenshinAccounts: CollectionConfig = {
                             type: "relationship",
                             relationTo: "genshin-wishes",
                             required: false,
+                        },
+                        {
+                            name: "pity4Star",
+                            type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "pity5Star",
+                            type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "lastId",
+                            type: "text",
                         },
                     ],
                 },
@@ -125,11 +144,6 @@ const GenshinAccounts: CollectionConfig = {
                             required: true,
                         },
                         {
-                            name: "pity",
-                            type: "number",
-                            required: true,
-                        },
-                        {
                             name: "last4Star",
                             type: "relationship",
                             relationTo: "genshin-wishes",
@@ -141,29 +155,25 @@ const GenshinAccounts: CollectionConfig = {
                             relationTo: "genshin-wishes",
                             required: false,
                         },
+                        {
+                            name: "pity4Star",
+                            type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "pity5Star",
+                            type: "number",
+                            required: true,
+                        },
+                        {
+                            name: "lastId",
+                            type: "text",
+                        },
                     ],
                 },
                 {
                     name: "lastUpdate",
                     type: "date",
-                },
-                {
-                    name: "lastIds",
-                    type: "group",
-                    fields: [
-                        {
-                            type: "text",
-                            name: "character",
-                        },
-                        {
-                            type: "text",
-                            name: "standard",
-                        },
-                        {
-                            type: "text",
-                            name: "weapon",
-                        },
-                    ],
                 },
             ],
         },
@@ -210,32 +220,9 @@ const GenshinAccounts: CollectionConfig = {
                             data: {
                                 region,
                                 hoyoId: hoyoId || "",
-                                wishInfo: {
-                                    standard: {
-                                        pullCount: 0,
-                                        pity: 0,
-                                        last4Star: "",
-                                        last5Star: "",
-                                    },
-                                    weapon: {
-                                        pullCount: 0,
-                                        pity: 0,
-                                        last4Star: "",
-                                        last5Star: "",
-                                    },
-                                    character: {
-                                        pullCount: 0,
-                                        pity: 0,
-                                        last4Star: "",
-                                        last5Star: "",
-                                    },
-                                    lastUpdate: "",
-                                    lastIds: {
-                                        character: "",
-                                        standard: "",
-                                        weapon: "",
-                                    },
-                                },
+                                wishInfo: JSON.parse(
+                                    JSON.stringify(DEFAULT_GENSHIN_WISH_INFO)
+                                ),
                                 importJob: "",
                             },
                         });

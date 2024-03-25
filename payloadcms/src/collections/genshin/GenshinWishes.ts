@@ -4,6 +4,11 @@ const GenshinWishes: CollectionConfig = {
     slug: "genshin-wishes",
     fields: [
         {
+            name: "id",
+            type: "text",
+            // genshinAccountId - type - count, eg: 65f6f5bfa96a29b608f23471-character-1, 65f6f5bfa96a29b608f23471-weapon-10
+        },
+        {
             name: "bannerType",
             type: "select",
             options: [

@@ -1,3 +1,5 @@
+import { GenshinAcountWishInfo } from "../types/types";
+
 // icons are not needed so no need to create a collection
 export const GENSHIN_SUBSTATS = [
     { label: "ATK%", value: "TK%" },
@@ -62,3 +64,30 @@ export enum DAYS {
     SATURDAY = "saturday",
     SUNDAY = "sunday",
 }
+
+export const DEFAULT_GENSHIN_WISH_INFO: GenshinAcountWishInfo = {
+    standard: {
+        pullCount: 0,
+        last4Star: "",
+        last5Star: "",
+        pity4Star: 0,
+        pity5Star: 0,
+        lastId: null,
+    },
+    weapon: {
+        pullCount: 0,
+        last4Star: "",
+        last5Star: "",
+        pity4Star: 0,
+        pity5Star: 0,
+        lastId: null,
+    },
+    character: {
+        pullCount: 0,
+        last4Star: "",
+        last5Star: "",
+        pity4Star: 0,
+        pity5Star: 0,
+        lastId: null,
+    },
+};

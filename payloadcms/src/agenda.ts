@@ -2,6 +2,8 @@ import Agenda from "agenda";
 import payload from "payload";
 import { GenshinAccount, Job } from "../types/payload-types";
 import { wishImporter } from "./api/wishes/importer";
+import { DEFAULT_GENSHIN_WISH_INFO } from "./constants";
+import { GenshinAcountWishInfo } from "../types/types";
 require("dotenv").config();
 
 let agenda: Agenda;
@@ -52,21 +54,20 @@ const initAgenda = async () => {
                     const link = jobAttributes.cmsJob.link;
 
                     const account = jobAttributes.account;
-                    let lastIds = {
-                        character: null,
-                        weapon: null,
-                        standard: null,
-                    };
-                    const wishInfo = account?.wishInfo?.lastIds;
+                    let lastIds = JSON.parse(
+                        JSON.stringify(DEFAULT_GENSHIN_WISH_INFO)
+                    ) as GenshinAcountWishInfo;
+                    const wishInfo = account?.wishInfo;
                     if (wishInfo) {
-                        if (wishInfo.character) {
-                            lastIds.character = wishInfo.character;
+                        if (wishInfo.character.lastId) {
+                            lastIds.character.lastId =
+                                wishInfo.character.lastId;
                         }
-                        if (wishInfo.weapon) {
-                            lastIds.weapon = wishInfo.weapon;
+                        if (wishInfo.weapon.lastId) {
+                            lastIds.weapon.lastId = wishInfo.weapon.lastId;
                         }
-                        if (wishInfo.standard) {
-                            lastIds.standard = wishInfo.standard;
+                        if (wishInfo.standard.lastId) {
+                            lastIds.standard.lastId = wishInfo.standard.lastId;
                         }
                     }
                     // await wishImporter(jobAttributes.link, lastIds);
