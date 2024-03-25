@@ -45,10 +45,6 @@ export interface User {
 }
 export interface PublicUser {
   id: string;
-  genshinTracking?: {
-    domains?: (string | GenshinDomain)[] | null;
-    events?: string[] | null;
-  };
   genshinAccounts?: (string | GenshinAccount)[] | null;
   expoPushToken?: string | null;
   updatedAt: string;
@@ -61,6 +57,150 @@ export interface PublicUser {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   password?: string | null;
+}
+export interface GenshinAccount {
+  id: string;
+  region?: ('os_euro' | 'os_asia' | 'os_usa' | 'os_cht') | null;
+  hoyoId?: string | null;
+  wishInfo: {
+    standard: {
+      pullCount: number;
+      pity: number;
+      last4Star?: (string | null) | GenshinWish;
+      last5Star?: (string | null) | GenshinWish;
+    };
+    weapon: {
+      pullCount: number;
+      pity: number;
+      last4Star?: (string | null) | GenshinWish;
+      last5Star?: (string | null) | GenshinWish;
+    };
+    character: {
+      pullCount: number;
+      pity: number;
+      last4Star?: (string | null) | GenshinWish;
+      last5Star?: (string | null) | GenshinWish;
+    };
+    lastUpdate?: string | null;
+    lastIds?: {
+      character?: string | null;
+      standard?: string | null;
+      weapon?: string | null;
+    };
+  };
+  importJob?: (string | null) | Job;
+  tracking?: {
+    items?: (string | GenshinItem)[] | null;
+    events?: boolean | null;
+    banners?: boolean | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinWish {
+  id: string;
+  bannerType?: ('character' | 'weapon' | 'standard') | null;
+  date?: string | null;
+  pity?: number | null;
+  hoyoId?: string | null;
+  banner?: (string | null) | GenshinEvent;
+  genshinAccount?: (string | null) | GenshinAccount;
+  itemId?:
+    | ({
+        relationTo: 'genshin-characters';
+        value: string | GenshinCharacter;
+      } | null)
+    | ({
+        relationTo: 'genshin-weapons';
+        value: string | GenshinWeapon;
+      } | null);
+  wishId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinEvent {
+  id: string;
+  name?: string | null;
+  type?: ('banner' | 'event') | null;
+  bannerType?: ('weapon' | 'character') | null;
+  start?: string | null;
+  end?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinCharacter {
+  name: string;
+  id: string;
+  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
+  rarity?: ('4' | '5') | null;
+  icon: string | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface Media {
+  id: string;
+  alt?: string | null;
+  name?: string | null;
+  type?: string | null;
+  mimetype?: string | null;
+  cloudinary?: {
+    public_id?: string | null;
+    original_filename?: string | null;
+    format?: string | null;
+    secure_url?: string | null;
+    resource_type?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+}
+export interface GenshinWeapon {
+  id: string;
+  name?: string | null;
+  icon?: string | Media | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface Job {
+  id: string;
+  status?: ('NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED') | null;
+  link?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinItem {
+  id: string;
+  type?:
+    | (
+        | 'collectable'
+        | 'food'
+        | 'characterAscension'
+        | 'book'
+        | 'weaponMat'
+        | 'weaponAscensionMaterial'
+        | 'expBook'
+        | 'expOre'
+        | 'fish'
+        | 'mobDrop'
+        | 'bossDrop'
+        | 'trounceDrop'
+      )
+    | null;
+  icon?: string | Media | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinElement {
+  id: string;
+  name?: string | null;
+  icon: string | Media;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface GenshinDomain {
   id: string;
@@ -101,145 +241,6 @@ export interface GenshinDomain {
   updatedAt: string;
   createdAt: string;
 }
-export interface GenshinItem {
-  id: string;
-  type?:
-    | (
-        | 'collectable'
-        | 'food'
-        | 'characterAscension'
-        | 'book'
-        | 'weaponMat'
-        | 'weaponAscensionMaterial'
-        | 'expBook'
-        | 'expOre'
-        | 'fish'
-        | 'mobDrop'
-        | 'bossDrop'
-        | 'trounceDrop'
-      )
-    | null;
-  icon?: string | Media | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface Media {
-  id: string;
-  alt?: string | null;
-  name?: string | null;
-  type?: string | null;
-  mimetype?: string | null;
-  cloudinary?: {
-    public_id?: string | null;
-    original_filename?: string | null;
-    format?: string | null;
-    secure_url?: string | null;
-    resource_type?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-}
-export interface GenshinCharacter {
-  name: string;
-  id: string;
-  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
-  rarity?: ('4' | '5') | null;
-  icon: string | Media;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinAccount {
-  id: string;
-  region?: ('os_euro' | 'os_asia' | 'os_usa' | 'os_cht') | null;
-  hoyoId?: string | null;
-  wishInfo: {
-    standard: {
-      pullCount: number;
-      pity: number;
-      last4Star?: (string | null) | GenshinWish;
-      last5Star?: (string | null) | GenshinWish;
-    };
-    weapon: {
-      pullCount: number;
-      pity: number;
-      last4Star?: (string | null) | GenshinWish;
-      last5Star?: (string | null) | GenshinWish;
-    };
-    character: {
-      pullCount: number;
-      pity: number;
-      last4Star?: (string | null) | GenshinWish;
-      last5Star?: (string | null) | GenshinWish;
-    };
-    lastUpdate?: string | null;
-    lastIds?: {
-      character?: string | null;
-      standard?: string | null;
-      weapon?: string | null;
-    };
-  };
-  importJob?: (string | null) | Job;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinWish {
-  id: string;
-  bannerType?: ('character' | 'weapon' | 'standard') | null;
-  date?: string | null;
-  pity?: number | null;
-  hoyoId?: string | null;
-  banner?: (string | null) | GenshinEvent;
-  genshinAccount?: (string | null) | GenshinAccount;
-  itemId?:
-    | ({
-        relationTo: 'genshin-characters';
-        value: string | GenshinCharacter;
-      } | null)
-    | ({
-        relationTo: 'genshin-weapons';
-        value: string | GenshinWeapon;
-      } | null);
-  wishId?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinEvent {
-  id: string;
-  name?: string | null;
-  type?: ('banner' | 'event') | null;
-  bannerType?: ('weapon' | 'character') | null;
-  start?: string | null;
-  end?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinWeapon {
-  id: string;
-  name?: string | null;
-  icon?: string | Media | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface Job {
-  id: string;
-  status?: ('NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED') | null;
-  link?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinElement {
-  id: string;
-  name?: string | null;
-  icon: string | Media;
-  updatedAt: string;
-  createdAt: string;
-}
 export interface GenshinMob {
   id: string;
   name?: string | null;
@@ -255,16 +256,8 @@ export interface GenshinArtifact {
   icon?: string | Media | null;
   domain: string | GenshinDomain;
   rarity?: ('1' | '2' | '3' | '4' | '5') | null;
-  '2pc'?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
-  '4pc'?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
+  '2pc'?: string | null;
+  '4pc'?: string | null;
   updatedAt: string;
   createdAt: string;
 }

@@ -22,34 +22,6 @@ const PublicUsers: CollectionConfig = {
         // Email added by default
         // Add more fields as needed
         {
-            name: "genshinTracking",
-            type: "group",
-            fields: [
-                {
-                    // domain tracking, used for notifications, only use book/weapon
-                    type: "relationship",
-                    name: "domains",
-                    relationTo: "genshin-domains",
-                    hasMany: true,
-                    filterOptions: () => {
-                        return {
-                            type: {
-                                in: ["book", "weapon"],
-                            },
-                        };
-                    },
-                },
-                {
-                    // enabled event notifications
-                    // banner or events
-                    // on start and end
-                    type: "text",
-                    name: "events",
-                    hasMany: true,
-                },
-            ],
-        },
-        {
             // support multiple accounts per user, these can be on different regions
             name: "genshinAccounts",
             type: "relationship",
@@ -101,82 +73,6 @@ const PublicUsers: CollectionConfig = {
                             "public-users/setExpoPushToken threw an exception when saving token: ",
                             error
                         );
-                    }
-                    res.send("OK");
-                },
-            ],
-        },
-        {
-            path: "/setNotificationSettings",
-            method: "post",
-            handler: [
-                authMiddleware,
-                async (req: PayloadRequest, res: Response) => {
-                    const body = req.body;
-                    if (typeof body !== "object") {
-                        return res.status(400).send("Invalid body");
-                    }
-
-                    const notifications = {};
-                    const events = [];
-                    const domains = [];
-                    if (body.events && Array.isArray(body.events)) {
-                        // filter allowed notifications
-                        for (const notif of body.events) {
-                            if (
-                                typeof notif === "string" &&
-                                ALLOWED_EVENT_NOTIFICATIONS[notif.toUpperCase()]
-                            ) {
-                                events.push(notif);
-                            }
-                        }
-                    }
-                    if (body.domains && Array.isArray(body.domains)) {
-                        try {
-                            const domainsReq = await req.payload.find({
-                                collection: "genshin-domains",
-                            });
-                            const allDomains = domainsReq.docs;
-                            // check valid domains
-                            for (const domain of body.domains) {
-                                if (
-                                    typeof domain === "string" &&
-                                    allDomains.some((d) => d.id === domain)
-                                ) {
-                                    domains.push(domain);
-                                }
-                            }
-                        } catch (error) {
-                            console.error(
-                                "public-users/setNotificationSettings threw an exception when trying to find domains: ",
-                                error
-                            );
-                        }
-                    }
-
-                    if (events.length > 0) {
-                        notifications["events"] = events;
-                    }
-                    if (domains.length > 0) {
-                        notifications["domains"] = domains;
-                    }
-
-                    try {
-                        await req.payload.update({
-                            collection: "public-users",
-                            where: {
-                                id: {
-                                    equals: req.user.id,
-                                },
-                            },
-                            data: { genshinTracking: { events: events } },
-                        });
-                    } catch (error) {
-                        console.error(
-                            "public-users/setNotificationSettings threw an exception when saving notification settings: ",
-                            error
-                        );
-                        res.status(500).send(error);
                     }
                     res.send("OK");
                 },

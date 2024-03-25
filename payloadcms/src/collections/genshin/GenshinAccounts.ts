@@ -1,9 +1,41 @@
 import { CollectionConfig, PayloadRequest, Where } from "payload/types";
-import { WISH_HISTORY, WISH_REGIONS } from "../../constants";
+import {
+    ALLOWED_EVENT_NOTIFICATIONS,
+    WISH_HISTORY,
+    WISH_REGIONS,
+} from "../../constants";
 import { Response } from "express";
 import authMiddleware from "../../api/authMiddleware";
 import { GenshinAccount, PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
+import payload from "payload";
+
+const genshinAccountBelongsToCurrentUser = async (
+    currentUserId: string,
+    accountId: string
+) => {
+    return new Promise(async (res, reject) => {
+        if (!accountId || !currentUserId) {
+            reject("Invalid account id");
+        }
+        try {
+            const user = await payload.findByID({
+                collection: "public-users",
+                id: currentUserId,
+                depth: 0,
+            });
+            if (user.genshinAccounts && Array.isArray(user.genshinAccounts)) {
+                if (user.genshinAccounts.includes(accountId)) {
+                    res(true);
+                } else {
+                    reject(false);
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 const GenshinAccounts: CollectionConfig = {
     slug: "genshin-accounts",
@@ -140,6 +172,26 @@ const GenshinAccounts: CollectionConfig = {
             type: "relationship",
             relationTo: "jobs",
         },
+        {
+            name: "tracking",
+            type: "group",
+            fields: [
+                {
+                    name: "items",
+                    type: "relationship",
+                    relationTo: "genshin-items",
+                    hasMany: true,
+                },
+                {
+                    name: "events",
+                    type: "checkbox",
+                },
+                {
+                    name: "banners",
+                    type: "checkbox",
+                },
+            ],
+        },
     ],
     endpoints: [
         {
@@ -150,7 +202,7 @@ const GenshinAccounts: CollectionConfig = {
                 async (req: PayloadRequest, res: Response) => {
                     const { region, hoyoId } = req.body;
                     if (!region) {
-                        res.status(400).send("Invalid body");
+                        return res.status(400).send("Invalid body");
                     }
                     try {
                         const account = await req.payload.create({
@@ -213,7 +265,7 @@ const GenshinAccounts: CollectionConfig = {
                             "genshin-accounts/create-genshin-account threw an error: ",
                             error
                         );
-                        res.status(500).send(error);
+                        return res.status(500).send(error);
                     }
                 },
             ],
@@ -296,7 +348,7 @@ const GenshinAccounts: CollectionConfig = {
                             `/genshin-accounts/getWishHistory/${type} threw an exception: `,
                             error
                         );
-                        res.status(500).send(error);
+                        return res.status(500).send(error);
                     }
                 },
             ],
@@ -350,7 +402,7 @@ const GenshinAccounts: CollectionConfig = {
                             "genshin-accounts/getOverview threw an exception: ",
                             error
                         );
-                        res.status(500).send(error);
+                        return res.status(500).send(error);
                     }
                 },
             ],
@@ -414,8 +466,85 @@ const GenshinAccounts: CollectionConfig = {
                             "genshin-accounts/importHistory threw an exception: ",
                             error
                         );
-                        res.status(500).send(error);
+                        return res.status(500).send(error);
                     }
+                },
+            ],
+        },
+        {
+            path: "/setNotificationSettings",
+            method: "post",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    const body = req.body;
+                    if (typeof body !== "object") {
+                        return res.status(400).send("Invalid body");
+                    }
+                    const notifications = {
+                        events: false,
+                        banners: false,
+                        items: [],
+                    };
+                    const genshinAccountId = body.accountId;
+                    if (
+                        typeof genshinAccountId !== "string" ||
+                        genshinAccountId.length === 0
+                    ) {
+                        return res.status(400).send("Invalid body");
+                    }
+                    try {
+                        await genshinAccountBelongsToCurrentUser(
+                            req.user.id,
+                            genshinAccountId
+                        );
+                    } catch (error) {
+                        return res.status(401).send("Unauthorized");
+                    }
+
+                    if (typeof body.events === "boolean") {
+                        notifications.events = body.events;
+                    }
+                    if (typeof body.banners === "boolean") {
+                        notifications.banners = body.banners;
+                    }
+                    if (body.items && Array.isArray(body.items)) {
+                        // check valid domains
+                        for (const item of body.items) {
+                            if (typeof item === "string") {
+                                try {
+                                    await payload.findByID({
+                                        collection: "genshin-items",
+                                        id: item,
+                                    });
+                                    notifications.items.push(item);
+                                } catch (error) {
+                                    console.error(
+                                        `genshin-accounts/setNotificationSettings: invalid item provided ${item}`
+                                    );
+                                }
+                            }
+                        }
+                    }
+
+                    try {
+                        await req.payload.update({
+                            collection: "genshin-accounts",
+                            where: {
+                                id: {
+                                    equals: genshinAccountId,
+                                },
+                            },
+                            data: { tracking: notifications },
+                        });
+                    } catch (error) {
+                        console.error(
+                            "genshin-accounts/setNotificationSettings threw an exception when saving notification settings: ",
+                            error
+                        );
+                        return res.status(500).send(error);
+                    }
+                    res.send("OK");
                 },
             ],
         },

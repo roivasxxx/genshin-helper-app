@@ -189,6 +189,16 @@ const GenshinWeapons: CollectionConfig = {
             required: false,
         },
     ],
+    endpoints: [
+        {
+            path: "/import",
+            method: "get",
+            handler: async (req, res) => {
+                await test();
+                res.send("ok");
+            },
+        },
+    ],
 };
 
 export default GenshinWeapons;
