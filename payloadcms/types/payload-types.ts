@@ -14,18 +14,12 @@ export interface Config {
     media: Media;
     'genshin-characters': GenshinCharacter;
     'genshin-elements': GenshinElement;
-    'genshin-weapon-types': GenshinWeaponType;
     'genshin-domains': GenshinDomain;
-    'genshin-domain-items': GenshinDomainItem;
     'genshin-mobs': GenshinMob;
-    'genshin-mob-drops': GenshinMobDrop;
-    'genshin-collectable-items': GenshinCollectableItem;
-    'genshin-npcs': GenshinNpc;
     'genshin-artifacts': GenshinArtifact;
     'genshin-events': GenshinEvent;
     'genshin-weapons': GenshinWeapon;
     'genshin-items': GenshinItem;
-    'genshin-quests': GenshinQuest;
     'genshin-wishes': GenshinWish;
     'genshin-articles': GenshinArticle;
     'genshin-patches': GenshinPatch;
@@ -70,19 +64,62 @@ export interface PublicUser {
 }
 export interface GenshinDomain {
   id: string;
+  region?: string | null;
   name?: string | null;
   location?: string | null;
-  type?: ('artifact' | 'book' | 'weapon' | 'Trounce') | null;
-  enemies?: (string | GenshinMob)[] | null;
+  type?: ('artifacts' | 'books' | 'weapons' | 'trounce') | null;
+  details?: {
+    monday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    tuesday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    wednesday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    thursday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    friday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    saturday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    sunday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }
-export interface GenshinMob {
+export interface GenshinItem {
   id: string;
-  name?: string | null;
+  type?:
+    | (
+        | 'collectable'
+        | 'food'
+        | 'characterAscension'
+        | 'book'
+        | 'weaponMat'
+        | 'weaponAscensionMaterial'
+        | 'expBook'
+        | 'expOre'
+        | 'fish'
+        | 'mobDrop'
+        | 'bossDrop'
+        | 'trounceDrop'
+      )
+    | null;
   icon?: string | Media | null;
-  location?: string | null;
-  type?: ('regular' | 'boss' | 'trouble') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -90,6 +127,8 @@ export interface Media {
   id: string;
   alt?: string | null;
   name?: string | null;
+  type?: string | null;
+  mimetype?: string | null;
   cloudinary?: {
     public_id?: string | null;
     original_filename?: string | null;
@@ -105,6 +144,15 @@ export interface Media {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
+}
+export interface GenshinCharacter {
+  name: string;
+  id: string;
+  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
+  rarity?: ('4' | '5') | null;
+  icon: string | Media;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface GenshinAccount {
   id: string;
@@ -165,245 +213,16 @@ export interface GenshinEvent {
   id: string;
   name?: string | null;
   type?: ('banner' | 'event') | null;
-  bannerType?: ('weapon' | 'character' | 'standard') | null;
-  characterIds?: (string | GenshinCharacter)[] | null;
-  weaponIds?: (string | GenshinWeapon)[] | null;
+  bannerType?: ('weapon' | 'character') | null;
   start?: string | null;
   end?: string | null;
-  patch?: (string | null) | GenshinPatch;
-  eventDescription?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
-  rewards?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinCharacter {
-  id: string;
-  name: string;
-  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
-  rarity?: ('4' | '5') | null;
-  element: string | GenshinElement;
-  'weapon-type': string | GenshinWeaponType;
-  released?: (string | null) | GenshinPatch;
-  drops?: {
-    talentBook?: (string | null) | GenshinDomainItem;
-    talentMobDrop?: (string | GenshinMobDrop)[] | null;
-    bossMobDrop?: (string | null) | GenshinMobDrop;
-    trounceMobDrop?: (string | null) | GenshinMobDrop;
-  };
-  talents?: {
-    autoattack?:
-      | {
-          [k: string]: unknown;
-        }[]
-      | null;
-    elementalSkill?:
-      | {
-          [k: string]: unknown;
-        }[]
-      | null;
-    elementalBurst?:
-      | {
-          [k: string]: unknown;
-        }[]
-      | null;
-  };
-  ascensionSkils?:
-    | {
-        name?:
-          | {
-              [k: string]: unknown;
-            }[]
-          | null;
-        unlockedAt?: number | null;
-        description?:
-          | {
-              [k: string]: unknown;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  constellation?: {
-    constellations?:
-      | {
-          constellation?: number | null;
-          name?:
-            | {
-                [k: string]: unknown;
-              }[]
-            | null;
-          description?:
-            | {
-                [k: string]: unknown;
-              }[]
-            | null;
-          icon?: string | Media | null;
-          id?: string | null;
-        }[]
-      | null;
-    image?: string | Media | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinElement {
-  id: string;
-  name?: string | null;
-  icon: string | Media;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinWeaponType {
-  id: string;
-  name?: string | null;
-  icon?: string | Media | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinPatch {
-  id: string;
-  patchNumber?: string | null;
-  releaseDate?: string | null;
-  changes?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinDomainItem {
-  id: string;
-  name?: string | null;
-  type: 'book' | 'weapon';
-  domain: string | GenshinDomain;
-  items?:
-    | {
-        name?: string | null;
-        icon?: string | Media | null;
-        id?: string | null;
-      }[]
-    | null;
-  droppedOn?: ('1' | '2' | '3' | '4' | '5' | '6' | '7')[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinMobDrop {
-  id: string;
-  name?: string | null;
-  items?:
-    | {
-        name?: string | null;
-        icon?: string | Media | null;
-        id?: string | null;
-      }[]
-    | null;
-  mobType?: string | null;
-  mobIds?: (string | GenshinMob)[] | null;
   updatedAt: string;
   createdAt: string;
 }
 export interface GenshinWeapon {
   id: string;
   name?: string | null;
-  obtainedBy?: ('gacha' | 'event' | 'batlepass' | 'crafting' | 'fishing') | null;
-  fishingDetails?: {
-    npc?: (string | null) | GenshinNpc;
-    cost?:
-      | {
-          fishId?: (string | null) | GenshinItem;
-          quantity?: number | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  questId?: (string | null) | GenshinQuest;
-  wishId?: string | null;
-  rarity?: ('1' | '2' | '3' | '4' | '5') | null;
-  'weapon-type': string | GenshinWeaponType;
-  ascensionMaterials?: {
-    domainDrop?: {
-      domainDropId?: (string | null) | GenshinItem;
-      quantity?: number | null;
-    };
-    mobDrop?: {
-      mobDropId?: (string | null) | GenshinItem;
-      quantity?: number | null;
-    };
-  };
-  refinementMaterial?: (string | null) | GenshinItem;
-  baseAttack?: number | null;
-  substat?: {
-    substat?:
-      | (
-          | 'TK%'
-          | 'HP%'
-          | 'DEF%'
-          | 'Elemental Mastery'
-          | 'Energy Recharge'
-          | 'CRIT Rate'
-          | 'CRIT DMG'
-          | 'Physical DMG Bonus'
-        )
-      | null;
-    value?: number | null;
-  };
-  passive?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
   icon?: string | Media | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinNpc {
-  id: string;
-  name?: string | null;
-  icon: string | Media;
-  location: string;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinItem {
-  id: string;
-  type?:
-    | (
-        | 'collectable'
-        | 'food'
-        | 'characterAscension'
-        | 'book'
-        | 'weaponAscension'
-        | 'weaponAscensionMaterial'
-        | 'expBook'
-        | 'expOre'
-        | 'fish'
-      )
-    | null;
-  items?:
-    | {
-        name?: string | null;
-        icon?: string | Media | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinQuest {
-  id: string;
-  name?: string | null;
-  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
-  description?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
-  questIds?: (string | GenshinQuest)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -414,17 +233,19 @@ export interface Job {
   updatedAt: string;
   createdAt: string;
 }
-export interface GenshinCollectableItem {
+export interface GenshinElement {
   id: string;
   name?: string | null;
   icon: string | Media;
-  location: string;
-  npcs?:
-    | {
-        npcId: string | GenshinNpc;
-        id?: string | null;
-      }[]
-    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinMob {
+  id: string;
+  name?: string | null;
+  icon?: string | Media | null;
+  location?: string | null;
+  type?: ('regular' | 'boss' | 'trouble') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -508,6 +329,18 @@ export interface GenshinArticle {
             | null;
         };
         id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinPatch {
+  id: string;
+  patchNumber?: string | null;
+  releaseDate?: string | null;
+  changes?:
+    | {
+        [k: string]: unknown;
       }[]
     | null;
   updatedAt: string;

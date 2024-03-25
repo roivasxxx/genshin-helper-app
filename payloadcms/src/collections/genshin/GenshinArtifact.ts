@@ -5,6 +5,10 @@ const GenshinArtifact: CollectionConfig = {
     slug: "genshin-artifacts",
     fields: [
         {
+            name: "id",
+            type: "text",
+        },
+        {
             name: "name",
             type: "text",
         },
@@ -27,11 +31,11 @@ const GenshinArtifact: CollectionConfig = {
         },
         {
             name: "2pc", // 2 piece bonus
-            type: "richText",
+            type: "text",
         },
         {
             name: "4pc", // 4 piece bonus
-            type: "richText",
+            type: "text",
         },
     ],
 };

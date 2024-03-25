@@ -53,3 +53,12 @@ export enum WISH_REGIONS {
 
 export const HOYO_WISH_API_URL =
     "https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog";
+export enum DAYS {
+    MONDAY = "monday",
+    TUESDAY = "tuesday",
+    WEDNESDAY = "wednesday",
+    THURSDAY = "thursday",
+    FRIDAY = "friday",
+    SATURDAY = "saturday",
+    SUNDAY = "sunday",
+}

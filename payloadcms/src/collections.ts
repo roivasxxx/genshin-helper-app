@@ -1,45 +1,39 @@
-import Events from "./collections/genshin/Events";
-import GenshinArticles from "./collections/genshin/GenshinArticles";
-import GenshinArtifact from "./collections/genshin/GenshinArtifact";
-import GenshinCharacters from "./collections/genshin/GenshinCharacters";
-import GenshinCollectableItem from "./collections/genshin/GenshinCollectableItem";
-import GenshinDomain from "./collections/genshin/GenshinDomain";
-import GenshinDomainDrop from "./collections/genshin/GenshinDomainDrop";
+import { CollectionConfig } from "payload/types";
+// users, media, misc.
+import Users from "./collections/Users";
+import PublicUsers from "./collections/PublicUsers";
+import Jobs from "./collections/genshin/Jobs";
+import { Media } from "./collections/Media";
+
+//genshin related collections
+import GenshinAccounts from "./collections/genshin/GenshinAccounts";
 import GenshinElements from "./collections/genshin/GenshinElements";
+import GenshinWeapons from "./collections/genshin/GenshinWeapon";
+import GenshinCharacters from "./collections/genshin/GenshinCharacters";
+import Events from "./collections/genshin/Events";
+import GenshinWishes from "./collections/genshin/GenshinWishes";
 import GenshinItems from "./collections/genshin/GenshinItem";
 import GenshinMob from "./collections/genshin/GenshinMob";
-import GenshinMobDrop from "./collections/genshin/GenshinMobDrop";
-import GenshinNPC from "./collections/genshin/GenshinNpc";
-import GenshinQuests from "./collections/genshin/GenshinQuests";
-import GenshinWeaponTypes from "./collections/genshin/GenshinWeaponTypes";
-import GenshinWishes from "./collections/genshin/GenshinWishes";
-import GenshinWeapons from "./collections/genshin/GenshinWeapon";
-import { Media } from "./collections/Media";
-import PublicUsers from "./collections/PublicUsers";
-import Users from "./collections/Users";
+// todo today
+import GenshinDomain from "./collections/genshin/GenshinDomain";
+import GenshinArtifact from "./collections/genshin/GenshinArtifact";
+// todo
 import GenshinPatches from "./collections/genshin/GenshinPatches";
-import GenshinAccounts from "./collections/genshin/GenshinAccounts";
-import Jobs from "./collections/genshin/Jobs";
+import GenshinArticles from "./collections/genshin/GenshinArticles";
 
-export const collections = [
+export const collections: CollectionConfig[] = [
     Users,
     PublicUsers,
     GenshinAccounts,
     Media,
     GenshinCharacters,
     GenshinElements,
-    GenshinWeaponTypes,
     GenshinDomain,
-    GenshinDomainDrop,
     GenshinMob,
-    GenshinMobDrop,
-    GenshinCollectableItem,
-    GenshinNPC,
     GenshinArtifact,
     Events,
     GenshinWeapons,
     GenshinItems,
-    GenshinQuests,
     GenshinWishes,
     GenshinArticles,
     GenshinPatches,

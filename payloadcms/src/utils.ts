@@ -7,8 +7,8 @@ export const sleep = (time: number) => {
 // used for weapons and character names
 export const normalizeName = (name: string) => {
     return name
-        .replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "")
+        .replace(/[&\/\\#,+()$~%.'":*?<>{}-]/g, "")
         .toLowerCase()
-        .split(" ")
+        .split(/\s+/)
         .join("_");
 };

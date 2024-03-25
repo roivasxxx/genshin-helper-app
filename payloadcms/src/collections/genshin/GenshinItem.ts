@@ -4,6 +4,10 @@ const GenshinItems: CollectionConfig = {
     slug: "genshin-items",
     fields: [
         {
+            name: "id",
+            type: "text",
+        },
+        {
             name: "type",
             type: "select",
             // use genshinItemConfig whenever selecting from GenshinItems based on a type (so always)
@@ -28,7 +32,7 @@ const GenshinItems: CollectionConfig = {
                 },
                 {
                     label: "Weapon Ascension",
-                    value: "weaponAscension",
+                    value: "weaponMat",
                 },
                 {
                     label: "Weapon Ascension Material", // event/fishing/quest items
@@ -46,22 +50,35 @@ const GenshinItems: CollectionConfig = {
                     label: "Fish",
                     value: "fish",
                 },
-            ],
-        },
-        {
-            // some item types exist in multiple variations -> use an array
-            // for example: books in weapon ascension, character ascension, etc
-            // those that only exist in one variation -> one item
-            name: "items",
-            type: "array",
-            fields: [
                 {
-                    name: "name",
-                    type: "text",
+                    label: "Mob drop",
+                    value: "mobDrop",
                 },
-                { name: "icon", type: "upload", relationTo: "media" },
+                {
+                    label: "Boss drop",
+                    value: "bossDrop",
+                },
+                {
+                    label: "Trounce drop",
+                    value: "trounceDrop",
+                },
             ],
         },
+        { name: "icon", type: "upload", relationTo: "media" },
+        // {
+        //     // some item types exist in multiple variations -> use an array
+        //     // for example: books in weapon ascension, character ascension, etc
+        //     // those that only exist in one variation -> one item
+        //     name: "items",
+        //     type: "array",
+        //     fields: [
+        //         {
+        //             name: "name",
+        //             type: "text",
+        //         },
+        //         { name: "icon", type: "upload", relationTo: "media" },
+        //     ],
+        // },
     ],
 };
 

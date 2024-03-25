@@ -28,7 +28,6 @@ const Events: CollectionConfig = {
             options: [
                 { label: "Weapon", value: "weapon" },
                 { label: "Character", value: "character" },
-                { label: "Standard", value: "standard" },
             ],
             admin: {
                 condition: (data) => {
@@ -37,50 +36,42 @@ const Events: CollectionConfig = {
             },
             index: true,
         },
-        characterField({
-            visible: (data) => {
-                return (
-                    data?.type === "banner" && data?.bannerType === "character"
-                );
-            },
-        }),
-        weaponField({
-            visible: (data) => {
-                return data?.type === "banner" && data?.bannerType === "weapon";
-            },
-        }),
         {
             name: "start",
-            type: "date",
+            type: "text",
+            // format yyyy-mm-dd hh:mm:ss
         },
         {
             name: "end",
-            type: "date",
-            localized: false,
-        },
-        genshinSelectField({
-            collection: "genshin-patches",
-            fieldName: "patch",
-        }),
-        {
-            name: "eventDescription",
-            type: "richText",
-            admin: {
-                condition: (data) => {
-                    return data?.type === "event";
-                },
-            },
-        },
-        {
-            name: "rewards",
-            // TODO: create reward field
             type: "text",
-            admin: {
-                condition: (data) => {
-                    return data?.type === "event";
-                },
-            },
+            // format yyyy-mm-dd hh:mm:ss
         },
+        // characterField({
+        //     visible: (data) => {
+        //         return (
+        //             data?.type === "banner" && data?.bannerType === "character"
+        //         );
+        //     },
+        // }),
+        // weaponField({
+        //     visible: (data) => {
+        //         return data?.type === "banner" && data?.bannerType === "weapon";
+        //     },
+        // }),
+
+        // genshinSelectField({
+        //     collection: "genshin-patches",
+        //     fieldName: "patch",
+        // }),
+        // {
+        //     name: "eventDescription",
+        //     type: "richText",
+        //     admin: {
+        //         condition: (data) => {
+        //             return data?.type === "event";
+        //         },
+        //     },
+        // },
     ],
 };
 

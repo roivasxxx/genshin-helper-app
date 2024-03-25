@@ -25,5 +25,9 @@ export const Media: CollectionConfig = {
             name: "type",
             type: "text",
         },
+        {
+            name: "mimetype",
+            type: "text",
+        },
     ],
 };
