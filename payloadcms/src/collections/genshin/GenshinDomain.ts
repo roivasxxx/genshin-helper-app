@@ -1,9 +1,35 @@
-import { CollectionConfig } from "payload/types";
+import { CollectionConfig, GroupField } from "payload/types";
 import { genshinSelectField } from "../../fields/fieldsConfig";
+import { DAYS } from "../../constants";
+
+const details = (): GroupField[] => {
+    return Object.values(DAYS).map((day) => {
+        return {
+            name: day.toString(),
+            type: "group",
+            fields: [
+                {
+                    name: "drops",
+                    type: "relationship",
+                    relationTo: "genshin-items",
+                    hasMany: true,
+                },
+                {
+                    name: "characters",
+                    type: "relationship",
+                    relationTo: "genshin-characters",
+                    hasMany: true,
+                },
+            ],
+        };
+    });
+};
 
 const GenshinDomain: CollectionConfig = {
     slug: "genshin-domains",
     fields: [
+        { name: "id", type: "text" },
+        { name: "region", type: "text" },
         {
             name: "name",
             type: "text",
@@ -19,27 +45,32 @@ const GenshinDomain: CollectionConfig = {
             options: [
                 {
                     label: "Artifact",
-                    value: "artifact",
+                    value: "artifacts",
                 },
                 {
                     label: "Book",
-                    value: "book",
+                    value: "books",
                 },
                 {
                     label: "Weapon",
-                    value: "weapon",
+                    value: "weapons",
                 },
                 {
                     label: "Trounce",
-                    value: "Trounce",
+                    value: "trounce",
                 },
             ],
         },
-        genshinSelectField({
-            collection: "genshin-mobs",
-            fieldName: "enemies",
-            hasMany: true,
-        }),
+        {
+            name: "details",
+            type: "group",
+            fields: details(),
+        }, // we can query details.sunday.drops to get all possible drops
+        // genshinSelectField({
+        //     collection: "genshin-mobs",
+        //     fieldName: "enemies",
+        //     hasMany: true,
+        // }),
     ],
 };
 
