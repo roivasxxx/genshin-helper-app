@@ -182,26 +182,6 @@ const GenshinAccounts: CollectionConfig = {
             type: "relationship",
             relationTo: "jobs",
         },
-        {
-            name: "tracking",
-            type: "group",
-            fields: [
-                {
-                    name: "items",
-                    type: "relationship",
-                    relationTo: "genshin-items",
-                    hasMany: true,
-                },
-                {
-                    name: "events",
-                    type: "checkbox",
-                },
-                {
-                    name: "banners",
-                    type: "checkbox",
-                },
-            ],
-        },
     ],
     endpoints: [
         {
@@ -455,83 +435,6 @@ const GenshinAccounts: CollectionConfig = {
                         );
                         return res.status(500).send(error);
                     }
-                },
-            ],
-        },
-        {
-            path: "/setNotificationSettings",
-            method: "post",
-            handler: [
-                authMiddleware,
-                async (req: PayloadRequest, res: Response) => {
-                    const body = req.body;
-                    if (typeof body !== "object") {
-                        return res.status(400).send("Invalid body");
-                    }
-                    const notifications = {
-                        events: false,
-                        banners: false,
-                        items: [],
-                    };
-                    const genshinAccountId = body.accountId;
-                    if (
-                        typeof genshinAccountId !== "string" ||
-                        genshinAccountId.length === 0
-                    ) {
-                        return res.status(400).send("Invalid body");
-                    }
-                    try {
-                        await genshinAccountBelongsToCurrentUser(
-                            req.user.id,
-                            genshinAccountId
-                        );
-                    } catch (error) {
-                        return res.status(401).send("Unauthorized");
-                    }
-
-                    if (typeof body.events === "boolean") {
-                        notifications.events = body.events;
-                    }
-                    if (typeof body.banners === "boolean") {
-                        notifications.banners = body.banners;
-                    }
-                    if (body.items && Array.isArray(body.items)) {
-                        // check valid domains
-                        for (const item of body.items) {
-                            if (typeof item === "string") {
-                                try {
-                                    await payload.findByID({
-                                        collection: "genshin-items",
-                                        id: item,
-                                    });
-                                    notifications.items.push(item);
-                                } catch (error) {
-                                    console.error(
-                                        `genshin-accounts/setNotificationSettings: invalid item provided ${item}`
-                                    );
-                                }
-                            }
-                        }
-                    }
-
-                    try {
-                        await req.payload.update({
-                            collection: "genshin-accounts",
-                            where: {
-                                id: {
-                                    equals: genshinAccountId,
-                                },
-                            },
-                            data: { tracking: notifications },
-                        });
-                    } catch (error) {
-                        console.error(
-                            "genshin-accounts/setNotificationSettings threw an exception when saving notification settings: ",
-                            error
-                        );
-                        return res.status(500).send(error);
-                    }
-                    res.send("OK");
                 },
             ],
         },

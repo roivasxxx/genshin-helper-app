@@ -47,6 +47,11 @@ export interface PublicUser {
   id: string;
   genshinAccounts?: (string | GenshinAccount)[] | null;
   expoPushToken?: string | null;
+  tracking?: {
+    items?: (string | GenshinItem)[] | null;
+    events?: boolean | null;
+    banners?: boolean | null;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -90,11 +95,6 @@ export interface GenshinAccount {
     lastUpdate?: string | null;
   };
   importJob?: (string | null) | Job;
-  tracking?: {
-    items?: (string | GenshinItem)[] | null;
-    events?: boolean | null;
-    banners?: boolean | null;
-  };
   updatedAt: string;
   createdAt: string;
 }
