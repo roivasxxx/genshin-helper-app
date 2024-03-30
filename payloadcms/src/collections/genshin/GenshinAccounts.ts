@@ -73,13 +73,19 @@ const GenshinAccounts: CollectionConfig = {
                         {
                             name: "last4Star",
                             type: "relationship",
-                            relationTo: "genshin-wishes",
+                            relationTo: [
+                                "genshin-weapons",
+                                "genshin-characters",
+                            ],
                             required: false,
                         },
                         {
                             name: "last5Star",
                             type: "relationship",
-                            relationTo: "genshin-wishes",
+                            relationTo: [
+                                "genshin-weapons",
+                                "genshin-characters",
+                            ],
                             required: false,
                         },
                         {
@@ -110,13 +116,19 @@ const GenshinAccounts: CollectionConfig = {
                         {
                             name: "last4Star",
                             type: "relationship",
-                            relationTo: "genshin-wishes",
+                            relationTo: [
+                                "genshin-weapons",
+                                "genshin-characters",
+                            ],
                             required: false,
                         },
                         {
                             name: "last5Star",
                             type: "relationship",
-                            relationTo: "genshin-wishes",
+                            relationTo: [
+                                "genshin-weapons",
+                                "genshin-characters",
+                            ],
                             required: false,
                         },
                         {
@@ -147,13 +159,19 @@ const GenshinAccounts: CollectionConfig = {
                         {
                             name: "last4Star",
                             type: "relationship",
-                            relationTo: "genshin-wishes",
+                            relationTo: [
+                                "genshin-weapons",
+                                "genshin-characters",
+                            ],
                             required: false,
                         },
                         {
                             name: "last5Star",
                             type: "relationship",
-                            relationTo: "genshin-wishes",
+                            relationTo: [
+                                "genshin-weapons",
+                                "genshin-characters",
+                            ],
                             required: false,
                         },
                         {
@@ -439,6 +457,30 @@ const GenshinAccounts: CollectionConfig = {
                         );
                         return res.status(500).send(error);
                     }
+                },
+            ],
+        },
+        {
+            path: "/clearHistory",
+            method: "post",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    const query = req.body;
+                    await req.payload.update({
+                        collection: "genshin-accounts",
+                        id: query.accountId,
+                        data: {
+                            wishInfo: DEFAULT_GENSHIN_WISH_INFO,
+                        },
+                    });
+                    await req.payload.delete({
+                        collection: "genshin-wishes",
+                        where: {
+                            genshinAccount: query.accountId,
+                        },
+                    });
+                    res.send("OK");
                 },
             ],
         },

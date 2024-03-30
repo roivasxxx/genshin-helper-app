@@ -2,6 +2,7 @@ import express from "express";
 import payload from "payload";
 import { mediaManagement } from "payload-cloudinary-plugin";
 import { initAgenda } from "./agenda";
+import { initializeMongo } from "./mongo";
 
 require("dotenv").config();
 const app = express();
@@ -33,6 +34,7 @@ const start = async () => {
     // Add your own express routes here
     app.listen(process.env.PAYLOAD_PUBLIC_PORT);
     await initAgenda();
+    await initializeMongo();
     // create cron jobs here
     // payload.find({ collection: "public-users" }).then((docs) => {
     //     console.log(`FOUND ${docs.docs.length} public users!`);

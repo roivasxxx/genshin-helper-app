@@ -2,8 +2,8 @@ import Agenda from "agenda";
 import payload from "payload";
 import { GenshinAccount, Job } from "../types/payload-types";
 import { wishImporter } from "./api/wishes/importer";
-import { DEFAULT_GENSHIN_WISH_INFO } from "./constants";
-import { GenshinAcountWishInfo } from "../types/types";
+import { mongoClient } from "./mongo";
+
 require("dotenv").config();
 
 let agenda: Agenda;
@@ -55,22 +55,7 @@ const initAgenda = async () => {
                     const link = jobAttributes.cmsJob.link;
 
                     const account = jobAttributes.account;
-                    let lastIds = JSON.parse(
-                        JSON.stringify(DEFAULT_GENSHIN_WISH_INFO)
-                    ) as GenshinAcountWishInfo;
-                    const wishInfo = account?.wishInfo;
-                    if (wishInfo) {
-                        if (wishInfo.character.lastId) {
-                            lastIds.character.lastId =
-                                wishInfo.character.lastId;
-                        }
-                        if (wishInfo.weapon.lastId) {
-                            lastIds.weapon.lastId = wishInfo.weapon.lastId;
-                        }
-                        if (wishInfo.standard.lastId) {
-                            lastIds.standard.lastId = wishInfo.standard.lastId;
-                        }
-                    }
+                    let lastIds = account.wishInfo;
                     // process history
                     const result = await wishImporter(
                         link,
@@ -80,8 +65,6 @@ const initAgenda = async () => {
                     // check if there was an error
                     const hasError = !result;
 
-                    const newWishInfo = { ...lastIds };
-                    console.log(lastIds);
                     try {
                         if (jobAttributes.cmsJob) {
                             if (hasError) {
@@ -109,20 +92,49 @@ const initAgenda = async () => {
                                         wishInfo: lastIds,
                                     },
                                 });
+                                console.time("test");
+                                const db = mongoClient.db("electro");
+                                const collection =
+                                    db.collection("genshin-wishes");
+                                for (const key of Object.keys(result)) {
+                                    // need to insert with mongo, because payload doesn't support bulk insert
+                                    const wishes = result[key].wishes;
+                                    if (
+                                        Array.isArray(wishes) &&
+                                        wishes.length > 0
+                                    ) {
+                                        // wishes for a banner might be empty, insertMany expects non-empty array
+                                        await collection.insertMany(
+                                            result[key].wishes
+                                        );
+                                    }
+                                }
+                                console.timeEnd("test");
                             }
                         }
                     } catch (error) {
-                        if (
-                            typeof error === "object" &&
-                            error?.status === 404
-                        ) {
-                            console.error(
-                                "Job not found: ",
-                                jobAttributes.cmsJob.id
-                            );
-                            // found invalid job
-                        }
+                        console.error(
+                            "Error while executing job: ",
+                            jobAttributes.cmsJob.id,
+                            error
+                        );
+                        try {
+                            // remove job from account
+                            await payload.update({
+                                id: jobAttributes.account.id,
+                                collection: "genshin-accounts",
+                                data: {
+                                    importJob: "",
+                                },
+                            });
+                            // delete job
+                            await payload.delete({
+                                collection: "jobs",
+                                id: jobAttributes.cmsJob.id,
+                            });
+                        } catch (e) {}
                     }
+                    console.log("Done with job: ", jobAttributes.cmsJob.id);
                     done();
                 }
             );

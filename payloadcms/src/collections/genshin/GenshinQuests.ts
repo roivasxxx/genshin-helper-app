@@ -9,11 +9,11 @@ const GenshinQuests: CollectionConfig = {
         { name: "region", type: "select", options: GENSHIN_REGIONS },
         // {name:"rewards",type:"array"}
         { name: "description", type: "richText" },
-        genshinSelectField({
-            collection: "genshin-quests",
-            fieldName: "questIds",
-            hasMany: true,
-        }),
+        // genshinSelectField({
+        //     collection: "genshin-quests",
+        //     fieldName: "questIds",
+        //     hasMany: true,
+        // }),
     ],
 };
 

@@ -12,33 +12,6 @@ import {
 
 const fs: typeof import("fs").promises = require("fs").promises;
 
-type WishImporterResult = {
-    character: {
-        pullCount: number;
-        last4Star: WishRelationship | null;
-        last5Star: WishRelationship | null;
-        pity4Star: number;
-        pity5Star: number;
-        lastId: string;
-    };
-    weapon: {
-        pullCount: number;
-        last4Star: WishRelationship | null;
-        last5Star: WishRelationship | null;
-        pity4Star: number;
-        pity5Star: number;
-        lastId: string;
-    };
-    standard: {
-        pullCount: number;
-        last4Star: WishRelationship | null;
-        last5Star: WishRelationship | null;
-        pity4Star: number;
-        pity5Star: number;
-        lastId: string;
-    };
-};
-
 type WishRelationship = {
     relationshipTo: "genshin-characters" | "genshin-weapons";
     value: "string";
@@ -48,7 +21,7 @@ export const wishImporter = async (
     authedLink: string,
     accountId: string,
     wishInfo: GenshinAcountWishInfo
-): Promise<WishImporterResult | null> => {
+) => {
     const history = {};
 
     for (let i = 0; i < Object.keys(WISH_HISTORY).length; i++) {
@@ -59,23 +32,18 @@ export const wishImporter = async (
         newUrl.search = searchParams.toString();
 
         const key = Object.keys(WISH_HISTORY)[i];
+        const bannerType = WISH_HISTORY[key];
         const wishes = await getHistory(
             newUrl,
             WISH_BANNER_CODES[key],
-            wishInfo.character.lastId
+            wishInfo[bannerType].lastId
         );
         if (!wishes) {
-            console.log(
-                "error getting history",
-                key,
-                WISH_BANNER_CODES[key],
-                wishes
-            );
+            console.log("error getting history", key);
             history["error"] = true;
             break;
         }
 
-        const bannerType = WISH_HISTORY[key];
         let pity4Star = wishInfo[bannerType].pity4Star || 0;
         let pity5Star = wishInfo[bannerType].pity5Star || 0;
         let last4Star = wishInfo[bannerType].last4Star;
@@ -113,21 +81,15 @@ export const wishImporter = async (
         wishInfo[bannerType].pity5Star = pity5Star;
 
         history[bannerType] = {
-            // pullCount: wishInfo[bannerType].pullCount + wishes.length,
             wishes,
-            // last4Star,
-            // last5Star,
-            // pity4Star,
-            // pity5Star,
-            // lastId: wishes[0]?.hoyoId || "",
         };
     }
     if (history["error"]) {
         console.error("THERE WAS AN ERROR WHILE FETCHING HISTORY");
         return null;
     }
-
-    return history as WishImporterResult;
+    // await fs.writeFile("history4.json", JSON.stringify(history));
+    return history;
 };
 
 // push to wishes, if lastId saved in DB is encountered, stop pushing, return true => should stop fetching wishes
@@ -143,7 +105,7 @@ const pushToWishHistory = (
             return true;
         }
         const item = {
-            relationshipTo:
+            relationTo:
                 wish.item_type === "Character"
                     ? "genshin-characters"
                     : "genshin-weapons",
