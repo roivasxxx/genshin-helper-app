@@ -10,6 +10,7 @@ import authMiddleware from "../../api/authMiddleware";
 import { GenshinAccount, PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
 import payload from "payload";
+import { wishImporter } from "../../api/wishes/importer";
 
 const genshinAccountBelongsToCurrentUser = async (
     currentUserId: string,
@@ -382,6 +383,10 @@ const GenshinAccounts: CollectionConfig = {
                 async (req: PayloadRequest, res: Response) => {
                     const query = req.body;
                     try {
+                        if (!query.accountId || !query.link) {
+                            return res.status(400).send("Invalid request");
+                        }
+
                         const account = await req.payload.findByID({
                             id: query.accountId,
                             collection: "genshin-accounts",
@@ -413,14 +418,13 @@ const GenshinAccounts: CollectionConfig = {
                             },
                         });
                         // save cms job id
-                        const test = await req.payload.update({
+                        await req.payload.update({
                             collection: "genshin-accounts",
                             id: query.accountId,
                             data: {
                                 importJob: newJob.id,
                             },
                         });
-                        console.log(test);
 
                         await agenda.now("wishImporter", {
                             cmsJob: newJob,

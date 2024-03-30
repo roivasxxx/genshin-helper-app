@@ -3,7 +3,6 @@ import weaponTypeField from "../../fields/WeaponTypeField";
 import { GENSHIN_SUBSTATS } from "../../constants";
 import { genshinSelectField } from "../../fields/fieldsConfig";
 import { normalizeName } from "../../utils";
-import { test } from "../../api/wishes/importer";
 
 const GenshinWeapons: CollectionConfig = {
     slug: "genshin-weapons",
@@ -187,17 +186,6 @@ const GenshinWeapons: CollectionConfig = {
             type: "upload",
             relationTo: "media",
             required: false,
-        },
-    ],
-    endpoints: [
-        {
-            path: "/import",
-            method: "post",
-            handler: async (req, res) => {
-                const acc = req.body.id;
-                await test(acc as string);
-                res.send("ok");
-            },
         },
     ],
 };

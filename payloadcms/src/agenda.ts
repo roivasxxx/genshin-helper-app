@@ -20,11 +20,12 @@ const initAgenda = async () => {
             agenda.define(
                 "wishImporter",
                 { shouldSaveResult: false, concurrency: 10 },
-                async (job) => {
+                async (job: any, done) => {
                     const jobAttributes: {
                         cmsJob: Job;
                         account: GenshinAccount;
                     } = job.attrs.data;
+
                     if (jobAttributes.cmsJob) {
                         try {
                             await payload.update({
@@ -41,7 +42,7 @@ const initAgenda = async () => {
                             ) {
                                 console.error(
                                     "Job not found: ",
-                                    jobAttributes.cmsJob
+                                    jobAttributes.cmsJob.id
                                 );
                                 // found invalid job
                                 throw new Error("Job not found!");
@@ -70,36 +71,59 @@ const initAgenda = async () => {
                             lastIds.standard.lastId = wishInfo.standard.lastId;
                         }
                     }
-                    // await wishImporter(jobAttributes.link, lastIds);
+                    // process history
+                    const result = await wishImporter(
+                        link,
+                        account.id,
+                        lastIds
+                    );
+                    // check if there was an error
+                    const hasError = !result;
 
-                    const newWishInfo = account.wishInfo;
-
+                    const newWishInfo = { ...lastIds };
+                    console.log(lastIds);
                     try {
                         if (jobAttributes.cmsJob) {
-                            // if job still exists, delete it
-                            await payload.delete({
-                                collection: "jobs",
-                                id: jobAttributes.cmsJob.id,
-                            });
-                            // update account
-                            await payload.update({
-                                id: jobAttributes.account.id,
-                                collection: "genshin-accounts",
-                                data: {
-                                    importJob: "",
-                                    wishInfo: newWishInfo,
-                                },
-                            });
+                            if (hasError) {
+                                // if there was an error, mark job as failed
+                                await payload.update({
+                                    collection: "jobs",
+                                    id: jobAttributes.cmsJob.id,
+                                    data: {
+                                        status: "FAILED",
+                                    },
+                                });
+                            } else {
+                                // if there was no error
+                                // if job still exists, delete it
+                                await payload.delete({
+                                    collection: "jobs",
+                                    id: jobAttributes.cmsJob.id,
+                                });
+                                // update account
+                                await payload.update({
+                                    id: jobAttributes.account.id,
+                                    collection: "genshin-accounts",
+                                    data: {
+                                        importJob: "",
+                                        wishInfo: lastIds,
+                                    },
+                                });
+                            }
                         }
                     } catch (error) {
                         if (
                             typeof error === "object" &&
                             error?.status === 404
                         ) {
+                            console.error(
+                                "Job not found: ",
+                                jobAttributes.cmsJob.id
+                            );
                             // found invalid job
-                            return;
                         }
                     }
+                    done();
                 }
             );
 

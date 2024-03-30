@@ -29,7 +29,7 @@ const PublicUsers: CollectionConfig = {
             hasMany: true,
         },
         // do not show in requests
-        { name: "expoPushToken", type: "text", hidden: true },
+        { name: "expoPushToken", type: "text" },
         {
             name: "tracking",
             type: "group",
@@ -176,6 +176,31 @@ const PublicUsers: CollectionConfig = {
                     res.send("OK");
                 },
             ],
+        },
+        {
+            path: "/forgot-password",
+            method: "post",
+            handler: async (req: PayloadRequest, res: Response) => {
+                const { email } = req.body;
+                const user = await req.payload.find({
+                    collection: "public-users",
+                    where: {
+                        email: { equals: email },
+                    },
+                });
+                if (user.docs.length === 0) {
+                    return res.status(404).send("User not found");
+                }
+                // https://payloadcms.com/docs/authentication/operations#forgot-password
+                // const token = await req.payload.forgotPassword({
+                //     collection: "public-users",
+                //     data: {
+                //         email,
+                //     },
+                //     disableEmail: true,
+                // });
+                res.send("OK");
+            },
         },
     ],
     access: {

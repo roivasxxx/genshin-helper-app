@@ -115,7 +115,6 @@ export interface GenshinWish {
         relationTo: 'genshin-weapons';
         value: string | GenshinWeapon;
       } | null);
-  wishId?: string | null;
   updatedAt: string;
   createdAt: string;
 }
