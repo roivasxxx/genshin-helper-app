@@ -63,12 +63,14 @@ export const wishImporter = async (
                 pity5Star = 0;
                 last5Star = el.itemId;
             }
+            const wishNumber =
+                wishInfo[bannerType].pullCount + wishes.length - (i + 1);
             wishes[i] = {
                 ...el,
                 pity,
                 genshinAccount: accountId,
                 bannerType,
-                id: `${accountId}-${bannerType}-${i}`,
+                wishNumber,
             };
         }
 

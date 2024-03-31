@@ -4,11 +4,6 @@ const GenshinWishes: CollectionConfig = {
     slug: "genshin-wishes",
     fields: [
         {
-            name: "id",
-            type: "text",
-            // genshinAccountId - type - count, eg: 65f6f5bfa96a29b608f23471-character-1, 65f6f5bfa96a29b608f23471-weapon-10
-        },
-        {
             name: "bannerType",
             type: "select",
             options: [
@@ -69,6 +64,10 @@ const GenshinWishes: CollectionConfig = {
             name: "itemId",
             type: "relationship",
             relationTo: ["genshin-characters", "genshin-weapons"],
+        },
+        {
+            name: "wishNumber",
+            type: "number",
         },
         // {
         //     // userId + bannerType + wishNumber - userId-standard-0, userId-weapon-1,...

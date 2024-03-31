@@ -1,6 +1,5 @@
 import { CollectionConfig, PayloadRequest, Where } from "payload/types";
 import {
-    ALLOWED_EVENT_NOTIFICATIONS,
     DEFAULT_GENSHIN_WISH_INFO,
     WISH_HISTORY,
     WISH_REGIONS,
@@ -9,34 +8,27 @@ import { Response } from "express";
 import authMiddleware from "../../api/authMiddleware";
 import { GenshinAccount, PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
-import payload from "payload";
-import { wishImporter } from "../../api/wishes/importer";
 
-const genshinAccountBelongsToCurrentUser = async (
-    currentUserId: string,
-    accountId: string
-) => {
-    return new Promise(async (res, reject) => {
-        if (!accountId || !currentUserId) {
-            reject("Invalid account id");
-        }
-        try {
-            const user = await payload.findByID({
-                collection: "public-users",
-                id: currentUserId,
-                depth: 0,
-            });
-            if (user.genshinAccounts && Array.isArray(user.genshinAccounts)) {
-                if (user.genshinAccounts.includes(accountId)) {
-                    res(true);
-                } else {
-                    reject(false);
-                }
-            }
-        } catch (error) {
-            reject(error);
-        }
+const validateGenshinAccount = async (req: PayloadRequest) => {
+    const user: PublicUser = await req.payload.findByID({
+        collection: "public-users",
+        id: req.user.id,
+        depth: 0,
     });
+    let accountId = "";
+
+    if (typeof req.query.accountId === "string") {
+        accountId = req.query.accountId;
+    } else if (
+        Array.isArray(req.query.accountId) &&
+        typeof req.query.accountId[0] === "string"
+    ) {
+        accountId = req.query.accountId[0];
+    }
+    if (!accountId || !user.genshinAccounts.includes(accountId)) {
+        return "";
+    }
+    return accountId;
 };
 
 const GenshinAccounts: CollectionConfig = {
@@ -262,33 +254,15 @@ const GenshinAccounts: CollectionConfig = {
             handler: [
                 authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
-                    const user: PublicUser = await req.payload.findByID({
-                        collection: "public-users",
-                        id: req.user.id,
-                        depth: 0,
-                    });
-                    let accountId = "";
-
-                    if (typeof req.query.accountId === "string") {
-                        accountId = req.query.accountId;
-                    } else if (
-                        Array.isArray(req.query.accountId) &&
-                        typeof req.query.accountId[0] === "string"
-                    ) {
-                        accountId = req.query.accountId[0];
-                    }
-
-                    if (
-                        !accountId ||
-                        !user.genshinAccounts.includes(accountId)
-                    ) {
+                    let accountId = await validateGenshinAccount(req);
+                    if (!accountId) {
                         return res.status(401).send("Unauthorized");
                     }
 
                     const query = req.query;
                     // pagination and limit
                     let limit = 100;
-                    let offset = 0;
+                    let offset = 1;
 
                     if (query.limit) {
                         if (typeof query.limit === "string") {
@@ -326,9 +300,38 @@ const GenshinAccounts: CollectionConfig = {
                             where: where,
                             limit: limit,
                             page: offset,
+                            sort: "-wishNumber",
                         });
 
-                        res.send(wishesReq.docs);
+                        const wishes = wishesReq.docs.map((el) => {
+                            const { itemId, genshinAccount, ...rest } = el;
+                            const wish = { ...rest };
+                            const value = el.itemId.value;
+                            let _itemId = null;
+                            if (
+                                value &&
+                                typeof value === "object" &&
+                                "icon" in value &&
+                                typeof value.icon === "object"
+                            ) {
+                                _itemId = {
+                                    icon: {
+                                        alt: value.icon.alt,
+                                        url: value.icon.cloudinary.secure_url,
+                                        originalName:
+                                            value.icon.cloudinary
+                                                .original_filename,
+                                    },
+                                    value: value.name,
+                                };
+                            }
+                            return { ...wish, item: _itemId };
+                        });
+
+                        res.send({
+                            history: wishes,
+                            hasMore: wishesReq.hasNextPage,
+                        });
                     } catch (error) {
                         console.error(
                             `/genshin-accounts/getWishHistory/${type} threw an exception: `,
@@ -346,26 +349,8 @@ const GenshinAccounts: CollectionConfig = {
                 authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
                     try {
-                        const user: PublicUser = await req.payload.findByID({
-                            collection: "public-users",
-                            id: req.user.id,
-                            depth: 0,
-                        });
-                        let accountId = "";
-
-                        if (typeof req.query.accountId === "string") {
-                            accountId = req.query.accountId;
-                        } else if (
-                            Array.isArray(req.query.accountId) &&
-                            typeof req.query.accountId[0] === "string"
-                        ) {
-                            accountId = req.query.accountId[0];
-                        }
-
-                        if (
-                            !accountId ||
-                            !user.genshinAccounts.includes(accountId)
-                        ) {
+                        let accountId = await validateGenshinAccount(req);
+                        if (!accountId) {
                             return res.status(401).send("Unauthorized");
                         }
 
@@ -423,7 +408,7 @@ const GenshinAccounts: CollectionConfig = {
                             } catch (error) {
                                 // previous job might still exist/being processed
                                 // remove it from the db
-                                console.log("Found invalid job: ", importJob);
+                                console.error("Found invalid job: ", importJob);
                             }
                         }
 
@@ -461,6 +446,52 @@ const GenshinAccounts: CollectionConfig = {
             ],
         },
         {
+            path: "/getAccount",
+            method: "get",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    let accountId = await validateGenshinAccount(req);
+                    if (!accountId) {
+                        return res.status(401).send("Unauthorized");
+                    }
+                    const doc = await req.payload.findByID({
+                        id: accountId,
+                        collection: "genshin-accounts",
+                    });
+                    const wishInfo = doc.wishInfo;
+                    const account = {
+                        wishInfo: {
+                            standard: wishInfo.standard,
+                            character: wishInfo.character,
+                            weapon: wishInfo.weapon,
+                        },
+                        accountId,
+                    };
+                    for (const key of ["character", "weapon", "standard"]) {
+                        if (
+                            wishInfo[key].last4Star &&
+                            wishInfo[key].last4Star.value &&
+                            typeof wishInfo[key].last4Star.value === "object"
+                        ) {
+                            account.wishInfo[key].last4Star =
+                                wishInfo[key].last4Star.value.name;
+                        }
+                        if (
+                            wishInfo[key].last5Star &&
+                            wishInfo[key].last5Star.value &&
+                            typeof wishInfo[key].last5Star.value === "object"
+                        ) {
+                            account.wishInfo[key].last5Star =
+                                wishInfo[key].last5Star.value.name;
+                        }
+                    }
+
+                    res.send(account);
+                },
+            ],
+        },
+        {
             path: "/clearHistory",
             method: "post",
             handler: [
@@ -474,10 +505,11 @@ const GenshinAccounts: CollectionConfig = {
                             wishInfo: DEFAULT_GENSHIN_WISH_INFO,
                         },
                     });
+
                     await req.payload.delete({
                         collection: "genshin-wishes",
                         where: {
-                            genshinAccount: query.accountId,
+                            genshinAccount: { equals: query.accountId },
                         },
                     });
                     res.send("OK");

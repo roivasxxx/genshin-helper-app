@@ -70,24 +70,72 @@ export interface GenshinAccount {
   wishInfo: {
     standard: {
       pullCount: number;
-      last4Star?: (string | null) | GenshinWish;
-      last5Star?: (string | null) | GenshinWish;
+      last4Star?:
+        | ({
+            relationTo: 'genshin-weapons';
+            value: string | GenshinWeapon;
+          } | null)
+        | ({
+            relationTo: 'genshin-characters';
+            value: string | GenshinCharacter;
+          } | null);
+      last5Star?:
+        | ({
+            relationTo: 'genshin-weapons';
+            value: string | GenshinWeapon;
+          } | null)
+        | ({
+            relationTo: 'genshin-characters';
+            value: string | GenshinCharacter;
+          } | null);
       pity4Star: number;
       pity5Star: number;
       lastId?: string | null;
     };
     weapon: {
       pullCount: number;
-      last4Star?: (string | null) | GenshinWish;
-      last5Star?: (string | null) | GenshinWish;
+      last4Star?:
+        | ({
+            relationTo: 'genshin-weapons';
+            value: string | GenshinWeapon;
+          } | null)
+        | ({
+            relationTo: 'genshin-characters';
+            value: string | GenshinCharacter;
+          } | null);
+      last5Star?:
+        | ({
+            relationTo: 'genshin-weapons';
+            value: string | GenshinWeapon;
+          } | null)
+        | ({
+            relationTo: 'genshin-characters';
+            value: string | GenshinCharacter;
+          } | null);
       pity4Star: number;
       pity5Star: number;
       lastId?: string | null;
     };
     character: {
       pullCount: number;
-      last4Star?: (string | null) | GenshinWish;
-      last5Star?: (string | null) | GenshinWish;
+      last4Star?:
+        | ({
+            relationTo: 'genshin-weapons';
+            value: string | GenshinWeapon;
+          } | null)
+        | ({
+            relationTo: 'genshin-characters';
+            value: string | GenshinCharacter;
+          } | null);
+      last5Star?:
+        | ({
+            relationTo: 'genshin-weapons';
+            value: string | GenshinWeapon;
+          } | null)
+        | ({
+            relationTo: 'genshin-characters';
+            value: string | GenshinCharacter;
+          } | null);
       pity4Star: number;
       pity5Star: number;
       lastId?: string | null;
@@ -98,42 +146,10 @@ export interface GenshinAccount {
   updatedAt: string;
   createdAt: string;
 }
-export interface GenshinWish {
-  id: string;
-  bannerType?: ('character' | 'weapon' | 'standard') | null;
-  date?: string | null;
-  pity?: number | null;
-  hoyoId?: string | null;
-  banner?: (string | null) | GenshinEvent;
-  genshinAccount?: (string | null) | GenshinAccount;
-  itemId?:
-    | ({
-        relationTo: 'genshin-characters';
-        value: string | GenshinCharacter;
-      } | null)
-    | ({
-        relationTo: 'genshin-weapons';
-        value: string | GenshinWeapon;
-      } | null);
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinEvent {
+export interface GenshinWeapon {
   id: string;
   name?: string | null;
-  type?: ('banner' | 'event') | null;
-  bannerType?: ('weapon' | 'character') | null;
-  start?: string | null;
-  end?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinCharacter {
-  name: string;
-  id: string;
-  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
-  rarity?: ('4' | '5') | null;
-  icon: string | Media;
+  icon?: string | Media | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -159,10 +175,12 @@ export interface Media {
   width?: number | null;
   height?: number | null;
 }
-export interface GenshinWeapon {
+export interface GenshinCharacter {
+  name: string;
   id: string;
-  name?: string | null;
-  icon?: string | Media | null;
+  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
+  rarity?: ('4' | '5') | null;
+  icon: string | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -258,6 +276,36 @@ export interface GenshinArtifact {
   rarity?: ('1' | '2' | '3' | '4' | '5') | null;
   '2pc'?: string | null;
   '4pc'?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinEvent {
+  id: string;
+  name?: string | null;
+  type?: ('banner' | 'event') | null;
+  bannerType?: ('weapon' | 'character') | null;
+  start?: string | null;
+  end?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinWish {
+  id: string;
+  bannerType?: ('character' | 'weapon' | 'standard') | null;
+  date?: string | null;
+  pity?: number | null;
+  hoyoId?: string | null;
+  genshinAccount?: (string | null) | GenshinAccount;
+  itemId?:
+    | ({
+        relationTo: 'genshin-characters';
+        value: string | GenshinCharacter;
+      } | null)
+    | ({
+        relationTo: 'genshin-weapons';
+        value: string | GenshinWeapon;
+      } | null);
+  wishNumber?: number | null;
   updatedAt: string;
   createdAt: string;
 }
