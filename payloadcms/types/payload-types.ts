@@ -193,6 +193,8 @@ export interface Job {
 }
 export interface GenshinItem {
   id: string;
+  name?: string | null;
+  rarity?: number | null;
   type?:
     | (
         | 'collectable'
