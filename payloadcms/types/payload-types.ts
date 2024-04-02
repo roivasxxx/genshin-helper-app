@@ -181,13 +181,14 @@ export interface GenshinCharacter {
   region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
   rarity?: ('4' | '5') | null;
   icon: string | Media;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface Job {
-  id: string;
-  status?: ('NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED') | null;
-  link?: string | null;
+  specialty?: (string | null) | GenshinItem;
+  talent?: (string | null) | GenshinItem;
+  trounce?: (string | null) | GenshinItem;
+  boss?: (string | null) | GenshinItem;
+  books?: (string | GenshinItem)[] | null;
+  weaponType?: string | null;
+  substat?: string | null;
+  element?: (string | null) | GenshinElement;
   updatedAt: string;
   createdAt: string;
 }
@@ -219,6 +220,13 @@ export interface GenshinElement {
   id: string;
   name?: string | null;
   icon: string | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface Job {
+  id: string;
+  status?: ('NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED') | null;
+  link?: string | null;
   updatedAt: string;
   createdAt: string;
 }

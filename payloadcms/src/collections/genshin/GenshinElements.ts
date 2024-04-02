@@ -4,6 +4,10 @@ const GenshinElements: CollectionConfig = {
     slug: "genshin-elements",
     fields: [
         {
+            name: "id",
+            type: "text",
+        },
+        {
             name: "name",
             type: "text",
         },
