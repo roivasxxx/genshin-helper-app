@@ -189,6 +189,7 @@ export interface GenshinCharacter {
   weaponType?: string | null;
   substat?: string | null;
   element?: (string | null) | GenshinElement;
+  gem?: (string | null) | GenshinItem;
   updatedAt: string;
   createdAt: string;
 }
@@ -210,6 +211,7 @@ export interface GenshinItem {
         | 'mobDrop'
         | 'bossDrop'
         | 'trounceDrop'
+        | 'gem'
       )
     | null;
   icon?: string | Media | null;

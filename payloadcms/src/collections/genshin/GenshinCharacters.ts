@@ -7,6 +7,106 @@ import authMiddleware from "../../api/authMiddleware";
 import { Response } from "express";
 import { GenshinCharacter } from "../../../types/payload-types";
 
+const normalizeChar = (char: GenshinCharacter) => {
+    const newChar = {
+        id: char.id,
+        name: char.name,
+        weaponType: char.weaponType,
+        substat: char.substat,
+        rarity: Number.parseInt(char.rarity),
+    };
+    if (char.icon && typeof char.icon === "object") {
+        newChar["icon"] = char.icon.cloudinary.secure_url;
+    }
+
+    if (
+        char.element &&
+        typeof char.element === "object" &&
+        char.element.icon &&
+        typeof char.element.icon === "object"
+    ) {
+        newChar["element"] = {
+            name: char.element.name,
+            icon: char.element.icon.cloudinary.secure_url,
+        };
+    }
+
+    if (
+        char.specialty &&
+        typeof char.specialty === "object" &&
+        char.specialty.icon &&
+        typeof char.specialty.icon === "object"
+    ) {
+        newChar["specialty"] = {
+            name: char.specialty.name,
+            icon: char.specialty.icon.cloudinary.secure_url,
+        };
+    }
+    if (
+        char.boss &&
+        typeof char.boss === "object" &&
+        char.boss.icon &&
+        typeof char.boss.icon === "object"
+    ) {
+        newChar["boss"] = {
+            name: char.boss.name,
+            icon: char.boss.icon.cloudinary.secure_url,
+        };
+    }
+    if (
+        char.talent &&
+        typeof char.talent === "object" &&
+        char.talent.icon &&
+        typeof char.talent.icon === "object"
+    ) {
+        newChar["talent"] = {
+            name: char.talent.name,
+            icon: char.talent.icon.cloudinary.secure_url,
+        };
+    }
+
+    if (
+        char.trounce &&
+        typeof char.trounce === "object" &&
+        char.trounce.icon &&
+        typeof char.trounce.icon === "object"
+    ) {
+        newChar["trounce"] = {
+            name: char.trounce.name,
+            icon: char.trounce.icon.cloudinary.secure_url,
+        };
+    }
+
+    if (
+        char.gem &&
+        typeof char.gem === "object" &&
+        char.gem.icon &&
+        typeof char.gem.icon === "object"
+    ) {
+        newChar["gem"] = {
+            name: char.gem.name,
+            icon: char.gem.icon.cloudinary.secure_url,
+        };
+    }
+
+    if (char.books && Array.isArray(char.books)) {
+        newChar["books"] = char.books.map((book) => {
+            if (
+                typeof book === "object" &&
+                book.icon &&
+                typeof book.icon === "object"
+            ) {
+                return {
+                    name: book.name,
+                    icon: book.icon.cloudinary.secure_url,
+                };
+            }
+        });
+    }
+
+    return newChar;
+};
+
 const GenshinCharacters: CollectionConfig = {
     slug: "genshin-characters",
     fields: [
@@ -73,6 +173,11 @@ const GenshinCharacters: CollectionConfig = {
             name: "element",
             type: "relationship",
             relationTo: "genshin-elements",
+        },
+        {
+            name: "gem",
+            type: "relationship",
+            relationTo: "genshin-items",
         },
         // elementField,
         // weaponTypeField,
@@ -199,105 +304,10 @@ const GenshinCharacters: CollectionConfig = {
                         const chars = await req.payload.find({
                             collection: "genshin-characters",
                             pagination: false,
+                            sort: "name",
                         });
                         if (chars.docs && chars.docs.length > 0) {
-                            const mappedChars = chars.docs.map((char) => {
-                                const newChar = {
-                                    name: char.name,
-                                    weaponType: char.weaponType,
-                                    substat: char.substat,
-                                };
-                                if (
-                                    char.icon &&
-                                    typeof char.icon === "object"
-                                ) {
-                                    newChar["icon"] =
-                                        char.icon.cloudinary.secure_url;
-                                }
-
-                                if (
-                                    char.element &&
-                                    typeof char.element === "object" &&
-                                    char.element.icon &&
-                                    typeof char.element.icon === "object"
-                                ) {
-                                    newChar["element"] = {
-                                        name: char.element.name,
-                                        icon: char.element.icon.cloudinary
-                                            .secure_url,
-                                    };
-                                }
-
-                                if (
-                                    char.specialty &&
-                                    typeof char.specialty === "object" &&
-                                    char.specialty.icon &&
-                                    typeof char.specialty.icon === "object"
-                                ) {
-                                    newChar["specialty"] = {
-                                        name: char.specialty.name,
-                                        icon: char.specialty.icon.cloudinary
-                                            .secure_url,
-                                    };
-                                }
-                                if (
-                                    char.boss &&
-                                    typeof char.boss === "object" &&
-                                    char.boss.icon &&
-                                    typeof char.boss.icon === "object"
-                                ) {
-                                    newChar["boss"] = {
-                                        name: char.boss.name,
-                                        icon: char.boss.icon.cloudinary
-                                            .secure_url,
-                                    };
-                                }
-                                if (
-                                    char.talent &&
-                                    typeof char.talent === "object" &&
-                                    char.talent.icon &&
-                                    typeof char.talent.icon === "object"
-                                ) {
-                                    newChar["talent"] = {
-                                        name: char.talent.name,
-                                        icon: char.talent.icon.cloudinary
-                                            .secure_url,
-                                    };
-                                }
-
-                                if (
-                                    char.boss &&
-                                    typeof char.boss === "object" &&
-                                    char.boss.icon &&
-                                    typeof char.boss.icon === "object"
-                                ) {
-                                    newChar["boss"] = {
-                                        name: char.boss.name,
-                                        icon: char.boss.icon.cloudinary
-                                            .secure_url,
-                                    };
-                                }
-
-                                if (char.books && Array.isArray(char.books)) {
-                                    newChar["books"] = char.books.map(
-                                        (book) => {
-                                            if (
-                                                typeof book === "object" &&
-                                                book.icon &&
-                                                typeof book.icon === "object"
-                                            ) {
-                                                return {
-                                                    name: book.name,
-                                                    icon: book.icon.cloudinary
-                                                        .secure_url,
-                                                };
-                                            }
-                                        }
-                                    );
-                                }
-
-                                return newChar;
-                            });
+                            const mappedChars = chars.docs.map(normalizeChar);
                             return res.send(mappedChars);
                         }
                         return res.send([]);
@@ -305,6 +315,33 @@ const GenshinCharacters: CollectionConfig = {
                         res.status(500).send(error);
                         console.error(
                             "/getGenshinCharacters threw an error: ",
+                            error
+                        );
+                    }
+                },
+            ],
+        },
+        {
+            path: "/getGenshinCharacter",
+            method: "get",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    try {
+                        const { id } = req.query;
+                        if (typeof id !== "string") {
+                            return res.status(400).send("Invalid id");
+                        }
+                        const character = await req.payload.findByID({
+                            collection: "genshin-characters",
+                            id: id,
+                        });
+
+                        return res.send(normalizeChar(character));
+                    } catch (error) {
+                        res.status(500).send(error);
+                        console.error(
+                            "/getGenshinCharacter threw an error: ",
                             error
                         );
                     }

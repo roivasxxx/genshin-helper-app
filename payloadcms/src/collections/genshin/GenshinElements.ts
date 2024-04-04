@@ -29,6 +29,7 @@ const GenshinElements: CollectionConfig = {
                 async (req: PayloadRequest, res: Response) => {
                     const elements = await req.payload.find({
                         collection: "genshin-elements",
+                        sort: "name",
                     });
 
                     const elementsMapped = elements.docs.map((el) => {

@@ -72,6 +72,10 @@ const GenshinItems: CollectionConfig = {
                     label: "Trounce drop",
                     value: "trounceDrop",
                 },
+                {
+                    label: "Gem",
+                    value: "gem",
+                },
             ],
         },
         { name: "icon", type: "upload", relationTo: "media" },
