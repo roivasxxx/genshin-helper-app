@@ -79,6 +79,41 @@ const GenshinItems: CollectionConfig = {
             ],
         },
         { name: "icon", type: "upload", relationTo: "media" },
+        { name: "region", type: "text" },
+        {
+            name: "days",
+            type: "select",
+            options: [
+                {
+                    value: "0",
+                    label: "Sunday",
+                },
+                {
+                    value: "1",
+                    label: "Monday",
+                },
+                {
+                    value: "2",
+                    label: "Tuesday",
+                },
+                {
+                    value: "3",
+                    label: "Wednesday",
+                },
+                {
+                    value: "4",
+                    label: "Thursday",
+                },
+                {
+                    value: "5",
+                    label: "Friday",
+                },
+                {
+                    value: "6",
+                    label: "Saturday",
+                },
+            ],
+        },
         // {
         //     // some item types exist in multiple variations -> use an array
         //     // for example: books in weapon ascension, character ascension, etc

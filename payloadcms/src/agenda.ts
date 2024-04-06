@@ -1,12 +1,52 @@
-import Agenda from "agenda";
+import Agenda, { Processor } from "agenda";
 import payload from "payload";
 import { GenshinAccount, Job } from "../types/payload-types";
 import { wishImporter } from "./api/wishes/importer";
 import { mongoClient } from "./mongo";
+import { WISH_REGIONS } from "./constants";
+import { NotificationConfig } from "../types/types";
+import { notifyUsers } from "./notifications";
 
 require("dotenv").config();
 
 let agenda: Agenda;
+
+const notifyConfig: NotificationConfig[] = [
+    {
+        // 6 am in Europe/Berlin
+        region: WISH_REGIONS.EUROPE,
+        startDate: 1712469600000,
+        timezone: "Europe/Berlin",
+    },
+    {
+        // 6 am in America/New_York
+        region: WISH_REGIONS.AMERICA,
+        startDate: 1712491200000,
+        timezone: "America/New_York",
+    },
+    {
+        // 6 am in Asia/Hong_Kong
+        region: WISH_REGIONS.ASIA,
+        startDate: 1712448000000,
+        timezone: "Asia/Hong_Kong",
+    },
+];
+
+function defineNotificationJobs() {
+    for (const config of notifyConfig) {
+        agenda.define(`notify${config.region}`, async (job, done) => {
+            console.log(`Notification job running for ${config.region}`);
+            await notifyUsers(config.region);
+            done();
+        });
+
+        const notifyJob = agenda.create(`notify${config.region}`, {});
+        notifyJob.repeatEvery("24 hours", {
+            timezone: config.timezone,
+            startDate: config.startDate,
+        });
+    }
+}
 
 const initAgenda = async () => {
     const mongoConnectionString = process.env.AGENDA_URI;
@@ -15,6 +55,7 @@ const initAgenda = async () => {
             address: mongoConnectionString,
         },
     });
+
     agenda.on("ready", async () => {
         try {
             agenda.define(
@@ -138,6 +179,14 @@ const initAgenda = async () => {
                     done();
                 }
             );
+
+            const notifyEUROPE = agenda.create("notify", {});
+            notifyEUROPE.repeatEvery("24 hours", {
+                timezone: "Europe/Berlin",
+                startDate: 1712469600000,
+            });
+
+            defineNotificationJobs();
 
             await agenda.start();
         } catch (error) {

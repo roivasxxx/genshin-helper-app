@@ -215,6 +215,8 @@ export interface GenshinItem {
       )
     | null;
   icon?: string | Media | null;
+  region?: string | null;
+  days?: ('0' | '1' | '2' | '3' | '4' | '5' | '6') | null;
   updatedAt: string;
   createdAt: string;
 }

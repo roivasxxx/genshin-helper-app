@@ -55,6 +55,7 @@ export enum WISH_REGIONS {
 
 export const HOYO_WISH_API_URL =
     "https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog";
+
 export enum DAYS {
     MONDAY = "monday",
     TUESDAY = "tuesday",
@@ -91,3 +92,5 @@ export const DEFAULT_GENSHIN_WISH_INFO: GenshinAcountWishInfo = {
         lastId: null,
     },
 };
+
+export const EXPO_NOTIFICATION_API = "https://exp.host/--/api/v2/push/send";

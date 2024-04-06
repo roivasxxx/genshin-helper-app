@@ -1,3 +1,4 @@
+import { WISH_REGIONS } from "../src/constants";
 import { GenshinAccount } from "./payload-types";
 
 export type GenshinAcountWishInfo = {
@@ -18,4 +19,10 @@ export type GenshinApiResponseWish = {
     rank_type: string;
     id: string;
     pity: number;
+};
+
+export type NotificationConfig = {
+    region: WISH_REGIONS;
+    startDate: number;
+    timezone: string;
 };
