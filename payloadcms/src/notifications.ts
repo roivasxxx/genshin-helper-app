@@ -42,7 +42,7 @@ export const notifyUsers = async (region: WISH_REGIONS) => {
 export const notifyUser = async (user: PublicUser) => {
     // get current day of the week index
     const dayIndex = new Date().getDay();
-
+    console.log("Notifying user: ", user.email);
     for (const item of user.tracking.items) {
         const items: GenshinItem[] = [];
         if (
@@ -91,6 +91,7 @@ export const sendExpoNotification = async (
     title: string,
     body: String
 ) => {
+    console.log("Sending expo notification to expoToken: ", expoToken);
     await axios({
         method: "POST",
         url: EXPO_NOTIFICATION_API,

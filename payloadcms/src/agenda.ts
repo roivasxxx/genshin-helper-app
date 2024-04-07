@@ -43,17 +43,37 @@ async function defineNotificationJobs() {
     for (const config of notifyConfig) {
         console.log("Set up notifications job for: ", config.region);
         agenda.define(`notify${config.region}`, async (job, done) => {
-            console.log(`Notification job running for ${config.region}`);
-            await notifyUsers(config.region);
+            const jobAttributes = job.attrs.data as { region: WISH_REGIONS };
+
+            console.log(`Notification job running for ${jobAttributes.region}`);
+            await notifyUsers(jobAttributes.region);
             done();
         });
+    }
 
-        const notifyJob = agenda.create(`notify${config.region}`, {});
+    agenda.define("notifyOneTime", async (job, done) => {
+        const jobAttributes = job.attrs.data as { region: WISH_REGIONS };
+
+        const config = notifyConfig.find(
+            (config) => config.region === jobAttributes.region
+        );
+        const notifyJob = agenda.create(`notify${jobAttributes.region}`, {
+            region: jobAttributes.region,
+        });
         notifyJob.repeatEvery("24 hours", {
             timezone: config.timezone,
-            startDate: config.startDate,
-            skipImmediate: true,
         });
+        await notifyJob.save();
+        done();
+    });
+
+    for (const config of notifyConfig) {
+        const notifyJob = await agenda.schedule(
+            config.startDate,
+            "notifyOneTime",
+            { region: config.region }
+        );
+
         await notifyJob.save();
     }
 }
