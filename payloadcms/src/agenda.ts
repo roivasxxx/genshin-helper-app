@@ -52,6 +52,7 @@ async function defineNotificationJobs() {
         notifyJob.repeatEvery("24 hours", {
             timezone: config.timezone,
             startDate: config.startDate,
+            skipImmediate: true,
         });
         await notifyJob.save();
     }
