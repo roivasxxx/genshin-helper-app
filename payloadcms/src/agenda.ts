@@ -15,21 +15,24 @@ const notifyConfig: NotificationConfig[] = [
     {
         // 6 am in Europe/Berlin
         region: WISH_REGIONS.EUROPE,
-        startDate: 1712556000000,
+        startDate: new Date(1712556000000),
         timezone: "Europe/Berlin",
     },
     {
         // 6 am in America/New_York
         region: WISH_REGIONS.AMERICA,
-        startDate: 1712577600000,
+        startDate: new Date(1712577600000),
         timezone: "America/New_York",
     },
     {
         // 6 am in Asia/Hong_Kong
         region: WISH_REGIONS.ASIA,
-        startDate: 1712534400000,
+        startDate: new Date(1712534400000),
         timezone: "Asia/Hong_Kong",
     },
+    // diff ASIA - EU = 21600000
+    // EU + 21600000 = NA
+    // EU - 21600000 = ASIA
 ];
 
 async function defineNotificationJobs() {

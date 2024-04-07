@@ -525,6 +525,9 @@ const GenshinAccounts: CollectionConfig = {
                 async (req: PayloadRequest, res: Response) => {
                     try {
                         const accountId = await validateGenshinAccount(req);
+                        if (!accountId) {
+                            return res.status(401).send("Unauthorized");
+                        }
                         res.setHeader("Content-Type", "application/json");
                         res.setHeader(
                             "Content-Disposition",
