@@ -41,6 +41,7 @@ async function defineNotificationJobs() {
         console.log("Skipping notification setup in development mode");
         return;
     }
+    // just change this to cron jobs
     for (const config of notifyConfig) {
         console.log("Set up notifications job for: ", config.region);
         agenda.define(`notify${config.region}`, async (job, done) => {
@@ -214,12 +215,14 @@ const initAgenda = async () => {
 
             agenda.define("timeout", async (job, done) => {
                 await sleep(5000);
+                console.log("keep alive");
                 done();
             });
-
             await defineNotificationJobs();
-
-            agenda.every("5 minutes", "timeout");
+            // console.log("sdssd", process.env.NODE_ENV);
+            if (process.env.NODE_ENV === "production") {
+                await agenda.every("5 minutes", "timeout");
+            }
 
             await agenda.start();
         } catch (error) {
