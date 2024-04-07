@@ -19,6 +19,11 @@ app.use(
 app.get("/", (_, res) => {
     res.redirect("/admin");
 });
+
+app.get("/timeout", (req, res) => {
+    console.log("TIMEOUT endpoint hit");
+    res.send("OK");
+});
 const start = async () => {
     // Initialize Payload
     await payload.init({
