@@ -6,6 +6,7 @@ import { mongoClient } from "./mongo";
 import { WISH_REGIONS } from "./constants";
 import { NotificationConfig } from "../types/types";
 import { notifyUsers } from "./notifications";
+import { sleep } from "./utils";
 
 require("dotenv").config();
 
@@ -211,7 +212,14 @@ const initAgenda = async () => {
                 }
             );
 
+            agenda.define("timeout", async (job, done) => {
+                await sleep(5000);
+                done();
+            });
+
             await defineNotificationJobs();
+
+            agenda.every("5 minutes", "timeout");
 
             await agenda.start();
         } catch (error) {
