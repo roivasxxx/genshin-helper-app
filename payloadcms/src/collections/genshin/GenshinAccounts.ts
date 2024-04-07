@@ -8,6 +8,7 @@ import { Response } from "express";
 import authMiddleware from "../../api/authMiddleware";
 import { GenshinAccount, PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
+import exportWishHistory from "../../api/wishes/exporter";
 
 const validateGenshinAccount = async (req: PayloadRequest) => {
     const user: PublicUser = await req.payload.findByID({
@@ -513,6 +514,38 @@ const GenshinAccounts: CollectionConfig = {
                         },
                     });
                     res.send("OK");
+                },
+            ],
+        },
+        {
+            path: "/exportWishHistory",
+            method: "get",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    try {
+                        const accountId = await validateGenshinAccount(req);
+                        res.setHeader("Content-Type", "application/json");
+                        res.setHeader(
+                            "Content-Disposition",
+                            "attachment; filename=data.json"
+                        );
+                        // checks if account exists
+                        await req.payload.findByID({
+                            collection: "genshin-accounts",
+                            id: accountId,
+                        });
+                        res.write("{");
+                        await exportWishHistory(accountId, res);
+                        res.write("}");
+                        res.end();
+                    } catch (error) {
+                        console.error(
+                            "exportWishHistory threw an exception:",
+                            error
+                        );
+                        return res.status(500).send(error);
+                    }
                 },
             ],
         },

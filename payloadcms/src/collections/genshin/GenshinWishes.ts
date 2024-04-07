@@ -69,6 +69,10 @@ const GenshinWishes: CollectionConfig = {
             name: "wishNumber",
             type: "number",
         },
+        {
+            name: "rarity",
+            type: "number",
+        },
         // {
         //     // userId + bannerType + wishNumber - userId-standard-0, userId-weapon-1,...
         //     // use for querying, sorting

@@ -1,4 +1,4 @@
-import Agenda, { Processor } from "agenda";
+import Agenda from "agenda";
 import payload from "payload";
 import { GenshinAccount, Job } from "../types/payload-types";
 import { wishImporter } from "./api/wishes/importer";
@@ -15,25 +15,30 @@ const notifyConfig: NotificationConfig[] = [
     {
         // 6 am in Europe/Berlin
         region: WISH_REGIONS.EUROPE,
-        startDate: 1712469600000,
+        startDate: 1712556000000,
         timezone: "Europe/Berlin",
     },
     {
         // 6 am in America/New_York
         region: WISH_REGIONS.AMERICA,
-        startDate: 1712491200000,
+        startDate: 1712577600000,
         timezone: "America/New_York",
     },
     {
         // 6 am in Asia/Hong_Kong
         region: WISH_REGIONS.ASIA,
-        startDate: 1712448000000,
+        startDate: 1712534400000,
         timezone: "Asia/Hong_Kong",
     },
 ];
 
-function defineNotificationJobs() {
+async function defineNotificationJobs() {
+    if (process.env.NODE_ENV !== "production") {
+        console.log("Skipping notification setup in development mode");
+        return;
+    }
     for (const config of notifyConfig) {
+        console.log("Set up notifications job for: ", config.region);
         agenda.define(`notify${config.region}`, async (job, done) => {
             console.log(`Notification job running for ${config.region}`);
             await notifyUsers(config.region);
@@ -45,6 +50,7 @@ function defineNotificationJobs() {
             timezone: config.timezone,
             startDate: config.startDate,
         });
+        await notifyJob.save();
     }
 }
 
@@ -58,6 +64,7 @@ const initAgenda = async () => {
 
     agenda.on("ready", async () => {
         try {
+            console.log("Setting up agenda jobs...");
             agenda.define(
                 "wishImporter",
                 { shouldSaveResult: false, concurrency: 10 },
@@ -180,13 +187,7 @@ const initAgenda = async () => {
                 }
             );
 
-            const notifyEUROPE = agenda.create("notify", {});
-            notifyEUROPE.repeatEvery("24 hours", {
-                timezone: "Europe/Berlin",
-                startDate: 1712469600000,
-            });
-
-            defineNotificationJobs();
+            await defineNotificationJobs();
 
             await agenda.start();
         } catch (error) {

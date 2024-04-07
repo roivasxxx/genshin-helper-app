@@ -320,6 +320,7 @@ export interface GenshinWish {
         value: string | GenshinWeapon;
       } | null);
   wishNumber?: number | null;
+  rarity?: number | null;
   updatedAt: string;
   createdAt: string;
 }
