@@ -218,7 +218,7 @@ const initAgenda = async () => {
                 console.log("keep alive");
                 done();
             });
-            await defineNotificationJobs();
+            // await defineNotificationJobs(); jobs are already defined, reruning the function will cause duplicate jobs to spawn
             // console.log("sdssd", process.env.NODE_ENV);
             if (process.env.NODE_ENV === "production") {
                 await agenda.every("5 minutes", "timeout");

@@ -1,7 +1,6 @@
 import axios from "axios";
-import { DAYS, EXPO_NOTIFICATION_API, WISH_REGIONS } from "./constants";
+import { EXPO_NOTIFICATION_API, WISH_REGIONS } from "./constants";
 import payload from "payload";
-import { mongoClient } from "./mongo";
 import { GenshinItem, PublicUser } from "../types/payload-types";
 import { sleep } from "./utils";
 
@@ -99,6 +98,8 @@ export const sendExpoNotification = async (
             to: expoToken,
             title,
             body,
+            priority: "high",
+            ttl: 86400,
         },
     });
 };

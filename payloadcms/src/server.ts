@@ -21,7 +21,6 @@ app.get("/", (_, res) => {
 });
 
 app.get("/timeout", (req, res) => {
-    console.log("TIMEOUT endpoint hit");
     res.send("OK");
 });
 const start = async () => {
