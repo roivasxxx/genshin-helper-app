@@ -23,6 +23,6 @@ export type GenshinApiResponseWish = {
 
 export type NotificationConfig = {
     region: WISH_REGIONS;
-    startDate: Date;
+    startDate: string;
     timezone: string;
 };
