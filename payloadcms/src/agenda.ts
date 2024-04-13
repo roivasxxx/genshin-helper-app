@@ -225,10 +225,9 @@ const initAgenda = async () => {
                 await notifyUsers(WISH_REGIONS.EUROPE);
             });
             // await defineNotificationJobs();
+            agenda.every("5 minutes", "notifyOneTime");
 
             await agenda.start();
-
-            agenda.every("5 minutes", "notifyOneTime");
         } catch (error) {
             console.error("Error in initAgenda: ", error);
         }
