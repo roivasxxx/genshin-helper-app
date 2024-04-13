@@ -221,9 +221,6 @@ const initAgenda = async () => {
                     done();
                 }
             );
-            agenda.define("notifyOneTime", async (job, done) => {
-                await notifyUsers(WISH_REGIONS.EUROPE);
-            });
             // await defineNotificationJobs();
 
             await agenda.start();
