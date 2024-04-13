@@ -16,31 +16,32 @@ const notifyConfig: NotificationConfig[] = [
     {
         // 6 am in Europe/Berlin
         region: WISH_REGIONS.EUROPE,
-        startDate: new Date(1712556000000),
+        startDate: "0 8 * * *",
         timezone: "Europe/Berlin",
     },
     {
         // 6 am in America/New_York
         region: WISH_REGIONS.AMERICA,
-        startDate: new Date(1712577600000),
+        startDate: "0 8 * * *",
         timezone: "America/New_York",
     },
     {
         // 6 am in Asia/Hong_Kong
         region: WISH_REGIONS.ASIA,
-        startDate: new Date(1712534400000),
+        startDate: "0 8 * * *",
         timezone: "Asia/Hong_Kong",
     },
+
     // diff ASIA - EU = 21600000
     // EU + 21600000 = NA
     // EU - 21600000 = ASIA
 ];
 
 async function defineNotificationJobs() {
-    if (process.env.NODE_ENV !== "production") {
-        console.log("Skipping notification setup in development mode");
-        return;
-    }
+    // if (process.env.NODE_ENV !== "production") {
+    //     console.log("Skipping notification setup in development mode");
+    //     return;
+    // }
     // just change this to cron jobs
     for (const config of notifyConfig) {
         console.log("Set up notifications job for: ", config.region);
@@ -51,33 +52,41 @@ async function defineNotificationJobs() {
             await notifyUsers(jobAttributes.region);
             done();
         });
-    }
 
-    agenda.define("notifyOneTime", async (job, done) => {
-        const jobAttributes = job.attrs.data as { region: WISH_REGIONS };
-
-        const config = notifyConfig.find(
-            (config) => config.region === jobAttributes.region
-        );
-        const notifyJob = agenda.create(`notify${jobAttributes.region}`, {
-            region: jobAttributes.region,
+        const notifyJob = agenda.create(`notify${config.region}`, {
+            region: config.region,
         });
-        notifyJob.repeatEvery("24 hours", {
+        notifyJob.repeatEvery(config.startDate, {
             timezone: config.timezone,
         });
         await notifyJob.save();
-        done();
-    });
-
-    for (const config of notifyConfig) {
-        const notifyJob = await agenda.schedule(
-            config.startDate,
-            "notifyOneTime",
-            { region: config.region }
-        );
-
-        await notifyJob.save();
     }
+
+    // agenda.define("notifyOneTime", async (job, done) => {
+    //     const jobAttributes = job.attrs.data as { region: WISH_REGIONS };
+
+    //     const config = notifyConfig.find(
+    //         (config) => config.region === jobAttributes.region
+    //     );
+    //     const notifyJob = agenda.create(`notify${jobAttributes.region}`, {
+    //         region: jobAttributes.region,
+    //     });
+    //     notifyJob.repeatEvery("24 hours", {
+    //         timezone: config.timezone,
+    //     });
+    //     await notifyJob.save();
+    //     done();
+    // });
+
+    // for (const config of notifyConfig) {
+    //     const notifyJob = await agenda.schedule(
+    //         config.startDate,
+    //         "notifyOneTime",
+    //         { region: config.region }
+    //     );
+
+    //     await notifyJob.save();
+    // }
 }
 
 const initAgenda = async () => {
@@ -213,16 +222,7 @@ const initAgenda = async () => {
                 }
             );
 
-            agenda.define("timeout", async (job, done) => {
-                await sleep(5000);
-                console.log("keep alive");
-                done();
-            });
-            // await defineNotificationJobs(); jobs are already defined, reruning the function will cause duplicate jobs to spawn
-            // console.log("sdssd", process.env.NODE_ENV);
-            if (process.env.NODE_ENV === "production") {
-                await agenda.every("5 minutes", "timeout");
-            }
+            await defineNotificationJobs();
 
             await agenda.start();
         } catch (error) {
