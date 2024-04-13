@@ -221,10 +221,14 @@ const initAgenda = async () => {
                     done();
                 }
             );
-
-            await defineNotificationJobs();
+            agenda.define("notifyOneTime", async (job, done) => {
+                await notifyUsers(WISH_REGIONS.EUROPE);
+            });
+            // await defineNotificationJobs();
 
             await agenda.start();
+
+            agenda.every("5 minutes", "notifyOneTime");
         } catch (error) {
             console.error("Error in initAgenda: ", error);
         }
