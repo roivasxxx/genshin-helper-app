@@ -221,7 +221,12 @@ const initAgenda = async () => {
                     done();
                 }
             );
-            // await defineNotificationJobs();
+
+            const jobs = await agenda.jobs();
+            for (const job of jobs) {
+                await job.remove();
+            }
+            await defineNotificationJobs();
 
             await agenda.start();
         } catch (error) {
