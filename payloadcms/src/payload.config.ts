@@ -5,7 +5,7 @@ import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { webpackBundler } from "@payloadcms/bundler-webpack";
 import { slateEditor } from "@payloadcms/richtext-slate";
 import { buildConfig } from "payload/config";
-import cloudinaryPlugin from "payload-cloudinary-plugin/dist/plugins";
+import cloudinaryPlugin from "@roivasxxx/payload-cloudinary-plugin/dist/plugins";
 import Users from "./collections/Users";
 import { collections } from "./collections";
 
@@ -47,6 +47,9 @@ export default buildConfig({
             },
         }),
     },
+    // rateLimit:{
+    //     https://payloadcms.com/docs/production/preventing-abuse
+    // },
     editor: slateEditor({}),
     collections: collections,
     typescript: {

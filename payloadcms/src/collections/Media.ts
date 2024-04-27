@@ -13,6 +13,17 @@ export const Media: CollectionConfig = {
         disableLocalStorage: true,
     },
     fields: [
+        // setting custom cloudinary folder name, defaults to /media
+        {
+            name: "folder",
+            type: "text",
+        },
+        // payload-cloudinary-plugin adds a timestamp to the filename, this results in the file in cloudinary containing the timestamp
+        // to avoid this, check the addFileNameDate option
+        {
+            name: "addFileNameDate",
+            type: "checkbox",
+        },
         {
             name: "alt",
             type: "text",

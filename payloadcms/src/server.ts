@@ -1,6 +1,6 @@
 import express from "express";
 import payload from "payload";
-import { mediaManagement } from "payload-cloudinary-plugin";
+import { mediaManagement } from "@roivasxxx/payload-cloudinary-plugin";
 import { initAgenda } from "./agenda";
 import { initializeMongo } from "./mongo";
 
@@ -9,11 +9,14 @@ const app = express();
 
 // use cloudinary plugin
 app.use(
-    mediaManagement({
-        cloud_name: process.env.CLOUDINARY_NAME,
-        api_key: process.env.CLOUDINARY_API_KEY,
-        api_secret: process.env.CLOUDINARY_API_SECRET,
-    })
+    mediaManagement(
+        {
+            cloud_name: process.env.CLOUDINARY_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET,
+        },
+        { unique_filename: false, use_filename: true }
+    )
 );
 // Redirect root to Admin panel
 app.get("/", (_, res) => {
