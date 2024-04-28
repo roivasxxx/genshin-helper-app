@@ -325,7 +325,6 @@ const GenshinCharacters: CollectionConfig = {
             path: "/getGenshinCharacter",
             method: "get",
             handler: [
-                authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
                     try {
                         const { id } = req.query;

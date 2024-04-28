@@ -1,12 +1,18 @@
 import { RequestUtilsBody } from "../../types";
 import ENV from "./env-utils";
 
+export class HttpError extends Error {
+    constructor(public response: Response) {
+        super(`HTTP error ${response.status}`);
+    }
+}
+
 /**
  * Creates a fetch request for the specified params
  * @param params
  * @returns fetch promise
  */
-const cmsRequest = (
+const cmsRequest = async (
     params: {
         path: string;
         abortController?: AbortController;
@@ -34,7 +40,12 @@ const cmsRequest = (
     const path =
         ENV.BACKEND_URL +
         (params.path[0] === "/" ? params.path : "/" + params.path);
-    return fetch(path, fetchOptions);
+    const result = await fetch(path, fetchOptions);
+    if (result.ok) {
+        return result;
+    } else {
+        throw new HttpError(result);
+    }
 };
 
 export default cmsRequest;
