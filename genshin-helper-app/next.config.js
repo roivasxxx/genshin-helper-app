@@ -4,8 +4,8 @@ const nextConfig = {
         return [
             {
                 source: "/",
-                destination: "/genshin-impact",
-                permanent: true,
+                destination: "/game/genshin-impact",
+                permanent: false,
             },
         ];
     },

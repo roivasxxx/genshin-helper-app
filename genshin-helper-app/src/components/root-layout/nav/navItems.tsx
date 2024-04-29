@@ -22,7 +22,7 @@ function SubPaths(props: {
 }
 
 export default function NavItems(props: { resolution: "small" | "large" }) {
-    const pathName = usePathname()?.split("/")[1] || "";
+    const pathName = usePathname()?.split("/")[2] || "";
     const [openStatus, setOpenStatus] = useState<boolean[]>([]);
 
     useEffect(() => {

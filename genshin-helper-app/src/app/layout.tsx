@@ -3,7 +3,6 @@ import { Exo_2, Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/auth/AuthProvider";
 import { getServerSession } from "next-auth";
-import Header from "@/components/root-layout/nav/header";
 // import { authOptions } from "./api/auth/[...nextauth]/route";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -28,10 +27,7 @@ export default async function RootLayout({
             className={`${inter.variable} ${exo.variable} bg-electro-900`}
         >
             <AuthProvider session={session}>
-                <body>
-                    <Header />
-                    {children}
-                </body>
+                <body>{children}</body>
             </AuthProvider>
         </html>
     );

@@ -21,7 +21,7 @@ export default function Header() {
         setVisibility: setIsMobileMenuOpen,
     } = useClickOutside(false);
 
-    const pathName = usePathname()?.split("/")[1] || "";
+    const pathName = usePathname()?.split("/")[2] || "";
 
     return (
         <header className="bg-electro-800 rounded font-exo text-electro-50 absolute top-0 w-full">
@@ -41,7 +41,7 @@ export default function Header() {
                             </div>
                         </div>
                         <Link
-                            href="/genshin-impact"
+                            href="/game/genshin-impact"
                             className="h-full flex flex-row items-center shrink-0"
                         >
                             <>
