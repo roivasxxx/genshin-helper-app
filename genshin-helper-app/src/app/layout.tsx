@@ -3,7 +3,7 @@ import { Exo_2, Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/auth/AuthProvider";
 import { getServerSession } from "next-auth";
-import Header from "@/components/root-layout/header";
+import Header from "@/components/root-layout/nav/header";
 // import { authOptions } from "./api/auth/[...nextauth]/route";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
