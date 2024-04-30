@@ -1,10 +1,8 @@
 "use client";
-import { GAMES, GAME_INFO } from "@/utils/constants";
 import useClickOutside from "@/utils/hooks/useClickOutside";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import NavItems from "./navItems";
 import GameChangeModal from "../gameChangeModal";
 import UserIcon from "./userIcon";

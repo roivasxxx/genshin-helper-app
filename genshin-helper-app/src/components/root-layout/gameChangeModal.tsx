@@ -49,7 +49,7 @@ const GameChangeModal = forwardRef(function GameChangeModal(
                     return (
                         <div key={"game-modal-link" + gameKey}>
                             <Link
-                                href={`/${gameKey}`}
+                                href={`/game/${gameInfo.path}`}
                                 onClick={() => setIsGameModalOpen(false)}
                             >
                                 <span className="hover:text-electro-900 text-xl">
