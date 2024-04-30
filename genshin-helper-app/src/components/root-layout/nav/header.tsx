@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import NavItems from "./navItems";
 import GameChangeModal from "../gameChangeModal";
+import UserIcon from "./userIcon";
 
 export default function Header() {
     const {
@@ -66,7 +67,7 @@ export default function Header() {
                         {/* content */}
                         <NavItems resolution="large" />
                     </div>
-                    <div className="flex flex-row">
+                    <div className="flex flex-row items-center">
                         <div
                             onClick={() => setIsGameModalOpen(true)}
                             className="size-7 md:size-9 hover:cursor-pointer"
@@ -85,7 +86,7 @@ export default function Header() {
                                 <></>
                             )}
                         </div>
-                        <div>user avatar</div>
+                        <UserIcon />
                     </div>
                 </div>
             </nav>
