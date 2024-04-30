@@ -41,7 +41,7 @@ export default function Header() {
                         </div>
                         <Link
                             href="/game/genshin-impact"
-                            className="h-full flex flex-row items-center shrink-0"
+                            className="h-full flex flex-row items-center shrink-0 text-electro-50 font-bebas hover:text-electro-500"
                         >
                             <>
                                 <div className="size-7 md:size-9">
@@ -55,7 +55,7 @@ export default function Header() {
                                         priority
                                     />
                                 </div>
-                                <span className="text-electro-50 hidden md:inline text-xl">
+                                <span className="hidden md:inline text-2xl">
                                     Electro Mains
                                 </span>
                             </>

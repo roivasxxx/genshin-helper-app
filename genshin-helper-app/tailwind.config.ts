@@ -38,6 +38,7 @@ const config: Config = {
             fontFamily: {
                 exo: ["var(--font-exo)"],
                 inter: ["var(--font-inter)"],
+                bebas: ["var(--font-bebas)"],
             },
         },
     },
