@@ -5,7 +5,7 @@ import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies as nextCookies } from "next/headers";
 import cookie from "cookie";
-import { AuthErrors } from "@/index.d";
+import { AuthErrors, HTTP_METHOD } from "@/types";
 
 const setPayloadCookie = (resCookies: string[]) => {
     for (const c of resCookies) {
@@ -38,7 +38,7 @@ const authOptions: AuthOptions = {
                     try {
                         const res = await cmsRequest({
                             path: "/api/public-users/login",
-                            method: "POST",
+                            method: HTTP_METHOD.POST,
                             body: credentials,
                         });
                         const user = await res.json();
@@ -69,7 +69,7 @@ const authOptions: AuthOptions = {
                 try {
                     const res = await cmsRequest({
                         path: "/api/public-users/refresh-token",
-                        method: "POST",
+                        method: HTTP_METHOD.POST,
                         headers: {
                             Authorization: `Bearer ${payloadToken.value}`,
                         },

@@ -1,4 +1,4 @@
-import { RequestUtilsBody } from "../../types";
+import { RequestUtilsBody } from "../types";
 import ENV from "./env-utils";
 
 export class HttpError extends Error {

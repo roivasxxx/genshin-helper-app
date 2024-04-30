@@ -2,7 +2,6 @@
 
 import { FormEvent, useState } from "react";
 import ENV from "@/utils/env-utils";
-import cmsRequest from "@/utils/fetchUtils";
 import { signIn } from "next-auth/react";
 import FloatingLabelInput from "../floatingLabelInput";
 import Link from "next/link";
@@ -13,7 +12,6 @@ export default function LoginForm() {
 
     const onSubmit = (event: FormEvent) => {
         event.preventDefault();
-        console.log(process.env.NEXT_PUBLIC_BACKEND_URL, ENV.BACKEND_URL);
         signIn("credentials", state);
     };
 
