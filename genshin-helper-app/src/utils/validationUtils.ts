@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export const emailSchema = z.string().email("This is not a valid email");
-export const passwordSchema = z
+export const emailValidator = z.string().email("This is not a valid email");
+export const passwordValidator = z
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(32, "Password must be at most 32 characters")
@@ -48,6 +48,6 @@ export const passwordSchema = z
     });
 
 export const credentialsValidator = z.object({
-    email: emailSchema,
-    password: passwordSchema,
+    email: emailValidator,
+    password: passwordValidator,
 });

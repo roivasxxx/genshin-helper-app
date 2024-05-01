@@ -1,11 +1,11 @@
-import cmsRequest from "@/utils/fetchUtils";
+import cmsRequest, { HttpError } from "@/utils/fetchUtils";
 import NextAuth from "next-auth";
 import type { AuthOptions, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies as nextCookies } from "next/headers";
 import cookie from "cookie";
-import { AuthErrors, HTTP_METHOD } from "@/types";
+import { AUTH_ERRORS, HTTP_METHOD } from "@/types";
 
 const setPayloadCookie = (resCookies: string[]) => {
     for (const c of resCookies) {
@@ -34,7 +34,7 @@ const authOptions: AuthOptions = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
-                if (typeof credentials !== "undefined") {
+                if (credentials && credentials.email && credentials.password) {
                     try {
                         const res = await cmsRequest({
                             path: "/api/public-users/login",
@@ -54,11 +54,21 @@ const authOptions: AuthOptions = {
                             createdAt,
                         };
                     } catch (error) {
-                        return null;
+                        if (error instanceof HttpError) {
+                            if (error.response.status === 401) {
+                                return Promise.reject(
+                                    new Error(AUTH_ERRORS.INVALID_CREDENTIALS)
+                                );
+                            } else if (error.response.status === 429) {
+                                return Promise.reject(
+                                    new Error(AUTH_ERRORS.RATE_LIMIT)
+                                );
+                            }
+                        }
+                        return Promise.reject(new Error(AUTH_ERRORS.UNKNOWN));
                     }
-                } else {
-                    return null;
                 }
+                return Promise.reject(new Error("No credentials provided"));
             },
         }),
     ],
@@ -99,7 +109,7 @@ const authOptions: AuthOptions = {
                         return {
                             ...token,
                             user,
-                            error: AuthErrors.INVALID_SESSION,
+                            error: AUTH_ERRORS.INVALID_SESSION,
                         };
                     }
                 } catch (error) {

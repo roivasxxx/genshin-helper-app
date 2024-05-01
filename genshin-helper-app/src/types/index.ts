@@ -13,9 +13,12 @@ export type RequestUtilsBody =
       }
     | {
           body?: undefined | null;
-          method: HTTP_METHOD.GET | HTTP_METHOD.delete;
+          method: HTTP_METHOD.GET | HTTP_METHOD.DELETE;
       };
 
-export enum AuthErrors {
-    INVALID_SESSION = "INVALID_SESSION",
+export enum AUTH_ERRORS {
+    INVALID_SESSION = "Invalid session",
+    INVALID_CREDENTIALS = "You have entered an invalid username or password",
+    UNKNOWN = "Something went wrong",
+    RATE_LIMIT = "Too many requests, please try again later",
 }

@@ -5,8 +5,8 @@ import { HTTP_METHOD } from "@/types";
 import cmsRequest, { HttpError } from "@/utils/fetchUtils";
 import {
     credentialsValidator,
-    emailSchema,
-    passwordSchema,
+    emailValidator,
+    passwordValidator,
 } from "@/utils/validationUtils";
 import Image from "next/image";
 import Link from "next/link";
@@ -72,19 +72,21 @@ export default function Register() {
                         </div>
                         <h1 className="text-4xl font-bebas">Electro Mains</h1>
                     </Link>
-                    <h2 className="text-xl">Log in to your account!</h2>
+                    <h2 className="text-xl">Create your account!</h2>
                     {errorState ? (
                         <div>
                             <p className="text-red-500 py-2">{errorState}</p>
                         </div>
-                    ) : null}
+                    ) : (
+                        <></>
+                    )}
                     <div className="w-full my-2">
                         <FloatingLabelInput
                             value={state.email}
                             onChange={(e) => onChange("email", e)}
                             label="Email"
                             id="email"
-                            validation={emailSchema}
+                            validation={emailValidator}
                         />
                     </div>
                     <FloatingLabelInput
@@ -92,7 +94,7 @@ export default function Register() {
                         onChange={(e) => onChange("password", e)}
                         label="Password"
                         id="password"
-                        validation={passwordSchema}
+                        validation={passwordValidator}
                         type="password"
                     />
                     <button
