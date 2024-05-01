@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Exo_2, Inter } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "@/components/auth/AuthProvider";
 import { getServerSession } from "next-auth";
+import AuthProvider from "@/components/authentication/authProvider";
 // import { authOptions } from "./api/auth/[...nextauth]/route";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
