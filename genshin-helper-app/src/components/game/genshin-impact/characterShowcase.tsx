@@ -9,6 +9,8 @@ import ShowcaseClickable from "./showcaseClickable";
 import { useDeferredValue, useMemo, useState } from "react";
 import CloseIcon from "@/components/closeIcon";
 import Image from "next/image";
+import { capitalizeString } from "@/utils/utils";
+import Link from "next/link";
 
 export default function CharacterShowcase(props: {
     characters: GenshinCharactersResponse[];
@@ -59,9 +61,9 @@ export default function CharacterShowcase(props: {
 
     return (
         <>
-            <div className="w-full flex flex-col md:flex-row items-center justify-between">
+            <div className="w-full flex overflow-x-auto flex-col xl:flex-row items-center justify-between py-4">
                 {/* filter */}
-                <div className="flex flex-wrap flex-row items-center justify-center gap-2">
+                <div className="flex flex-row items-center justify-between gap-2 py-2 w-full xl:w-auto">
                     {elements.map((element) => {
                         const selected = filter.element === element.name;
                         return (
@@ -69,11 +71,12 @@ export default function CharacterShowcase(props: {
                                 onClick={(_) =>
                                     filterChange("element", element.name)
                                 }
-                                className={`flex items-center justify-center w-10 h-10 ${
+                                className={`${
                                     selected
                                         ? "bg-electro-600"
                                         : "bg-electro-600/50"
-                                } rounded text-electro-50 group hover:bg-electro-300 hover:text-electro-500`}
+                                }`}
+                                title={capitalizeString(element.name)}
                             >
                                 <div className="relative w-4/5 h-4/5">
                                     {element.icon ? (
@@ -95,7 +98,8 @@ export default function CharacterShowcase(props: {
                         );
                     })}
                 </div>
-                <div className="flex flex-wrap flex-row items-center justify-center gap-2">
+
+                <div className="flex flex-row items-center justify-between gap-2 py-2 w-full xl:w-auto">
                     {Object.keys(GENSHIN_WEAPONS).map((weapon) => {
                         const key =
                             GENSHIN_WEAPONS[
@@ -105,11 +109,12 @@ export default function CharacterShowcase(props: {
                         return (
                             <ShowcaseClickable
                                 onClick={(_) => filterChange("weapon", key)}
-                                className={`flex items-center justify-center w-10 h-10 ${
+                                className={`${
                                     selected
                                         ? "bg-electro-600"
                                         : "bg-electro-600/50"
-                                } rounded text-electro-50 group hover:bg-electro-300 hover:text-electro-500`}
+                                }`}
+                                title={capitalizeString(key)}
                             >
                                 <div className="relative w-4/5 h-4/5">
                                     <Image
@@ -130,49 +135,73 @@ export default function CharacterShowcase(props: {
                             </ShowcaseClickable>
                         );
                     })}
-                </div>
-                <div className="flex flex-wrap flex-row items-center justify-center gap-2">
+
                     <ShowcaseClickable
                         onClick={(_) => {
                             filterChange("rarity", "4");
                         }}
-                        className={`flex items-center justify-center w-10 h-10 ${
+                        className={`${
                             filter.rarity === "4"
                                 ? "bg-electro-600 text-electro-50"
                                 : "bg-electro-600/50 text-electro-50/50"
-                        } rounded group hover:bg-electro-300 hover:text-electro-50`}
+                        }`}
+                        title="4 star"
                     >
                         {`4 ${STAR_SYMBOL}`}
                     </ShowcaseClickable>
+
                     <ShowcaseClickable
                         onClick={(_) => {
                             filterChange("rarity", "5");
                         }}
-                        className={`flex items-center justify-center w-10 h-10 ${
+                        className={`${
                             filter.rarity === "5"
                                 ? "bg-electro-600 text-electro-50"
                                 : "bg-electro-600/50 text-electro-50/50"
-                        } rounded group hover:bg-electro-300 hover:text-electro-50`}
+                        }`}
+                        title="5 star"
                     >
                         {`5 ${STAR_SYMBOL}`}
                     </ShowcaseClickable>
                 </div>
+
                 <button
                     onClick={() => {
                         setFilter({ weapon: "", element: "", rarity: "" });
                     }}
-                    className="flex items-center justify-center w-10 h-10 bg-red-600 rounded group hover:bg-red-800"
+                    className="flex items-center justify-center w-full h-10 xl:w-14 md:h-14 bg-red-600 rounded group hover:bg-red-800"
+                    title="Clear filters"
                 >
                     <CloseIcon className="stroke-electro-50 w-4 h-4 group-hover:stroke-electro-500" />
                 </button>
             </div>
-            <div>
+
+            <div className="grid grid-cols-3 gap-2">
                 {/* filtered characters */}
                 {filteredData.map((character) => {
                     return (
-                        <div key={"preview-" + character.id}>
-                            {character.name}
-                        </div>
+                        <Link
+                            href="#"
+                            key={"preview-" + character.id}
+                            className={`h-28 flex flex-col items-center justify-center rounded overflow-hidden ${
+                                character.rarity === 4
+                                    ? "bg-electro-4star-from/50"
+                                    : "bg-electro-5star-from/50"
+                            }`}
+                        >
+                            <div className={"relative w-3/5 h-[80%]"}>
+                                <Image
+                                    src={character.icon}
+                                    alt={character.id}
+                                    fill={true}
+                                    className="w-full h-full object-cover"
+                                    objectFit="cover"
+                                />
+                            </div>
+                            <span className="grid items-center text-xs text-electro-50 bold bg-electro-850 w-full text-center h-[20%] flex:1">
+                                {character.name}
+                            </span>
+                        </Link>
                     );
                 })}
             </div>

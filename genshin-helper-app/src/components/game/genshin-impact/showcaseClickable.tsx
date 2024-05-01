@@ -1,14 +1,24 @@
 import { ReactNode } from "react";
 
-export default function ShowcaseClickable(props: {
+interface ShowcaseClickableProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     onClick: React.MouseEventHandler<HTMLButtonElement>;
     children: ReactNode;
     className?: string;
-}) {
-    const { onClick, className, children } = props;
+}
+
+export default function ShowcaseClickable(props: ShowcaseClickableProps) {
+    const { onClick, className, children, ...rest } = props;
+
+    const defaultClass =
+        "flex items-center justify-center w-10 h-10 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded group hover:bg-electro-300 hover:text-electro-50 ";
 
     return (
-        <button onClick={onClick} className={className}>
+        <button
+            onClick={onClick}
+            className={defaultClass + className}
+            {...rest}
+        >
             {children}
         </button>
     );

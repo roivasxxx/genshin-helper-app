@@ -6,12 +6,18 @@ const config: Config = {
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
+    future: {
+        hoverOnlyWhenSupported: true,
+    },
     theme: {
         extend: {
             backgroundImage: {
                 "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
                 "gradient-conic":
                     "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+            },
+            gridTemplateColumns: {
+                "14": "repeat(14, minmax(0, 1fr))",
             },
             screens: {
                 sm: "640px",
@@ -32,7 +38,16 @@ const config: Config = {
                     600: "#9B7EB0",
                     700: "#675476",
                     800: "#4D3F58",
+                    850: "#614868",
                     900: "#342A3B",
+                    "4star": {
+                        from: "#D28FD6",
+                        to: "#665680",
+                    },
+                    "5star": {
+                        from: "#FFB13F",
+                        to: "#846332",
+                    },
                 },
             },
             fontFamily: {
