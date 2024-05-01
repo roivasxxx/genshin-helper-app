@@ -47,8 +47,11 @@ export default buildConfig({
             },
         }),
     },
-    // rateLimit:{
-    //     https://payloadcms.com/docs/production/preventing-abuse
+    // rateLimit: {
+    //     implement custom express rate limiter, that can be set up on a per route basis
+    //     max: 1,
+    //     window: 500,
+    //     // https://payloadcms.com/docs/production/preventing-abuse
     // },
     editor: slateEditor({}),
     collections: collections,

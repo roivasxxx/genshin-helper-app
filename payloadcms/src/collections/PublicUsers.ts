@@ -15,6 +15,8 @@ const PublicUsers: CollectionConfig = {
 
         // 30 days
         tokenExpiration: 60 * 60 * 24 * 30,
+        maxLoginAttempts: 10,
+        lockTime: 300000, //5 minutes
     },
     admin: {
         useAsTitle: "email",

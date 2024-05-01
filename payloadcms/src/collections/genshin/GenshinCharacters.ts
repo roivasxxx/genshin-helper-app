@@ -28,6 +28,7 @@ const normalizeChar = (char: GenshinCharacter) => {
         newChar["element"] = {
             name: char.element.name,
             icon: char.element.icon.cloudinary.secure_url,
+            id: char.element.id,
         };
     }
 
@@ -298,7 +299,6 @@ const GenshinCharacters: CollectionConfig = {
             path: "/getGenshinCharacters",
             method: "get",
             handler: [
-                authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
                     try {
                         const chars = await req.payload.find({

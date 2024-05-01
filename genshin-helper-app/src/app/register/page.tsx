@@ -48,12 +48,13 @@ export default function Register() {
     };
 
     return (
-        <main>
+        <main className="w-full h-full">
             <div className="flex flex-col justify-center items-center w-full h-full">
                 <form
                     className="flex flex-col justify-center items-center bg-electro-800 rounded text-electro-50 px-6 py-2 min-h-1/2 w-1/2"
                     onSubmit={onSubmit}
                     autoComplete="off"
+                    role="presentation"
                 >
                     <Link
                         href="/game/genshin-impact"
@@ -87,6 +88,8 @@ export default function Register() {
                             label="Email"
                             id="email"
                             validation={emailValidator}
+                            autoComplete="new-password" // disable autofill
+                            required
                         />
                     </div>
                     <FloatingLabelInput
@@ -96,6 +99,8 @@ export default function Register() {
                         id="password"
                         validation={passwordValidator}
                         type="password"
+                        autoComplete="new-password" // disable autofill
+                        required
                     />
                     <button
                         className={`w-full mt-4 bg-electro-500 text-electro-50 p-2 rounded flex justify-center hover:bg-electro-900 disabled:bg-gray-600`}

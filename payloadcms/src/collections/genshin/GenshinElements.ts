@@ -25,7 +25,6 @@ const GenshinElements: CollectionConfig = {
             path: "/getElements",
             method: "get",
             handler: [
-                authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
                     const elements = await req.payload.find({
                         collection: "genshin-elements",
@@ -35,6 +34,7 @@ const GenshinElements: CollectionConfig = {
                     const elementsMapped = elements.docs.map((el) => {
                         const element = {
                             name: el.name,
+                            id: el.id,
                         };
                         if (typeof el.icon === "object") {
                             element["icon"] = el.icon.cloudinary.secure_url;

@@ -23,3 +23,15 @@ export const GAME_INFO: Record<GAMES, GameInfo> = {
         label: "Zenless Zone Zero",
     },
 };
+
+export const DEFAULT_GAME = GAMES.GENSHIN;
+
+export enum GENSHIN_WEAPONS {
+    SWORD = "sword",
+    CLAYMORE = "claymore",
+    POLEARM = "polearm",
+    BOW = "bow",
+    CATALYST = "catalyst",
+}
+
+export const STAR_SYMBOL = "\u2605";

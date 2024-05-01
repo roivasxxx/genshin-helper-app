@@ -40,6 +40,7 @@ const cmsRequest = async (
     const path =
         ENV.BACKEND_URL +
         (params.path[0] === "/" ? params.path : "/" + params.path);
+
     const result = await fetch(path, fetchOptions);
     if (result.ok) {
         return result;

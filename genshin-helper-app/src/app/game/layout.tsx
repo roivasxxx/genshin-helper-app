@@ -8,8 +8,10 @@ export default async function GameLayout({
 }) {
     return (
         <>
-            <Header />
-            {children}
+            <div className="flex h-full w-full flex-col">
+                <Header />
+                {children}
+            </div>
         </>
     );
 }
