@@ -3,6 +3,11 @@ import FloatingLabelInput from "@/components/floatingLabelInput";
 import LoadingLogo from "@/components/loadingLogo";
 import { HTTP_METHOD } from "@/types";
 import cmsRequest, { HttpError } from "@/utils/fetchUtils";
+import {
+    credentialsValidator,
+    emailSchema,
+    passwordSchema,
+} from "@/utils/validationUtils";
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -46,7 +51,7 @@ export default function Register() {
         <main>
             <div className="flex flex-col justify-center items-center w-full h-full">
                 <form
-                    className="flex flex-col justify-center items-center bg-electro-800 rounded text-electro-50 px-6 py-2 h-1/2 w-1/2"
+                    className="flex flex-col justify-center items-center bg-electro-800 rounded text-electro-50 px-6 py-2 min-h-1/2 w-1/2"
                     onSubmit={onSubmit}
                     autoComplete="off"
                 >
@@ -79,6 +84,7 @@ export default function Register() {
                             onChange={(e) => onChange("email", e)}
                             label="Email"
                             id="email"
+                            validation={emailSchema}
                         />
                     </div>
                     <FloatingLabelInput
@@ -86,11 +92,15 @@ export default function Register() {
                         onChange={(e) => onChange("password", e)}
                         label="Password"
                         id="password"
+                        validation={passwordSchema}
+                        type="password"
                     />
                     <button
                         className={`w-full mt-4 bg-electro-500 text-electro-50 p-2 rounded flex justify-center hover:bg-electro-900 disabled:bg-gray-600`}
                         type="submit"
-                        disabled={state.email === "" || state.password === ""}
+                        disabled={
+                            !credentialsValidator.safeParse(state).success
+                        }
                     >
                         {loading ? <LoadingLogo size={"7"} /> : "Submit"}
                     </button>
