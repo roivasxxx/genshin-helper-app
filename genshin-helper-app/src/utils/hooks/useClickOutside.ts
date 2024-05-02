@@ -5,15 +5,22 @@ import { useEffect, useRef, useState } from "react";
  * Hook controls component's visibility. To use this hook ref needs to be set by component to itself.
  * Provides access to isVisible state and setVisibility setter function.
  * @param initialState                initial visible state of the component (boolean)
+ * @param skipElements                list of element ids to skip
  */
-export default function useClickOutside(initialState: boolean) {
+export default function useClickOutside(
+    initialState: boolean,
+    skipElements?: string[]
+) {
     const [isVisible, setVisibility] = useState(initialState);
     // HTMLDivElement is used as generic, should work for all other elements
     const ref = useRef<HTMLDivElement>(null);
 
     const handleClickOutside = (event: MouseEvent) => {
         if (ref.current && event.target instanceof Element) {
-            if (!ref.current.contains(event.target)) {
+            if (
+                !ref.current.contains(event.target) &&
+                !skipElements?.includes(event.target.id)
+            ) {
                 setVisibility(false);
             }
         }

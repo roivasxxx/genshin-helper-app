@@ -18,22 +18,29 @@ export default function Header() {
         ref: mobileNavRef,
         isVisible: isMobileMenuOpen,
         setVisibility: setIsMobileMenuOpen,
-    } = useClickOutside(false);
+    } = useClickOutside(false, ["hamburger"]);
 
     const pathName = usePathname()?.split("/")[2] || "";
 
     return (
-        <header className="bg-electro-800 rounded font-exo text-electro-50 fixed top-0 w-full z-50">
+        <header className="bg-electro-800 rounded font-exo text-electro-50 sticky top-0 w-full z-50">
             <nav className="w-full flex items-center">
                 <div className="w-full h-16 flex flex-row items-center justify-between px-2">
                     <div className="w-36 h-full flex flex-row items-center">
                         <div
                             className="inline md:hidden px-2"
-                            onClick={() =>
-                                setIsMobileMenuOpen(!isMobileMenuOpen)
-                            }
+                            onClick={() => {
+                                console.log(
+                                    "clicked, setting to",
+                                    !isMobileMenuOpen
+                                );
+                                setIsMobileMenuOpen(!isMobileMenuOpen);
+                            }}
                         >
-                            <div className="grid justify-items-center gap-1.5">
+                            <div
+                                className="grid justify-items-center gap-1.5"
+                                id="hamburger"
+                            >
                                 <span className="block h-0.5 w-6 bg-electro-50" />
                                 <span className="block h-0.5 w-6 bg-electro-50" />
                                 <span className="block h-0.5 w-6 bg-electro-50" />

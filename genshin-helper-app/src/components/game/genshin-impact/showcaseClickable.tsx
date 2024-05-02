@@ -11,7 +11,7 @@ export default function ShowcaseClickable(props: ShowcaseClickableProps) {
     const { onClick, className, children, ...rest } = props;
 
     const defaultClass =
-        "flex items-center justify-center w-10 h-10 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded group hover:bg-electro-300 hover:text-electro-50 ";
+        "flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded group hover:bg-electro-300 hover:text-electro-50 ";
 
     return (
         <button
