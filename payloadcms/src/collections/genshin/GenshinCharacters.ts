@@ -11,7 +11,7 @@ const normalizeChar = (char: GenshinCharacter) => {
     const newChar = {
         id: char.id,
         name: char.name,
-        weaponType: char.weaponType,
+        weaponType: char.weaponType || "sword",
         substat: char.substat,
         rarity: Number.parseInt(char.rarity),
     };

@@ -61,7 +61,7 @@ export default function CharacterShowcase(props: {
 
     return (
         <>
-            <div className="w-full grid grid-cols-7 gap-2 xl:grid-cols-15 place-items-center my-2">
+            <div className="w-full grid grid-cols-7 gap-2 lg:grid-cols-15 place-items-center my-2">
                 {elements.map((element) => {
                     const selected = filter.element === element.name;
                     return (
@@ -162,7 +162,7 @@ export default function CharacterShowcase(props: {
                     onClick={() => {
                         setFilter({ weapon: "", element: "", rarity: "" });
                     }}
-                    className="flex col-span-full items-center justify-center w-full h-10 xl:col-span-1 xl:w-14 xl:h-14 bg-red-600 rounded group hover:bg-red-800"
+                    className="flex col-span-full items-center justify-center w-full h-10 lg:col-span-1 lg:w-14 lg:h-14 bg-red-600 rounded group hover:bg-red-800"
                     title="Clear filters"
                 >
                     <CloseIcon className="stroke-electro-50 w-4 h-4 group-hover:stroke-electro-500" />
@@ -176,24 +176,58 @@ export default function CharacterShowcase(props: {
                         <Link
                             href="#"
                             key={"preview-" + character.id}
-                            className={`h-28 flex flex-col items-center justify-center rounded ${
-                                character.rarity === 4
-                                    ? "bg-electro-4star-from/50"
-                                    : "bg-electro-5star-from/50"
-                            }`}
+                            className={`h-28 flex p-2 rounded bg-electro-850 text-lg`}
                         >
-                            <div className={"relative w-full h-full"}>
-                                <Image
-                                    src={character.icon}
-                                    alt={character.id}
-                                    fill={true}
-                                    // className="w-full h-full"
-                                    objectFit="cover"
-                                />
+                            <div className="w-2/5 flex justify-center">
+                                <div
+                                    className={`relative w-4/5 h-full rounded p-2 ${
+                                        character.rarity === 4
+                                            ? "bg-electro-4star-from/50"
+                                            : "bg-electro-5star-from/50"
+                                    }`}
+                                >
+                                    <Image
+                                        src={character.icon}
+                                        alt={character.id}
+                                        fill={true}
+                                        priority
+                                        className="object-contain"
+                                    />
+                                </div>
                             </div>
-                            <span className="grid items-center text-xs text-electro-50 bold bg-electro-850 w-full text-center h-[20%] flex:1">
-                                {character.name}
-                            </span>
+                            <div className="w-3/5 ">
+                                <span className="grid text-electro-50 bold bg-electro-850 w-full h-[20%] mb-2">
+                                    {character.name}
+                                </span>
+                                <div className="flex flex-row items-center">
+                                    <div className="relative w-9 h-9">
+                                        {character.element.icon ? (
+                                            <Image
+                                                alt={character.element.name}
+                                                src={character.element.icon}
+                                                fill={true}
+                                                priority
+                                                className="object-contain"
+                                            />
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
+                                    <div className="relative w-9 h-9">
+                                        <Image
+                                            alt={character.weaponType}
+                                            src={
+                                                "/images/games/icons/genshin-impact/weapon-types/" +
+                                                character.weaponType +
+                                                ".png"
+                                            }
+                                            fill={true}
+                                            priority
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </Link>
                     );
                 })}

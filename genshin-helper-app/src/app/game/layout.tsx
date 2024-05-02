@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Header from "@/components/root-layout/nav/header";
 
 export default async function GameLayout({
@@ -8,7 +7,7 @@ export default async function GameLayout({
 }) {
     return (
         <>
-            <div className="flex h-full w-full flex-col">
+            <div className="flex flex-col min-h-screen">
                 <Header />
                 {children}
             </div>
