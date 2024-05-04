@@ -1,5 +1,5 @@
 import { WISH_REGIONS } from "../src/constants";
-import { GenshinAccount } from "./payload-types";
+import { GenshinAccount, Media } from "./payload-types";
 
 export type GenshinAcountWishInfo = {
     character: GenshinAccount["wishInfo"]["character"];
@@ -25,4 +25,16 @@ export type NotificationConfig = {
     region: WISH_REGIONS;
     startDate: string;
     timezone: string;
+};
+
+export type RecordToMap = Record<string, any> & {
+    name: string;
+    id: string;
+    icon: string | Media;
+};
+
+export type RecordWithIcon = {
+    name: string;
+    icon: string;
+    id: string;
 };

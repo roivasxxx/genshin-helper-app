@@ -1,7 +1,7 @@
-import { CollectionConfig } from "payload/types";
-import characterField from "../../fields/CharacterField";
-import weaponField from "../../fields/WeaponField";
-import { genshinSelectField } from "../../fields/fieldsConfig";
+import { CollectionConfig, PayloadRequest } from "payload/types";
+import { Response } from "express";
+import { relationToDictionary } from "../../utils";
+import { RecordWithIcon } from "../../../types/types";
 
 const Events: CollectionConfig = {
     slug: "genshin-events",
@@ -46,6 +46,51 @@ const Events: CollectionConfig = {
             type: "text",
             // format yyyy-mm-dd hh:mm:ss
         },
+        {
+            name: "timezoneDependent",
+            type: "checkbox",
+            defaultValue: false,
+        },
+        {
+            name: "weapons",
+            type: "group",
+            fields: [
+                {
+                    name: "fourStar",
+                    type: "relationship",
+                    relationTo: "genshin-weapons",
+                    hasMany: true,
+                },
+                {
+                    name: "fiveStar",
+                    type: "relationship",
+                    relationTo: "genshin-weapons",
+                    hasMany: true,
+                },
+            ],
+        },
+        {
+            name: "characters",
+            type: "group",
+            fields: [
+                {
+                    name: "fourStar",
+                    type: "relationship",
+                    relationTo: "genshin-characters",
+                    hasMany: true,
+                },
+                {
+                    name: "fiveStar",
+                    type: "relationship",
+                    relationTo: "genshin-characters",
+                    hasMany: true,
+                },
+            ],
+        },
+        {
+            name: "url",
+            type: "text",
+        },
         // characterField({
         //     visible: (data) => {
         //         return (
@@ -72,6 +117,72 @@ const Events: CollectionConfig = {
         //         },
         //     },
         // },
+    ],
+    endpoints: [
+        {
+            path: "/getEventOverview",
+            method: "get",
+            handler: [
+                async (req: PayloadRequest, res: Response) => {
+                    const _events = await req.payload.find({
+                        collection: "genshin-events",
+                        limit: 10,
+                        sort: "-start",
+                    });
+                    const events = _events.docs.map((doc) => {
+                        const mappedDoc: {
+                            name: string;
+                            type: string;
+                            timezoneDependent: boolean;
+                            start: string;
+                            end: string;
+                            url: string;
+                            bannerType?: string;
+                            featured?: {
+                                fourStar: (RecordWithIcon | string)[];
+                                fiveStar: (RecordWithIcon | string)[];
+                            };
+                        } = {
+                            name: doc.name,
+                            type: doc.type,
+                            timezoneDependent: doc.timezoneDependent || false,
+                            start: doc.start,
+                            end: doc.end,
+                            url: doc.url,
+                        };
+
+                        if (doc.type === "banner") {
+                            mappedDoc.bannerType = doc.bannerType;
+                            if (doc.bannerType === "weapon") {
+                                mappedDoc.featured = {
+                                    fourStar:
+                                        doc.weapons.fourStar.map(
+                                            relationToDictionary
+                                        ),
+                                    fiveStar:
+                                        doc.weapons.fourStar.map(
+                                            relationToDictionary
+                                        ),
+                                };
+                            } else if (doc.bannerType === "character") {
+                                mappedDoc.featured = {
+                                    fourStar:
+                                        doc.characters.fourStar.map(
+                                            relationToDictionary
+                                        ),
+                                    fiveStar:
+                                        doc.characters.fiveStar.map(
+                                            relationToDictionary
+                                        ),
+                                };
+                            }
+                        }
+                        return mappedDoc;
+                    });
+                    return res.status(200).send(events);
+                },
+            ],
+        },
     ],
 };
 

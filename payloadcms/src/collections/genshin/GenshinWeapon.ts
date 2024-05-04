@@ -14,6 +14,7 @@ const GenshinWeapons: CollectionConfig = {
         {
             name: "name",
             type: "text",
+            required: true,
         },
         // {
         //     name: "obtainedBy",
@@ -90,17 +91,16 @@ const GenshinWeapons: CollectionConfig = {
         //         },
         //     },
         // },
-        // {
-        //     name: "rarity",
-        //     type: "select", // 3,4,5
-        //     options: [
-        //         { label: "1", value: "1" },
-        //         { label: "2", value: "2" },
-        //         { label: "3", value: "3" },
-        //         { label: "4", value: "4" },
-        //         { label: "5", value: "5" },
-        //     ],
-        // },
+        {
+            name: "rarity",
+            type: "select", // 3,4,5
+            options: [
+                { label: "3", value: "3" },
+                { label: "4", value: "4" },
+                { label: "5", value: "5" },
+            ],
+            required: true,
+        },
         // weaponTypeField,
         // {
         //     name: "ascensionMaterials",
@@ -185,7 +185,7 @@ const GenshinWeapons: CollectionConfig = {
             name: "icon",
             type: "upload",
             relationTo: "media",
-            required: false,
+            required: true,
         },
     ],
 };

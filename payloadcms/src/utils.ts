@@ -1,3 +1,5 @@
+import { RecordToMap, RecordWithIcon } from "../types/types";
+
 export const sleep = (time: number) => {
     return new Promise((res, _) => {
         setTimeout(() => res("OK"), time);
@@ -11,4 +13,21 @@ export const normalizeName = (name: string) => {
         .toLowerCase()
         .split(/\s+/)
         .join("_");
+};
+
+export const relationToDictionary = (doc: string | RecordToMap) => {
+    if (typeof doc === "string") return "";
+    let icon = "";
+    if (
+        doc.icon &&
+        typeof doc.icon !== "string" &&
+        doc.icon.cloudinary.secure_url
+    ) {
+        icon = doc.icon.cloudinary.secure_url;
+    }
+    return {
+        name: doc.name,
+        id: doc.id,
+        icon,
+    };
 };

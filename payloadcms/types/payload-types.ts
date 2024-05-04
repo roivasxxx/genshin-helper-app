@@ -148,13 +148,16 @@ export interface GenshinAccount {
 }
 export interface GenshinWeapon {
   id: string;
-  name?: string | null;
-  icon?: string | Media | null;
+  name: string;
+  rarity: '3' | '4' | '5';
+  icon: string | Media;
   updatedAt: string;
   createdAt: string;
 }
 export interface Media {
   id: string;
+  folder?: string | null;
+  addFileNameDate?: boolean | null;
   alt?: string | null;
   name?: string | null;
   type?: string | null;
@@ -300,6 +303,16 @@ export interface GenshinEvent {
   bannerType?: ('weapon' | 'character') | null;
   start?: string | null;
   end?: string | null;
+  timezoneDependent?: boolean | null;
+  weapons?: {
+    fourStar?: (string | GenshinWeapon)[] | null;
+    fiveStar?: (string | GenshinWeapon)[] | null;
+  };
+  characters?: {
+    fourStar?: (string | GenshinCharacter)[] | null;
+    fiveStar?: (string | GenshinCharacter)[] | null;
+  };
+  url?: string | null;
   updatedAt: string;
   createdAt: string;
 }
