@@ -65,7 +65,7 @@ export interface PublicUser {
 }
 export interface GenshinAccount {
   id: string;
-  region?: ('os_euro' | 'os_asia' | 'os_usa' | 'os_cht') | null;
+  region: 'os_euro' | 'os_asia' | 'os_usa' | 'os_cht';
   hoyoId?: string | null;
   wishInfo: {
     standard: {
@@ -232,8 +232,8 @@ export interface GenshinElement {
 }
 export interface Job {
   id: string;
-  status?: ('NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED') | null;
-  link?: string | null;
+  status: 'NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+  genshinAccount: string | GenshinAccount;
   updatedAt: string;
   createdAt: string;
 }

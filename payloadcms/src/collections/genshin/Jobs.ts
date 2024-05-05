@@ -8,26 +8,33 @@ const Jobs: CollectionConfig = {
             type: "select",
             options: [
                 {
-                    label: "new",
+                    label: "New",
                     value: "NEW",
                 },
                 {
-                    label: "in progress",
+                    label: "In progress",
                     value: "IN_PROGRESS",
                 },
                 {
-                    label: "completed",
+                    label: "Completed",
                     value: "COMPLETED",
                 },
                 {
-                    label: "failed",
+                    label: "Failed",
                     value: "FAILED",
                 },
+                {
+                    label: "Cancelled",
+                    value: "CANCELLED",
+                },
             ],
+            required: true,
         },
         {
-            name: "link",
-            type: "text",
+            name: "genshinAccount",
+            relationTo: "genshin-accounts",
+            type: "relationship",
+            required: true,
         },
     ],
 };

@@ -1,8 +1,9 @@
 import axios from "axios";
 import {
-    HOYO_WISH_API_URL,
     WISH_BANNER_CODES,
     WISH_HISTORY,
+    WISH_REGIONS,
+    getWishApiUrl,
 } from "../../constants";
 import { normalizeName, sleep } from "../../utils";
 import {
@@ -10,26 +11,48 @@ import {
     GenshinApiResponseWish,
 } from "../../../types/types";
 
-const fs: typeof import("fs").promises = require("fs").promises;
+export const parseAuthedUrl = (authedLink: string, region: WISH_REGIONS) => {
+    const originalURL = new URL(authedLink);
+    const searchParams = originalURL.searchParams;
 
-type WishRelationship = {
-    relationshipTo: "genshin-characters" | "genshin-weapons";
-    value: "string";
+    const newURL = new URL(getWishApiUrl(region));
+    newURL.search = searchParams.toString();
+    return newURL;
+};
+
+export const makeApiRequest = async (
+    url: URL,
+    bannerCode: WISH_BANNER_CODES,
+    lastId?: string | null
+) => {
+    url.searchParams.set("gacha_type", String(bannerCode));
+    url.searchParams.set("size", "20");
+    if (lastId) {
+        url.searchParams.set("last_id", lastId);
+    }
+    const req = await axios.get(url.href);
+    const result = req.data;
+    if (!result.data || result.retcode === -101) {
+        throw new Error("INVALID_LINK");
+    }
+    return result.data.list;
+};
+
+export const testLink = async (authedLink: string, region: WISH_REGIONS) => {
+    const url = parseAuthedUrl(authedLink, region);
+    await makeApiRequest(url, WISH_BANNER_CODES.STANDARD);
 };
 
 export const wishImporter = async (
     authedLink: string,
     accountId: string,
-    wishInfo: GenshinAcountWishInfo
+    wishInfo: GenshinAcountWishInfo,
+    region: WISH_REGIONS
 ) => {
     const history = {};
 
     for (let i = 0; i < Object.keys(WISH_HISTORY).length; i++) {
-        const originalUrl = new URL(authedLink);
-        const searchParams = originalUrl.searchParams;
-
-        const newUrl = new URL(HOYO_WISH_API_URL);
-        newUrl.search = searchParams.toString();
+        const newUrl = parseAuthedUrl(authedLink, region);
 
         const key = Object.keys(WISH_HISTORY)[i];
         const bannerType = WISH_HISTORY[key];
@@ -87,7 +110,7 @@ export const wishImporter = async (
         };
     }
     if (history["error"]) {
-        console.error("THERE WAS AN ERROR WHILE FETCHING HISTORY");
+        console.error("THERE WAS AN ERROR WHILE FETCHING WISH HISTORY");
         return null;
     }
     // await fs.writeFile("history4.json", JSON.stringify(history));

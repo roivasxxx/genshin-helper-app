@@ -9,6 +9,7 @@ import authMiddleware from "../../api/authMiddleware";
 import { GenshinAccount, PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
 import exportWishHistory from "../../api/wishes/exporter";
+import { testLink } from "../../api/wishes/importer";
 
 const validateGenshinAccount = async (req: PayloadRequest) => {
     const user: PublicUser = await req.payload.findByID({
@@ -43,6 +44,7 @@ const GenshinAccounts: CollectionConfig = {
                 label: key.toLowerCase(),
                 value: WISH_REGIONS[key],
             })),
+            required: true,
         },
         {
             // hoyo uuid
@@ -396,20 +398,36 @@ const GenshinAccounts: CollectionConfig = {
                             collection: "genshin-accounts",
                             depth: 0,
                         });
+
+                        try {
+                            // test link before processing
+                            await testLink(
+                                query.link,
+                                account.region as WISH_REGIONS
+                            );
+                        } catch (error) {
+                            // return 403 if link is invalid
+                            return res.status(403).send("Invalid link");
+                        }
+
                         if (account.importJob) {
                             const importJob =
                                 typeof account.importJob === "string"
                                     ? account.importJob
                                     : account.importJob.id;
                             try {
-                                await req.payload.delete({
+                                await req.payload.update({
                                     collection: "jobs",
                                     id: importJob,
+                                    data: {
+                                        status: "CANCELLED",
+                                    },
                                 });
                             } catch (error) {
                                 // previous job might still exist/being processed
                                 // remove it from the db
                                 console.error("Found invalid job: ", importJob);
+                                return res.status(500).send("SERVER ERROR");
                             }
                         }
 
@@ -418,20 +436,21 @@ const GenshinAccounts: CollectionConfig = {
                             collection: "jobs",
                             data: {
                                 status: "NEW",
-                                link: query.link,
+                                genshinAccount: account.id,
                             },
                         });
                         // save cms job id
                         await req.payload.update({
                             collection: "genshin-accounts",
-                            id: query.accountId,
+                            id: account.id,
                             data: {
                                 importJob: newJob.id,
                             },
                         });
 
                         await agenda.now("wishImporter", {
-                            cmsJob: newJob,
+                            cmsJob: newJob.id,
+                            link: query.link,
                             account: account,
                         });
 

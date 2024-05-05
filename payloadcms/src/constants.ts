@@ -53,8 +53,11 @@ export enum WISH_REGIONS {
     CHINA = "os_cht",
 }
 
-export const HOYO_WISH_API_URL =
-    "https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog";
+export const getWishApiUrl = (region: WISH_REGIONS) => {
+    return region === WISH_REGIONS.AMERICA || region === WISH_REGIONS.EUROPE
+        ? "https://hk4e-api-os.hoyoverse.com/gacha_info/api/getGachaLog"
+        : "https://public-operation-hk4e.mihoyo.com/gacha_info/api/getGachaLog";
+};
 
 export enum DAYS {
     MONDAY = "monday",

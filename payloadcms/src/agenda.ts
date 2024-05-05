@@ -1,12 +1,11 @@
 import Agenda from "agenda";
 import payload from "payload";
-import { GenshinAccount, Job } from "../types/payload-types";
+import { GenshinAccount } from "../types/payload-types";
 import { wishImporter } from "./api/wishes/importer";
 import { mongoClient } from "./mongo";
 import { WISH_REGIONS } from "./constants";
 import { NotificationConfig } from "../types/types";
 import { notifyUsers } from "./notifications";
-import { sleep } from "./utils";
 
 require("dotenv").config();
 
@@ -103,106 +102,102 @@ const initAgenda = async () => {
             agenda.define(
                 "wishImporter",
                 { shouldSaveResult: false, concurrency: 10 },
-                async (job: any, done) => {
+                async (job, done) => {
                     const jobAttributes: {
-                        cmsJob: Job;
+                        cmsJob: string;
                         account: GenshinAccount;
-                    } = job.attrs.data;
+                        link: string;
+                    } = job.attrs.data as any;
 
-                    if (jobAttributes.cmsJob) {
+                    const cmsJobId = jobAttributes.cmsJob;
+                    const region =
+                        (jobAttributes.account.region as WISH_REGIONS) ||
+                        WISH_REGIONS.EUROPE;
+
+                    try {
+                        let isValid = await isCmsJobValid(cmsJobId);
+                        if (!isValid) {
+                            console.error("Invalid job: " + cmsJobId);
+                            throw new Error("Invalid job: " + cmsJobId);
+                        }
+                        // mark job as in progress
+                        await payload.update({
+                            collection: "jobs",
+                            id: cmsJobId,
+                            data: {
+                                status: "IN_PROGRESS",
+                            },
+                        });
+                        // this will come from jobAttributes.link !!!!
+                        const link = jobAttributes.link;
+
+                        const account = jobAttributes.account;
+                        let lastIds = account.wishInfo;
+                        // process history
+                        const result = await wishImporter(
+                            link,
+                            account.id,
+                            lastIds,
+                            region
+                        );
+                        // check if there was an error
+                        const hasError = !result;
+
+                        if (hasError) {
+                            // if there was an error, mark job as failed, abort import
+                            console.error("Wish processing failed..");
+                            throw new Error("Wish processing failed.");
+                        }
+
+                        // check if job is still valid after processing is done
+                        isValid = await isCmsJobValid(cmsJobId);
+                        if (!isValid) {
+                            console.error(
+                                "Invalid job, abort updating wishInfo, abort importing wish history"
+                            );
+                            throw new Error(
+                                "Invalid job, abort updating wishInfo, abort importing wish history"
+                            );
+                        }
+
+                        const db = mongoClient.db("electro");
+                        const collection = db.collection("genshin-wishes");
+                        for (const key of Object.keys(result)) {
+                            // need to insert with mongo, because payload doesn't support bulk insert
+                            const wishes = result[key].wishes;
+                            if (Array.isArray(wishes) && wishes.length > 0) {
+                                // wishes for a banner might be empty, insertMany expects non-empty array
+                                await collection.insertMany(result[key].wishes);
+                            }
+                        }
+                        // update account
+                        await payload.update({
+                            id: jobAttributes.account.id,
+                            collection: "genshin-accounts",
+                            data: {
+                                importJob: "",
+                                wishInfo: lastIds,
+                            },
+                        });
+                        // update job
+                        await payload.update({
+                            collection: "jobs",
+                            id: cmsJobId,
+                            data: {
+                                status: "COMPLETED",
+                            },
+                        });
+                    } catch (error) {
+                        console.error("WISH IMPORT ERROR: ", error);
+                        // mark job as failed
                         try {
                             await payload.update({
                                 collection: "jobs",
-                                id: jobAttributes.cmsJob.id,
+                                id: cmsJobId,
                                 data: {
-                                    status: "IN_PROGRESS",
+                                    status: "FAILED",
                                 },
                             });
-                        } catch (error) {
-                            if (
-                                typeof error === "object" &&
-                                error?.status === 404
-                            ) {
-                                console.error(
-                                    "Job not found: ",
-                                    jobAttributes.cmsJob.id
-                                );
-                                // found invalid job
-                                throw new Error("Job not found!");
-                            }
-                        }
-                    } else {
-                        console.error("No job provided!");
-                        throw new Error("No job provided!");
-                    }
-                    const link = jobAttributes.cmsJob.link;
-
-                    const account = jobAttributes.account;
-                    let lastIds = account.wishInfo;
-                    // process history
-                    const result = await wishImporter(
-                        link,
-                        account.id,
-                        lastIds
-                    );
-                    // check if there was an error
-                    const hasError = !result;
-
-                    try {
-                        if (jobAttributes.cmsJob) {
-                            if (hasError) {
-                                // if there was an error, mark job as failed
-                                await payload.update({
-                                    collection: "jobs",
-                                    id: jobAttributes.cmsJob.id,
-                                    data: {
-                                        status: "FAILED",
-                                    },
-                                });
-                            } else {
-                                // if there was no error
-                                // if job still exists, delete it
-                                await payload.delete({
-                                    collection: "jobs",
-                                    id: jobAttributes.cmsJob.id,
-                                });
-                                // update account
-                                await payload.update({
-                                    id: jobAttributes.account.id,
-                                    collection: "genshin-accounts",
-                                    data: {
-                                        importJob: "",
-                                        wishInfo: lastIds,
-                                    },
-                                });
-                                console.time("test");
-                                const db = mongoClient.db("electro");
-                                const collection =
-                                    db.collection("genshin-wishes");
-                                for (const key of Object.keys(result)) {
-                                    // need to insert with mongo, because payload doesn't support bulk insert
-                                    const wishes = result[key].wishes;
-                                    if (
-                                        Array.isArray(wishes) &&
-                                        wishes.length > 0
-                                    ) {
-                                        // wishes for a banner might be empty, insertMany expects non-empty array
-                                        await collection.insertMany(
-                                            result[key].wishes
-                                        );
-                                    }
-                                }
-                                console.timeEnd("test");
-                            }
-                        }
-                    } catch (error) {
-                        console.error(
-                            "Error while executing job: ",
-                            jobAttributes.cmsJob.id,
-                            error
-                        );
-                        try {
-                            // remove job from account
                             await payload.update({
                                 id: jobAttributes.account.id,
                                 collection: "genshin-accounts",
@@ -210,22 +205,22 @@ const initAgenda = async () => {
                                     importJob: "",
                                 },
                             });
-                            // delete job
-                            await payload.delete({
-                                collection: "jobs",
-                                id: jobAttributes.cmsJob.id,
-                            });
                         } catch (e) {}
+                        job.fail(error);
+                        done();
+                        return;
                     }
-                    console.log("Done with job: ", jobAttributes.cmsJob.id);
+
+                    console.log("Done with job: ", cmsJobId);
                     done();
                 }
             );
-
+            // remove existing jobs
             const jobs = await agenda.jobs();
             for (const job of jobs) {
                 await job.remove();
             }
+            // create new ones
             await defineNotificationJobs();
 
             await agenda.start();
@@ -233,6 +228,25 @@ const initAgenda = async () => {
             console.error("Error in initAgenda: ", error);
         }
     });
+};
+
+const isCmsJobValid = async (cmsJobId: string) => {
+    try {
+        const jobStatus = await payload.findByID({
+            collection: "jobs",
+            id: cmsJobId,
+        });
+        // check if cms job was cancelled
+        if (jobStatus.status === "CANCELLED") {
+            // throw error
+            throw new Error(`Job cancelled.`);
+        }
+    } catch (error) {
+        // if any error is thrown -> job is not valid, return false
+        console.error("CMS job is not valid: ", error);
+        return false;
+    }
+    return true;
 };
 
 export { agenda, initAgenda };
