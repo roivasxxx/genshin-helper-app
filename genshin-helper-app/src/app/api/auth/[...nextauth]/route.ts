@@ -113,7 +113,10 @@ const authOptions: AuthOptions = {
                         };
                     }
                 } catch (error) {
-                    console.error(error);
+                    return {
+                        ...token,
+                        error: AUTH_ERRORS.INVALID_SESSION,
+                    };
                 }
             }
             return { ...token, ...user };

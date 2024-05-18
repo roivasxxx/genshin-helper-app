@@ -7,6 +7,11 @@ const nextConfig = {
                 destination: "/game/genshin-impact",
                 permanent: false,
             },
+            {
+                source: "/game/genshin-impact/wiki",
+                destination: "/game/genshin-impact/wiki/characters",
+                permanent: false,
+            },
         ];
     },
     images: {

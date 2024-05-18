@@ -76,7 +76,7 @@ export default function CharacterShowcase(props: {
                             }`}
                             title={capitalizeString(element.name)}
                         >
-                            <div className="relative w-4/5 h-4/5">
+                            <div className="relative w-10 h-10 lg:w-4/5 lg:h-4/5">
                                 {element.icon ? (
                                     <Image
                                         src={element.icon}
@@ -110,7 +110,7 @@ export default function CharacterShowcase(props: {
                             }`}
                             title={capitalizeString(key)}
                         >
-                            <div className="relative w-4/5 h-4/5">
+                            <div className="relative w-10 h-10 lg:w-4/5 lg:h-4/5">
                                 <Image
                                     src={
                                         "/images/games/icons/genshin-impact/weapon-types/" +
@@ -174,7 +174,7 @@ export default function CharacterShowcase(props: {
                 {filteredData.map((character) => {
                     return (
                         <Link
-                            href="#"
+                            href={`/game/genshin-impact/wiki/characters/${character.id}`}
                             key={"preview-" + character.id}
                             className={`h-28 flex p-2 rounded bg-electro-850 text-lg`}
                         >

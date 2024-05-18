@@ -1,3 +1,4 @@
+"use client";
 import navConfig, { NavConfigPath } from "@/nav-config";
 import { GAMES } from "@/utils/constants";
 import Link from "next/link";
@@ -24,7 +25,8 @@ function SubPaths(props: {
 export default function NavItems() {
     const pathName = usePathname()?.split("/")[2] || "";
     const [openStatus, setOpenStatus] = useState<boolean[]>([]);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    // initial state for mobile is false, needs to be updated on client, cant use default window.innerWidth value, cause of server rendering, hydration errors
+    const [isMobile, setIsMobile] = useState(false);
 
     const resolution = isMobile ? "small" : "large";
 
@@ -41,6 +43,8 @@ export default function NavItems() {
 
         window.addEventListener("resize", handleResize);
 
+        // run once to set initial state on client
+        handleResize();
         return () => {
             window.removeEventListener("resize", handleResize);
         };
