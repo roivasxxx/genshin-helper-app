@@ -259,7 +259,7 @@ const GenshinAccounts: CollectionConfig = {
                 async (req: PayloadRequest, res: Response) => {
                     let accountId = await validateGenshinAccount(req);
                     if (!accountId) {
-                        return res.status(401).send("Unauthorized");
+                        return res.status(403).send("Invalid accountId");
                     }
 
                     const query = req.query;
@@ -354,7 +354,7 @@ const GenshinAccounts: CollectionConfig = {
                     try {
                         let accountId = await validateGenshinAccount(req);
                         if (!accountId) {
-                            return res.status(401).send("Unauthorized");
+                            return res.status(403).send("Invalid accountId");
                         }
 
                         const acc: GenshinAccount = await req.payload.findByID({
@@ -473,7 +473,7 @@ const GenshinAccounts: CollectionConfig = {
                 async (req: PayloadRequest, res: Response) => {
                     let accountId = await validateGenshinAccount(req);
                     if (!accountId) {
-                        return res.status(401).send("Unauthorized");
+                        return res.status(403).send("Invalid accountId");
                     }
                     const doc = await req.payload.findByID({
                         id: accountId,
@@ -545,7 +545,7 @@ const GenshinAccounts: CollectionConfig = {
                     try {
                         const accountId = await validateGenshinAccount(req);
                         if (!accountId) {
-                            return res.status(401).send("Unauthorized");
+                            return res.status(403).send("Invalid accountId");
                         }
                         res.setHeader("Content-Type", "application/json");
                         res.setHeader(

@@ -45,6 +45,7 @@ export enum WISH_BANNER_CODES {
     WEAPON = 302,
     STANDARD = 200,
     CHARACTER = 301,
+    CHARACTER_2 = 400,
 }
 export enum WISH_REGIONS {
     EUROPE = "os_euro",

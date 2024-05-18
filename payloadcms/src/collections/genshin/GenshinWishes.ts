@@ -73,6 +73,11 @@ const GenshinWishes: CollectionConfig = {
             name: "rarity",
             type: "number",
         },
+        {
+            // for character banners, this tells us whether its the first or second character banner
+            name: "gachaType",
+            type: "text",
+        },
         // {
         //     // userId + bannerType + wishNumber - userId-standard-0, userId-weapon-1,...
         //     // use for querying, sorting

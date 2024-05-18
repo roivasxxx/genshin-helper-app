@@ -55,22 +55,33 @@ export const wishImporter = async (
         const newUrl = parseAuthedUrl(authedLink, region);
 
         const key = Object.keys(WISH_HISTORY)[i];
-        const bannerType = WISH_HISTORY[key];
-        const wishes = await getHistory(
+        const bannerType: WISH_HISTORY = WISH_HISTORY[key];
+        const result = await getHistory(
             newUrl,
             WISH_BANNER_CODES[key],
             wishInfo[bannerType].lastId
         );
+        const { wishes, stoppedByLastId } = result;
+
         if (!wishes) {
             console.log("error getting history", key);
             history["error"] = true;
             break;
         }
 
-        let pity4Star = wishInfo[bannerType].pity4Star || 0;
-        let pity5Star = wishInfo[bannerType].pity5Star || 0;
+        // if NOT stopped by last id, then we need to start counting pity from 0
+        // situations when this can happen:
+        // 1. new account
+        // 2. user took a break from importing/wishing -> some wishes might be missing -> could produce incorrect pity count, so just set it to 0
+        let pity4Star = stoppedByLastId
+            ? wishInfo[bannerType].pity4Star || 0
+            : 0;
+        let pity5Star = stoppedByLastId
+            ? wishInfo[bannerType].pity5Star || 0
+            : 0;
         let last4Star = wishInfo[bannerType].last4Star;
         let last5Star = wishInfo[bannerType].last5Star;
+        const lastId = wishInfo[bannerType].lastId || "";
 
         for (let i = wishes.length - 1; i >= 0; i--) {
             const el = wishes[i];
@@ -99,7 +110,7 @@ export const wishImporter = async (
 
         wishInfo[bannerType].pullCount =
             wishInfo[bannerType].pullCount + wishes.length;
-        wishInfo[bannerType].lastId = wishes[0]?.hoyoId || "";
+        wishInfo[bannerType].lastId = wishes[0]?.hoyoId || lastId;
         wishInfo[bannerType].last4Star = last4Star;
         wishInfo[bannerType].last5Star = last5Star;
         wishInfo[bannerType].pity4Star = pity4Star;
@@ -113,7 +124,7 @@ export const wishImporter = async (
         console.error("THERE WAS AN ERROR WHILE FETCHING WISH HISTORY");
         return null;
     }
-    // await fs.writeFile("history4.json", JSON.stringify(history));
+
     return history;
 };
 
@@ -136,10 +147,10 @@ const pushToWishHistory = (
                     : "genshin-weapons",
             value: normalizeName(wish.name),
         };
-
         const newWish = {
             date: wish.time,
             itemId: item,
+            gachaType: wish.gacha_type, // 301 = character banner 1, 400 = character banner 2
             rarity: Number.parseInt(wish.rank_type),
             hoyoId: wish.id,
         };
@@ -165,8 +176,8 @@ const getHistory = async (
             throw new Error("Invalid link provided");
         }
         if (pushToWishHistory(wishes, result.data.list, lastId)) {
-            // if lastId is found, stop fetching, return wishes
-            return wishes;
+            // if lastId is found, stop fetching, return found wishes
+            return { wishes, stoppedByLastId: true };
         }
         // use this as the end_id
         let endId = wishes[wishes.length - 1]?.hoyoId;
@@ -182,14 +193,14 @@ const getHistory = async (
             }
             const resultData = result.data.list;
             if (pushToWishHistory(wishes, resultData, lastId)) {
-                break;
+                return { wishes, stoppedByLastId: true };
             }
             endId =
                 resultData.length === 0
                     ? ""
                     : wishes[wishes.length - 1]?.hoyoId;
         }
-        return wishes;
+        return { wishes, stoppedByLastId: false };
     } catch (error) {
         console.error("error", error);
         return null;
