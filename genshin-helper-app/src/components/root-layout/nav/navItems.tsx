@@ -21,15 +21,30 @@ function SubPaths(props: {
     ));
 }
 
-export default function NavItems(props: { resolution: "small" | "large" }) {
+export default function NavItems() {
     const pathName = usePathname()?.split("/")[2] || "";
     const [openStatus, setOpenStatus] = useState<boolean[]>([]);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    const resolution = isMobile ? "small" : "large";
 
     useEffect(() => {
         if (pathName in navConfig) {
             setOpenStatus(navConfig[pathName as GAMES].paths.map(() => false));
         }
     }, [pathName]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     if (!(pathName in navConfig)) {
         return null;
@@ -42,19 +57,18 @@ export default function NavItems(props: { resolution: "small" | "large" }) {
                         <div
                             key={pathName + path.path}
                             className={`w-full h-full group px-6 py-2 relative hover:cursor-pointer ${
-                                props.resolution === "small" &&
-                                openStatus[pathIndex]
+                                resolution === "small" && openStatus[pathIndex]
                                     ? "bg-electro-900"
                                     : ""
                             }`}
                         >
                             <div
                                 className={`w-full h-full flex items-center justify-between ${
-                                    props.resolution === "large"
+                                    resolution === "large"
                                         ? "hover:text-electro-500"
                                         : ""
                                 }`}
-                                {...(props.resolution === "small"
+                                {...(resolution === "small"
                                     ? {
                                           onClick: () =>
                                               setOpenStatus(
@@ -70,7 +84,7 @@ export default function NavItems(props: { resolution: "small" | "large" }) {
                             >
                                 {path.label}
 
-                                {props.resolution === "small" ? (
+                                {resolution === "small" ? (
                                     <svg
                                         className={`w-5 h-5 transition-transform duration-300 transform ${
                                             openStatus[pathIndex]
@@ -96,7 +110,7 @@ export default function NavItems(props: { resolution: "small" | "large" }) {
                                     <></>
                                 )}
                             </div>
-                            {props.resolution === "large" ? (
+                            {resolution === "large" ? (
                                 <div className="absolute hidden group-hover:block bg-electro-800 py-2 px-4">
                                     <SubPaths
                                         pathName={pathName}

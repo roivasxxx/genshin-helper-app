@@ -23,7 +23,7 @@ export default function Header() {
     const pathName = usePathname()?.split("/")[2] || "";
 
     return (
-        <header className="bg-electro-800 rounded font-exo text-electro-50 sticky top-0 w-full z-50">
+        <header className="bg-electro-800 md:rounded font-exo text-electro-50 sticky top-0 w-full z-50">
             <nav className="w-full flex items-center">
                 <div className="w-full h-16 flex flex-row items-center justify-between px-2">
                     <div className="w-36 h-full flex flex-row items-center">
@@ -68,9 +68,13 @@ export default function Header() {
                             </>
                         </Link>
                     </div>
-                    <div className="hidden md:flex h-full items-center">
+                    <div
+                        className={`absolute top-16 left-0 w-full pb-1 items-center bg-electro-800 ${
+                            !isMobileMenuOpen ? "hidden" : ""
+                        } md:flex md:static md:h-full md:w-auto`}
+                    >
                         {/* content */}
-                        <NavItems resolution="large" />
+                        <NavItems />
                     </div>
                     <div className="flex flex-row items-center">
                         <div
@@ -95,17 +99,6 @@ export default function Header() {
                     </div>
                 </div>
             </nav>
-
-            {isMobileMenuOpen ? (
-                <div
-                    className="flex w-full relative flex-col py-2 md:hidden"
-                    ref={mobileNavRef}
-                >
-                    <NavItems resolution="small" />
-                </div>
-            ) : (
-                <></>
-            )}
 
             <GameChangeModal
                 isGameModalOpen={isGameModalOpen}
