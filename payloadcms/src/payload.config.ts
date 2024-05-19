@@ -5,10 +5,10 @@ import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { webpackBundler } from "@payloadcms/bundler-webpack";
 import { slateEditor } from "@payloadcms/richtext-slate";
 import { buildConfig } from "payload/config";
+import { PayloadRequest } from "payload/types";
 import cloudinaryPlugin from "@roivasxxx/payload-cloudinary-plugin/dist/plugins";
 import Users from "./collections/Users";
 import { collections } from "./collections";
-
 // webpack
 const mockModulePath = path.resolve(__dirname, "../src/mocks/emptyFunction.ts");
 const agendaMockModulePath = path.resolve(
@@ -53,6 +53,18 @@ export default buildConfig({
     //     window: 500,
     //     // https://payloadcms.com/docs/production/preventing-abuse
     // },
+    rateLimit: {
+        skip(req: PayloadRequest) {
+            // skip rate limit for requests with skipRateLimitKey
+            // these request are made when the frontend is building SSG pages
+            // TODO: add allowed endpoint list here
+            return (
+                req.query &&
+                req.query.skipRateLimitKey &&
+                req.query.skipRateLimitKey === process.env.SKIP_RATE_LIMIT_KEY
+            );
+        },
+    },
     editor: slateEditor({}),
     collections: collections,
     typescript: {

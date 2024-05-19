@@ -30,7 +30,7 @@ export default async function GenshinRoot(props: any) {
     return (
         <main className="w-full mx-auto p-4 my-8 bg-electro-800 rounded inline-block sm:flex items-start justify-center lg:w-[75%] font-exo">
             <div className="flex-1 flex flex-col justify-center">
-                <CharacterShowcase {...{ characters, elements }} />
+                {/* <CharacterShowcase {...{ characters, elements }} /> */}
             </div>
         </main>
     );

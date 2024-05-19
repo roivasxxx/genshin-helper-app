@@ -14,11 +14,13 @@ export const GENSHIN_SUBSTATS = [
 
 // icons are not needed so no need to create a collection
 export const GENSHIN_REGIONS = [
-    { label: "Mondstadt", value: "mondstadt" },
-    { label: "Liyue", value: "liyue" },
-    { label: "Inazuma", value: "inazuma" },
-    { label: "Sumeru", value: "sumeru" },
-    { label: "Fontaine", value: "fontaine" },
+    { label: "Mondstadt", value: "Mondstadt" },
+    { label: "Liyue", value: "Liyue" },
+    { label: "Inazuma", value: "Inazuma" },
+    { label: "Sumeru", value: "Sumeru" },
+    { label: "Fontaine", value: "Fontaine" },
+    { label: "Natlan", value: "Natlan" },
+    { label: "Snezhnaya", value: "Snezhnaya" },
 ];
 
 // returns options from start to end

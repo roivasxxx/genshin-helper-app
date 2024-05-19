@@ -13,7 +13,7 @@ function SubPaths(props: {
     return props.subpaths.map((subpath) => (
         <div key={props.pathName + props.path + subpath.path}>
             <Link
-                href={props.pathName + props.path + subpath.path}
+                href={"/game/" + props.pathName + props.path + subpath.path}
                 className="py-2 hover:text-electro-500"
             >
                 {subpath.label}
@@ -139,7 +139,7 @@ export default function NavItems() {
                 return (
                     <Link
                         key={pathName + path.path}
-                        href={pathName + path.path}
+                        href={"/game/" + pathName + path.path}
                         className=" hover:text-electro-500 w-full h-full flex items-center px-6 py-2"
                     >
                         {path.label}
