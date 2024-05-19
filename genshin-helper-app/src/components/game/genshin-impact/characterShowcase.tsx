@@ -61,12 +61,13 @@ export default function CharacterShowcase(props: {
 
     return (
         <>
-            <div className="w-full grid grid-cols-7 gap-2 lg:grid-cols-15 place-items-center my-2">
+            <div className="w-full min-h-14 grid grid-cols-7 gap-2 xl:grid-cols-15 place-items-center my-2">
                 {elements.map((element) => {
                     const selected = filter.element === element.name;
                     return (
                         <ShowcaseClickable
-                            onClick={(_) =>
+                            key={"element-" + element.name}
+                            onClick={() =>
                                 filterChange("element", element.name)
                             }
                             className={`${
@@ -76,22 +77,20 @@ export default function CharacterShowcase(props: {
                             }`}
                             title={capitalizeString(element.name)}
                         >
-                            <div className="relative w-10 h-10 lg:w-4/5 lg:h-4/5">
-                                {element.icon ? (
-                                    <Image
-                                        src={element.icon}
-                                        fill={true}
-                                        objectFit="cover"
-                                        priority
-                                        alt={element.name}
-                                        className={`${
-                                            selected ? "" : "opacity-50"
-                                        }`}
-                                    />
-                                ) : (
-                                    element.name
-                                )}
-                            </div>
+                            {element.icon ? (
+                                <Image
+                                    src={element.icon}
+                                    width={40}
+                                    height={40}
+                                    priority
+                                    alt={element.name}
+                                    className={`${
+                                        selected ? "" : "opacity-50"
+                                    }`}
+                                />
+                            ) : (
+                                element.name
+                            )}
                         </ShowcaseClickable>
                     );
                 })}
@@ -102,7 +101,8 @@ export default function CharacterShowcase(props: {
                     const selected = filter.weapon === key;
                     return (
                         <ShowcaseClickable
-                            onClick={(_) => filterChange("weapon", key)}
+                            key={"weapon-" + key}
+                            onClick={() => filterChange("weapon", key)}
                             className={`${
                                 selected
                                     ? "bg-electro-600"
@@ -110,28 +110,24 @@ export default function CharacterShowcase(props: {
                             }`}
                             title={capitalizeString(key)}
                         >
-                            <div className="relative w-10 h-10 lg:w-4/5 lg:h-4/5">
-                                <Image
-                                    src={
-                                        "/images/games/icons/genshin-impact/weapon-types/" +
-                                        key +
-                                        ".png"
-                                    }
-                                    fill={true}
-                                    objectFit="cover"
-                                    priority
-                                    alt={key}
-                                    className={`${
-                                        selected ? "" : "opacity-50"
-                                    }`}
-                                />
-                            </div>
+                            <Image
+                                src={
+                                    "/images/games/icons/genshin-impact/weapon-types/" +
+                                    key +
+                                    ".png"
+                                }
+                                width={40}
+                                height={40}
+                                priority
+                                alt={key}
+                                className={`${selected ? "" : "opacity-50"}`}
+                            />
                         </ShowcaseClickable>
                     );
                 })}
 
                 <ShowcaseClickable
-                    onClick={(_) => {
+                    onClick={() => {
                         filterChange("rarity", "4");
                     }}
                     className={`${
@@ -145,7 +141,7 @@ export default function CharacterShowcase(props: {
                 </ShowcaseClickable>
 
                 <ShowcaseClickable
-                    onClick={(_) => {
+                    onClick={() => {
                         filterChange("rarity", "5");
                     }}
                     className={`${
@@ -162,7 +158,7 @@ export default function CharacterShowcase(props: {
                     onClick={() => {
                         setFilter({ weapon: "", element: "", rarity: "" });
                     }}
-                    className="flex col-span-full items-center justify-center w-full h-10 lg:col-span-1 lg:w-14 lg:h-14 bg-red-600 rounded group hover:bg-red-800"
+                    className="flex col-span-full items-center justify-center w-full h-full min-h-10 xl:col-span-1 bg-red-600 rounded group hover:bg-red-800"
                     title="Clear filters"
                 >
                     <CloseIcon className="stroke-electro-50 w-4 h-4 group-hover:stroke-electro-500" />
@@ -190,6 +186,7 @@ export default function CharacterShowcase(props: {
                                         src={character.icon}
                                         alt={character.id}
                                         fill={true}
+                                        sizes="100%"
                                         priority
                                         className="object-contain"
                                     />
@@ -206,6 +203,7 @@ export default function CharacterShowcase(props: {
                                                 alt={character.element.name}
                                                 src={character.element.icon}
                                                 fill={true}
+                                                sizes="100%"
                                                 priority
                                                 className="object-contain"
                                             />
@@ -222,6 +220,7 @@ export default function CharacterShowcase(props: {
                                                 ".png"
                                             }
                                             fill={true}
+                                            sizes="100%"
                                             priority
                                             className="object-contain"
                                         />

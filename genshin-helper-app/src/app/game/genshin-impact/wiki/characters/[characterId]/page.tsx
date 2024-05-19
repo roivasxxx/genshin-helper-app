@@ -27,8 +27,7 @@ export default async function CharacterSlug(props: {
     let character;
     try {
         const result = await cmsRequest({
-            path:
-                "/api/genshin-characters/getGenshinCharacter?id=" + characterId,
+            path: `/api/genshin-characters/getGenshinCharacter?id=${characterId}&skipRateLimitKey=${process.env.SKIP_RATE_LIMIT_KEY}`,
             method: HTTP_METHOD.GET,
         });
         character = await result.json();
@@ -36,7 +35,6 @@ export default async function CharacterSlug(props: {
         console.error("CharacterSlug - threw an error", error);
         return null;
     }
-    console.log(character);
 
     return (
         <main className="max-w-5xl mx-auto p-4 my-8 bg-electro-800 rounded block sm:flex items-start justify-center font-exo">
