@@ -16,6 +16,8 @@ const weekdays = [
     "saturday",
 ];
 
+export const DATE_FORMAT = "MMM DD,YYYY";
+
 export const getTimeOffset = (server: SERVER_TIME_OFFSET) => {
     return SERVER_TIME_OFFSET[server];
 };
@@ -52,4 +54,10 @@ export const getCurrentDay = (server: SERVER_TIME_OFFSET) => {
     }
 
     return weekdays[day];
+};
+
+export const formatEventDuration = (start: string, end: string) => {
+    return `${dayjs(start).format(DATE_FORMAT)} - ${dayjs(end).format(
+        DATE_FORMAT
+    )}`;
 };

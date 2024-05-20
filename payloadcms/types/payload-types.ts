@@ -181,9 +181,10 @@ export interface Media {
 export interface GenshinCharacter {
   name: string;
   id: string;
-  region?: ('mondstadt' | 'liyue' | 'inazuma' | 'sumeru' | 'fontaine') | null;
+  region?: ('Mondstadt' | 'Liyue' | 'Inazuma' | 'Sumeru' | 'Fontaine' | 'Natlan' | 'Snezhnaya') | null;
   rarity?: ('4' | '5') | null;
   icon: string | Media;
+  splash: string | Media;
   specialty?: (string | null) | GenshinItem;
   talent?: (string | null) | GenshinItem;
   trounce?: (string | null) | GenshinItem;
@@ -193,6 +194,8 @@ export interface GenshinCharacter {
   substat?: string | null;
   element?: (string | null) | GenshinElement;
   gem?: (string | null) | GenshinItem;
+  birthday?: string | null;
+  patch?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -313,6 +316,7 @@ export interface GenshinEvent {
     fiveStar?: (string | GenshinCharacter)[] | null;
   };
   url?: string | null;
+  version?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -334,6 +338,7 @@ export interface GenshinWish {
       } | null);
   wishNumber?: number | null;
   rarity?: number | null;
+  gachaType?: string | null;
   updatedAt: string;
   createdAt: string;
 }

@@ -1,8 +1,14 @@
 import { HTTP_METHOD } from "@/types";
-import { GenshinCharactersResponse } from "@/types/apiResponses";
+import {
+    ExtraGenshinCharacter,
+    GenshinCharacterSubstats,
+    NameIconWithIdDictionary,
+} from "@/types/apiResponses";
+import { formatEventDuration } from "@/utils/dateUtils";
 import cmsRequest from "@/utils/fetchUtils";
 import { capitalizeString, getStarString } from "@/utils/utils";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export async function generateStaticParams() {
@@ -24,11 +30,37 @@ export async function generateStaticParams() {
     });
 }
 
+function BannerCharacterPreview(props: {
+    char: NameIconWithIdDictionary;
+    href: string;
+    rarity: number;
+}) {
+    const { char, href, rarity } = props;
+    return (
+        <Link
+            href={href}
+            className={`relative text-electro-50 size-10 md:size-14 text-md bg-electro-${rarity}star-from/50 rounded overflow-hidden`}
+        >
+            {char.icon ? (
+                <Image
+                    src={char.icon}
+                    alt={char.name}
+                    fill={true}
+                    sizes="100%"
+                    title={char.name}
+                />
+            ) : (
+                <>fiveStar.name</>
+            )}
+        </Link>
+    );
+}
+
 export default async function CharacterSlug(props: {
     params: { characterId: string };
 }) {
     const { characterId } = props.params;
-    let character: GenshinCharactersResponse;
+    let character: ExtraGenshinCharacter;
     try {
         const result = await cmsRequest({
             path: `/api/genshin-characters/getGenshinCharacter?id=${characterId}&skipRateLimitKey=${process.env.SKIP_RATE_LIMIT_KEY}`,
@@ -53,8 +85,14 @@ export default async function CharacterSlug(props: {
     return (
         <main className="w-full mx-auto p-4 my-8 bg-electro-800 rounded inline-block items-start justify-center font-exo lg:w-[75%] sm:flex">
             <div className="flex-1 flex flex-col justify-center text-electro-50">
-                <div className="grid grid-cols-[80%_20%] gap-4 w-full">
-                    <div className="w-9/12">
+                <div className="flex flex-col-reverse md:grid md:grid-cols-[70%_30%] gap-4 w-full">
+                    <div
+                        className="flex flex-col mt-[-50vh] md:mt-0 items-center z-[1] md:block"
+                        style={{
+                            background:
+                                "linear-gradient(180deg, rgba(77,63,88, 0) 0%, rgba(77,63,88,.75) 10%)",
+                        }}
+                    >
                         <h1 className="text-5xl">{character.name}</h1>
                         <div className="flex flex-row items-center mt-2">
                             <span className="text-electro-5star-from text-2xl">
@@ -67,161 +105,252 @@ export default async function CharacterSlug(props: {
                                         src={character.element.icon}
                                         fill={true}
                                         sizes="100%"
-                                        objectFit="scale-down"
+                                        className="object-scale-down"
                                     />
                                 </div>
                             ) : (
                                 character.element.name
                             )}
                         </div>
-                        <p className="text-electro-50 text-2xl">
-                            {capitalizeString(character.weaponType)}
-                        </p>
-                        <p className="text-electro-50 text-2xl">
-                            Level Up Stat {character.substat}
-                        </p>
+                        <table className="w-[80%] my-2 border-b-2 border-electro-50/20">
+                            <tbody>
+                                <tr>
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
+                                        Birthday
+                                    </td>
+                                    <td className="text-electro-50 text-md">
+                                        {character.birthday}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
+                                        Weapon Type
+                                    </td>
+                                    <td className="text-electro-50 text-md">
+                                        {capitalizeString(character.weaponType)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
+                                        Level Up Stat
+                                    </td>
+                                    <td className="text-electro-50 text-md">
+                                        {
+                                            GenshinCharacterSubstats[
+                                                character.substat
+                                            ]
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                        <table className="w-full my-2">
+                        <table className="w-[80%] my-2 border-b-2 border-electro-50/20">
                             <caption className="text-electro-50 text-2xl text-left">
                                 Character Level Up Materials
                             </caption>
-                            <thead>
+                            <tbody>
                                 <tr>
-                                    <th className="text-electro-50 text-xl text-left">
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
                                         Specialty
-                                    </th>
-                                    <th className="text-electro-50 text-xl text-left">
-                                        Open World Boss
-                                    </th>
-                                    <th className="text-electro-50 text-xl text-left">
-                                        Gem
-                                    </th>
+                                    </td>
+                                    <td className="text-electro-50 text-md flex">
+                                        {character.specialty.icon ? (
+                                            <Image
+                                                src={character.specialty.icon}
+                                                alt={character.specialty.name}
+                                                height={40}
+                                                width={40}
+                                                title={character.specialty.name}
+                                            />
+                                        ) : (
+                                            character.specialty.name
+                                        )}
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tr>
-                                <td className="text-electro-50 text-md flex">
-                                    {character.specialty.icon ? (
-                                        <Image
-                                            src={character.specialty.icon}
-                                            alt={character.specialty.name}
-                                            height={40}
-                                            width={40}
-                                            title={character.specialty.name}
-                                        />
-                                    ) : (
-                                        character.specialty.name
-                                    )}
-                                </td>
-                                <td className="text-electro-50 text-md">
-                                    {character.boss && character.boss.icon ? (
-                                        <Image
-                                            src={character.boss.icon}
-                                            alt={character.boss.name}
-                                            height={40}
-                                            width={40}
-                                            title={character.boss.name}
-                                        />
-                                    ) : (
-                                        // traveler does not need any boss drop
-                                        <></>
-                                    )}
-                                </td>
-                                <td className="text-electro-50 text-md">
-                                    {character.gem.icon ? (
-                                        <Image
-                                            src={character.gem.icon}
-                                            alt={character.gem.name}
-                                            height={40}
-                                            width={40}
-                                            title={character.gem.name}
-                                        />
-                                    ) : (
-                                        character.gem.name
-                                    )}
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
+                                        Open World Boss
+                                    </td>
+                                    <td className="text-electro-50 text-md">
+                                        {character.boss &&
+                                        character.boss.icon ? (
+                                            <Image
+                                                src={character.boss.icon}
+                                                alt={character.boss.name}
+                                                height={40}
+                                                width={40}
+                                                title={character.boss.name}
+                                            />
+                                        ) : (
+                                            // traveler does not need any boss drop
+                                            <></>
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
+                                        Gem
+                                    </td>
+                                    <td className="text-electro-50 text-md">
+                                        {character.gem.icon ? (
+                                            <Image
+                                                src={character.gem.icon}
+                                                alt={character.gem.name}
+                                                height={40}
+                                                width={40}
+                                                title={character.gem.name}
+                                            />
+                                        ) : (
+                                            character.gem.name
+                                        )}
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
 
-                        <table className="w-full my-2">
-                            <caption className="text-electro-50 text-2xl text-left border-b-2 border-electro-50">
+                        <table className="w-[80%] my-2">
+                            <caption className="text-electro-50 text-2xl text-left">
                                 Talent Lvl Up Materials
                             </caption>
-                            <thead>
+                            <tbody>
                                 <tr>
-                                    <th className="text-electro-50 text-xl text-left">
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
                                         Books
-                                    </th>
-                                    <th className="text-electro-50 text-xl text-left">
-                                        Weekly Boss
-                                    </th>
-                                    <th className="text-electro-50 text-xl text-left">
-                                        Mob Drop
-                                    </th>
+                                    </td>
+                                    <td className="text-electro-50 text-md grid grid-cols-3 align-top">
+                                        {character.books.map((book) => {
+                                            return (
+                                                <span
+                                                    key={book.name}
+                                                    title={book.name}
+                                                >
+                                                    {book.icon ? (
+                                                        <Image
+                                                            src={book.icon}
+                                                            alt={book.name}
+                                                            height={40}
+                                                            width={40}
+                                                        />
+                                                    ) : (
+                                                        book.name
+                                                    )}
+                                                </span>
+                                            );
+                                        })}
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tr>
-                                <td className="text-electro-50 text-md grid grid-cols-3 align-top">
-                                    {character.books.map((book) => {
-                                        return (
-                                            <span
-                                                key={book.name}
-                                                title={book.name}
-                                            >
-                                                {book.icon ? (
-                                                    <Image
-                                                        src={book.icon}
-                                                        alt={book.name}
-                                                        height={40}
-                                                        width={40}
-                                                    />
-                                                ) : (
-                                                    book.name
-                                                )}
-                                            </span>
-                                        );
-                                    })}
-                                </td>
-                                <td className="text-electro-50 text-md align-top">
-                                    {character.trounce.icon ? (
-                                        <Image
-                                            src={character.trounce.icon}
-                                            alt={character.trounce.name}
-                                            height={40}
-                                            width={40}
-                                            title={character.trounce.name}
-                                        />
-                                    ) : (
-                                        character.trounce.name
-                                    )}
-                                </td>
-                                <td className="text-electro-50 text-md align-top">
-                                    {character.talent.icon ? (
-                                        <Image
-                                            src={character.talent.icon}
-                                            alt={character.talent.name}
-                                            height={40}
-                                            width={40}
-                                            title={character.talent.name}
-                                        />
-                                    ) : (
-                                        character.talent.name
-                                    )}
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
+                                        Weekly Boss
+                                    </td>
+                                    <td className="text-electro-50 text-md align-top">
+                                        {character.trounce.icon ? (
+                                            <Image
+                                                src={character.trounce.icon}
+                                                alt={character.trounce.name}
+                                                height={40}
+                                                width={40}
+                                                title={character.trounce.name}
+                                            />
+                                        ) : (
+                                            character.trounce.name
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="text-electro-50 text-xl text-left w-1/2">
+                                        Mob Drop
+                                    </td>
+                                    <td className="text-electro-50 text-md align-top">
+                                        {character.talent.icon ? (
+                                            <Image
+                                                src={character.talent.icon}
+                                                alt={character.talent.name}
+                                                height={40}
+                                                width={40}
+                                                title={character.talent.name}
+                                            />
+                                        ) : (
+                                            character.talent.name
+                                        )}
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
-                    <div className="w-3/12">
-                        {/** PUT SPLASH HERE */}
-                        {/* <div className="relative size-24">
+
+                    <div className="relative h-full w-full overflow-clip h-[calc(100vh-4rem)] max-h-[600px] z-0">
+                        {character.splash ? (
                             <Image
-                                src={character.icon}
-                                alt={character.id}
+                                src={character.splash}
+                                alt={character.id + "_splash"}
                                 fill={true}
                                 sizes="100%"
-                                objectFit="scale-down"
+                                style={{
+                                    objectFit: "cover",
+                                    alignSelf: "center",
+                                }}
+                                className="h-[calc(100vh-4rem)] max-h-[600px]"
                             />
-                        </div> */}
+                        ) : (
+                            <></>
+                        )}
                     </div>
+                </div>
+                <div>
+                    <table className="w-full my-2 border-separate border-spacing-y-2 bg-electro-900 p-2 rounded">
+                        <caption className="text-electro-50 text-2xl text-left">
+                            Banners
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th className="text-electro-50 text-left text-lg border-b-2 border-electro-50/20">
+                                    Characters
+                                </th>
+                                <th className="text-electro-50 text-left text-lg border-b-2 border-electro-50/20">
+                                    Duration
+                                </th>
+                                <th className="text-electro-50 text-left text-lg border-b-2 border-electro-50/20">
+                                    Version
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="gap-2">
+                            {character.events.map((event) => {
+                                return (
+                                    <tr
+                                        key={event.id}
+                                        className="border-b-2 border-electro-50 text-sm md:text-md "
+                                    >
+                                        <td className="flex flex-row gap-2 border-b-2 border-electro-50/20 align-top">
+                                            {event.characters.fourStar.map(
+                                                (fourStar) => {
+                                                    return (
+                                                        <BannerCharacterPreview
+                                                            char={fourStar}
+                                                            rarity={4}
+                                                            href="#"
+                                                            key={`${event.id}-${fourStar.id}`}
+                                                        />
+                                                    );
+                                                }
+                                            )}
+                                        </td>
+                                        <td className="border-b-2 border-electro-50/20 align-top">
+                                            {formatEventDuration(
+                                                event.start,
+                                                event.end
+                                            )}
+                                        </td>
+                                        <td className="border-b-2 border-electro-50/20 align-top">
+                                            {event.version}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </main>

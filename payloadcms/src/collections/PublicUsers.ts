@@ -2,7 +2,7 @@ import { Response } from "express";
 import { CollectionConfig, PayloadRequest } from "payload/types";
 import authMiddleware from "../api/authMiddleware";
 import payload from "payload";
-import { createItemNotifications, notifyUser } from "../notifications";
+import { notifyUser } from "../notifications";
 
 const PublicUsers: CollectionConfig = {
     slug: "public-users",

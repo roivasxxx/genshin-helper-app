@@ -1,11 +1,77 @@
 import { CollectionConfig, PayloadRequest } from "payload/types";
-import elementField from "../../fields/ElementField";
-import weaponTypeField from "../../fields/WeaponTypeField";
 import { GENSHIN_REGIONS, RARITY_LABELS } from "../../constants";
-import { genshinSelectField } from "../../fields/fieldsConfig";
-import authMiddleware from "../../api/authMiddleware";
 import { Response } from "express";
 import { GenshinCharacter } from "../../../types/payload-types";
+import payload from "payload";
+
+const addCharExtra = async (
+    char: GenshinCharacter,
+    newChar: ReturnType<typeof normalizeChar>
+) => {
+    if (char.splash && typeof char.splash === "object") {
+        newChar["splash"] = char.splash.cloudinary.secure_url;
+    }
+
+    const eventProperty = char.rarity === "5" ? "fiveStar" : "fourStar";
+
+    const events = await payload.find({
+        collection: "genshin-events",
+        where: {
+            and: [
+                {
+                    bannerType: {
+                        equals: "character",
+                    },
+                },
+                {
+                    [`characters.${eventProperty}`]: {
+                        contains: char.id,
+                    },
+                },
+            ],
+        },
+        sort: "-end",
+    });
+    newChar.events.push(
+        ...events.docs.map((e) => {
+            return {
+                id: e.id,
+                start: e.start,
+                end: e.end,
+                version: e.version,
+                timezoneDependent: e.timezoneDependent,
+                characters: {
+                    fiveStar: e.characters.fiveStar.map((char) => {
+                        if (
+                            typeof char === "object" &&
+                            typeof char.icon === "object"
+                        ) {
+                            return {
+                                id: char.id,
+                                name: char.name,
+                                icon: char.icon.cloudinary.secure_url,
+                            };
+                        }
+                        return char;
+                    }),
+                    fourStar: e.characters.fourStar.map((char) => {
+                        if (
+                            typeof char === "object" &&
+                            typeof char.icon === "object"
+                        ) {
+                            return {
+                                id: char.id,
+                                name: char.name,
+                                icon: char.icon.cloudinary.secure_url,
+                            };
+                        }
+                        return char;
+                    }),
+                },
+            };
+        })
+    );
+};
 
 const normalizeChar = (char: GenshinCharacter) => {
     const newChar = {
@@ -14,6 +80,9 @@ const normalizeChar = (char: GenshinCharacter) => {
         weaponType: char.weaponType || "sword",
         substat: char.substat,
         rarity: Number.parseInt(char.rarity),
+        birthday: char.birthday,
+        events: [],
+        patch: char.patch,
     };
     if (char.icon && typeof char.icon === "object") {
         newChar["icon"] = char.icon.cloudinary.secure_url;
@@ -137,6 +206,12 @@ const GenshinCharacters: CollectionConfig = {
             required: true,
         },
         {
+            name: "splash",
+            type: "upload",
+            relationTo: "media",
+            required: true,
+        },
+        {
             name: "specialty",
             type: "relationship",
             relationTo: "genshin-items",
@@ -179,6 +254,14 @@ const GenshinCharacters: CollectionConfig = {
             name: "gem",
             type: "relationship",
             relationTo: "genshin-items",
+        },
+        {
+            name: "birthday",
+            type: "text",
+        },
+        {
+            name: "patch",
+            type: "text",
         },
         // elementField,
         // weaponTypeField,
@@ -336,7 +419,9 @@ const GenshinCharacters: CollectionConfig = {
                             id: id,
                         });
 
-                        return res.send(normalizeChar(character));
+                        const _normalized_character = normalizeChar(character);
+                        await addCharExtra(character, _normalized_character);
+                        return res.send(_normalized_character);
                     } catch (error) {
                         res.status(500).send(error);
                         console.error(
