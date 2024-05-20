@@ -1,7 +1,7 @@
 "use client";
 
 import {
-    GenshinCharactersResponse,
+    GenshinCharacter,
     GenshinElementsResponse,
 } from "@/types/apiResponses";
 import { GENSHIN_WEAPONS, STAR_SYMBOL } from "@/utils/constants";
@@ -13,7 +13,7 @@ import { capitalizeString } from "@/utils/utils";
 import Link from "next/link";
 
 export default function CharacterShowcase(props: {
-    characters: GenshinCharactersResponse[];
+    characters: GenshinCharacter[];
     elements: GenshinElementsResponse[];
 }) {
     const { characters, elements } = props;
