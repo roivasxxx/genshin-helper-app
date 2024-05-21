@@ -318,19 +318,37 @@ export default async function CharacterSlug(props: {
                         </thead>
                         <tbody className="gap-2">
                             {character.events.map((event) => {
+                                const { fiveStar1, fiveStar2 } =
+                                    event.characters;
                                 return (
                                     <tr
                                         key={event.id}
                                         className="border-b-2 border-electro-50 text-sm md:text-md "
                                     >
                                         <td className="flex flex-row gap-2 border-b-2 border-electro-50/20 align-top">
+                                            <BannerCharacterPreview
+                                                char={fiveStar1}
+                                                rarity={5}
+                                                href={`/game/genshin-impact/wiki/characters/${fiveStar1.id}`}
+                                            />
+                                            {fiveStar2 ? (
+                                                <td className="flex flex-row gap-2 border-b-2 border-electro-50/20 align-top">
+                                                    <BannerCharacterPreview
+                                                        char={fiveStar2}
+                                                        rarity={5}
+                                                        href={`/game/genshin-impact/wiki/characters/${fiveStar2.id}`}
+                                                    />
+                                                </td>
+                                            ) : (
+                                                <></>
+                                            )}
                                             {event.characters.fourStar.map(
                                                 (fourStar) => {
                                                     return (
                                                         <BannerCharacterPreview
                                                             char={fourStar}
                                                             rarity={4}
-                                                            href="#"
+                                                            href={`/game/genshin-impact/wiki/characters/${fourStar.id}`}
                                                             key={`${event.id}-${fourStar.id}`}
                                                         />
                                                     );

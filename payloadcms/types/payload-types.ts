@@ -314,6 +314,8 @@ export interface GenshinEvent {
   characters?: {
     fourStar?: (string | GenshinCharacter)[] | null;
     fiveStar?: (string | GenshinCharacter)[] | null;
+    fiveStar1?: (string | null) | GenshinCharacter;
+    fiveStar2?: (string | null) | GenshinCharacter;
   };
   url?: string | null;
   version?: string | null;

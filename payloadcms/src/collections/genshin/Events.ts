@@ -67,16 +67,6 @@ const Events: CollectionConfig = {
                     relationTo: "genshin-weapons",
                     hasMany: true,
                 },
-                {
-                    name: "fiveStar1",
-                    type: "relationship",
-                    relationTo: "genshin-characters",
-                },
-                {
-                    name: "fiveStar2",
-                    type: "relationship",
-                    relationTo: "genshin-characters",
-                },
             ],
         },
         {

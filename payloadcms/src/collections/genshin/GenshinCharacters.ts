@@ -34,6 +34,24 @@ const addCharExtra = async (
     });
     newChar.events.push(
         ...events.docs.map((e) => {
+            const { fiveStar1, fiveStar2 } = e.characters;
+
+            const charToMap = (character: GenshinCharacter | string | null) => {
+                const map = {
+                    id: "",
+                    name: "",
+                    icon: "",
+                };
+                // old banners might only have one 5* character
+                if (typeof character === "string" || !character) return null;
+                map.id = character.id;
+                map.name = character.name;
+                if (typeof character.icon === "object") {
+                    map.icon = character.icon.cloudinary.secure_url;
+                }
+                return map;
+            };
+
             return {
                 id: e.id,
                 start: e.start,
@@ -41,32 +59,9 @@ const addCharExtra = async (
                 version: e.version,
                 timezoneDependent: e.timezoneDependent,
                 characters: {
-                    fiveStar: e.characters.fiveStar.map((char) => {
-                        if (
-                            typeof char === "object" &&
-                            typeof char.icon === "object"
-                        ) {
-                            return {
-                                id: char.id,
-                                name: char.name,
-                                icon: char.icon.cloudinary.secure_url,
-                            };
-                        }
-                        return char;
-                    }),
-                    fourStar: e.characters.fourStar.map((char) => {
-                        if (
-                            typeof char === "object" &&
-                            typeof char.icon === "object"
-                        ) {
-                            return {
-                                id: char.id,
-                                name: char.name,
-                                icon: char.icon.cloudinary.secure_url,
-                            };
-                        }
-                        return char;
-                    }),
+                    fiveStar1: charToMap(fiveStar1),
+                    fiveStar2: charToMap(fiveStar2),
+                    fourStar: e.characters.fourStar.map(charToMap),
                 },
             };
         })

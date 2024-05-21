@@ -35,8 +35,8 @@ export type ExtraGenshinCharacter = GenshinCharacter & {
             fourStar: NameIconWithIdDictionary[];
             // first banner
             fiveStar1: NameIconWithIdDictionary;
-            // second banner
-            fiveStar2: NameIconWithIdDictionary;
+            // second banner - old banners might only have one 5* character
+            fiveStar2: NameIconWithIdDictionary | null;
         };
     }[];
 };
