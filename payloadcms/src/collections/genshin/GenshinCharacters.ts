@@ -106,6 +106,7 @@ const normalizeChar = async (char: GenshinCharacter, addExtra?: boolean) => {
     }
 
     if (addExtra) {
+        console.log("adding extra to", char.id);
         if (char.splash && typeof char.splash === "object") {
             newChar["splash"] = char.splash.cloudinary.secure_url;
         }

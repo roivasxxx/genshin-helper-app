@@ -1,3 +1,4 @@
+import BlurredImage from "@/components/blurredImage";
 import { HTTP_METHOD } from "@/types";
 import {
     ExtraGenshinCharacter,
@@ -42,7 +43,7 @@ function BannerCharacterPreview(props: {
             className={`relative text-electro-50 size-10 md:size-14 text-md bg-electro-${rarity}star-from/50 rounded overflow-hidden`}
         >
             {char.icon ? (
-                <Image
+                <BlurredImage
                     src={char.icon}
                     alt={char.name}
                     fill={true}
@@ -81,7 +82,9 @@ export default async function CharacterSlug(props: {
         console.error("CharacterSlug - threw an error", error);
         return null;
     }
-
+    if (!character.events || !character.books) {
+        console.log(character);
+    }
     return (
         <main className="w-full mx-auto p-4 my-8 bg-electro-800 rounded inline-block items-start justify-center font-exo lg:w-[75%] sm:flex">
             <div className="flex-1 flex flex-col justify-center text-electro-50">
@@ -100,7 +103,7 @@ export default async function CharacterSlug(props: {
                             </span>
                             {character.element.icon ? (
                                 <div className="relative size-10 mx-2">
-                                    <Image
+                                    <BlurredImage
                                         alt={character.element.name}
                                         src={character.element.icon}
                                         fill={true}
@@ -156,7 +159,7 @@ export default async function CharacterSlug(props: {
                                     </td>
                                     <td className="text-electro-50 text-md flex">
                                         {character.specialty.icon ? (
-                                            <Image
+                                            <BlurredImage
                                                 src={character.specialty.icon}
                                                 alt={character.specialty.name}
                                                 height={40}
@@ -175,7 +178,7 @@ export default async function CharacterSlug(props: {
                                     <td className="text-electro-50 text-md">
                                         {character.boss &&
                                         character.boss.icon ? (
-                                            <Image
+                                            <BlurredImage
                                                 src={character.boss.icon}
                                                 alt={character.boss.name}
                                                 height={40}
@@ -194,7 +197,7 @@ export default async function CharacterSlug(props: {
                                     </td>
                                     <td className="text-electro-50 text-md">
                                         {character.gem.icon ? (
-                                            <Image
+                                            <BlurredImage
                                                 src={character.gem.icon}
                                                 alt={character.gem.name}
                                                 height={40}
@@ -226,7 +229,7 @@ export default async function CharacterSlug(props: {
                                                     title={book.name}
                                                 >
                                                     {book.icon ? (
-                                                        <Image
+                                                        <BlurredImage
                                                             src={book.icon}
                                                             alt={book.name}
                                                             height={40}
@@ -246,7 +249,7 @@ export default async function CharacterSlug(props: {
                                     </td>
                                     <td className="text-electro-50 text-md align-top">
                                         {character.trounce.icon ? (
-                                            <Image
+                                            <BlurredImage
                                                 src={character.trounce.icon}
                                                 alt={character.trounce.name}
                                                 height={40}
@@ -264,7 +267,7 @@ export default async function CharacterSlug(props: {
                                     </td>
                                     <td className="text-electro-50 text-md align-top">
                                         {character.talent.icon ? (
-                                            <Image
+                                            <BlurredImage
                                                 src={character.talent.icon}
                                                 alt={character.talent.name}
                                                 height={40}
@@ -280,24 +283,23 @@ export default async function CharacterSlug(props: {
                         </table>
                     </div>
 
-                    <div className="relative h-full w-full overflow-clip h-[calc(100vh-4rem)] max-h-[600px] z-0">
+                    <div className="w-full overflow-clip h-[calc(100vh-4rem)] max-h-[600px] z-0 ">
                         {character.splash ? (
-                            <Image
+                            <BlurredImage
                                 src={character.splash}
                                 alt={character.id + "_splash"}
-                                fill={true}
+                                width={0}
+                                height={0}
+                                priority
                                 sizes="100%"
-                                style={{
-                                    objectFit: "cover",
-                                    alignSelf: "center",
-                                }}
-                                className="h-[calc(100vh-4rem)] max-h-[600px]"
+                                className="h-[calc(100vh-4rem)] max-h-[600px] object-cover w-auto mx-auto"
                             />
                         ) : (
                             <></>
                         )}
                     </div>
                 </div>
+
                 <div>
                     <table className="w-full my-2 border-separate border-spacing-y-2 bg-electro-900 p-2 rounded">
                         <caption className="text-electro-50 text-2xl text-left">
@@ -332,13 +334,11 @@ export default async function CharacterSlug(props: {
                                                 href={`/game/genshin-impact/wiki/characters/${fiveStar1.id}`}
                                             />
                                             {fiveStar2 ? (
-                                                <td className="flex flex-row gap-2 border-b-2 border-electro-50/20 align-top">
-                                                    <BannerCharacterPreview
-                                                        char={fiveStar2}
-                                                        rarity={5}
-                                                        href={`/game/genshin-impact/wiki/characters/${fiveStar2.id}`}
-                                                    />
-                                                </td>
+                                                <BannerCharacterPreview
+                                                    char={fiveStar2}
+                                                    rarity={5}
+                                                    href={`/game/genshin-impact/wiki/characters/${fiveStar2.id}`}
+                                                />
                                             ) : (
                                                 <></>
                                             )}
