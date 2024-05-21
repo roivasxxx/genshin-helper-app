@@ -1,20 +1,10 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Exo_2, Inter } from "next/font/google";
 import "./globals.css";
 import { getServerSession } from "next-auth";
 import AuthProvider from "@/components/authentication/authProvider";
 import Footer from "@/components/footer";
+import { exo, inter, silkscreen } from "@/utils/fonts";
 // import { authOptions } from "./api/auth/[...nextauth]/route";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-
-const exo = Exo_2({ subsets: ["latin"], variable: "--font-exo" });
-
-const silkscreen = Bebas_Neue({
-    subsets: ["latin"],
-    weight: "400",
-    variable: "--font-bebas",
-});
 
 export const metadata: Metadata = {
     title: "Electro Mains",
