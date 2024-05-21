@@ -4,7 +4,71 @@ import { Response } from "express";
 import { GenshinCharacter } from "../../../types/payload-types";
 import payload from "payload";
 
-const normalizeChar = async (char: GenshinCharacter, addExtra?: boolean) => {
+const addCharExtra = async (
+    char: GenshinCharacter,
+    newChar: ReturnType<typeof normalizeChar>
+) => {
+    if (char.splash && typeof char.splash === "object") {
+        newChar["splash"] = char.splash.cloudinary.secure_url;
+    }
+
+    const eventProperty = char.rarity === "5" ? "fiveStar" : "fourStar";
+
+    const events = await payload.find({
+        collection: "genshin-events",
+        where: {
+            and: [
+                {
+                    bannerType: {
+                        equals: "character",
+                    },
+                },
+                {
+                    [`characters.${eventProperty}`]: {
+                        contains: char.id,
+                    },
+                },
+            ],
+        },
+        sort: "-end",
+    });
+    newChar.events.push(
+        ...events.docs.map((e) => {
+            const { fiveStar1, fiveStar2 } = e.characters;
+
+            const charToMap = (character: GenshinCharacter | string | null) => {
+                const map = {
+                    id: "",
+                    name: "",
+                    icon: "",
+                };
+                // old banners might only have one 5* character
+                if (typeof character === "string" || !character) return null;
+                map.id = character.id;
+                map.name = character.name;
+                if (typeof character.icon === "object") {
+                    map.icon = character.icon.cloudinary.secure_url;
+                }
+                return map;
+            };
+
+            return {
+                id: e.id,
+                start: e.start,
+                end: e.end,
+                version: e.version,
+                timezoneDependent: e.timezoneDependent,
+                characters: {
+                    fiveStar1: charToMap(fiveStar1),
+                    fiveStar2: charToMap(fiveStar2),
+                    fourStar: e.characters.fourStar.map(charToMap),
+                },
+            };
+        })
+    );
+};
+
+const normalizeChar = (char: GenshinCharacter) => {
     const newChar = {
         id: char.id,
         name: char.name,
@@ -103,71 +167,6 @@ const normalizeChar = async (char: GenshinCharacter, addExtra?: boolean) => {
                 };
             }
         });
-    }
-
-    if (addExtra) {
-        console.log("adding extra to", char.id);
-        if (char.splash && typeof char.splash === "object") {
-            newChar["splash"] = char.splash.cloudinary.secure_url;
-        }
-
-        const eventProperty = char.rarity === "5" ? "fiveStar" : "fourStar";
-
-        const events = await payload.find({
-            collection: "genshin-events",
-            where: {
-                and: [
-                    {
-                        bannerType: {
-                            equals: "character",
-                        },
-                    },
-                    {
-                        [`characters.${eventProperty}`]: {
-                            contains: char.id,
-                        },
-                    },
-                ],
-            },
-            sort: "-end",
-        });
-        newChar.events.push(
-            ...events.docs.map((e) => {
-                const { fiveStar1, fiveStar2 } = e.characters;
-
-                const charToMap = (
-                    character: GenshinCharacter | string | null
-                ) => {
-                    const map = {
-                        id: "",
-                        name: "",
-                        icon: "",
-                    };
-                    // old banners might only have one 5* character
-                    if (typeof character === "string" || !character)
-                        return null;
-                    map.id = character.id;
-                    map.name = character.name;
-                    if (typeof character.icon === "object") {
-                        map.icon = character.icon.cloudinary.secure_url;
-                    }
-                    return map;
-                };
-
-                return {
-                    id: e.id,
-                    start: e.start,
-                    end: e.end,
-                    version: e.version,
-                    timezoneDependent: e.timezoneDependent,
-                    characters: {
-                        fiveStar1: charToMap(fiveStar1),
-                        fiveStar2: charToMap(fiveStar2),
-                        fourStar: e.characters.fourStar.map(charToMap),
-                    },
-                };
-            })
-        );
     }
 
     return newChar;
@@ -386,9 +385,7 @@ const GenshinCharacters: CollectionConfig = {
                             sort: "name",
                         });
                         if (chars.docs && chars.docs.length > 0) {
-                            const mappedChars = chars.docs.map(async (char) =>
-                                normalizeChar(char, false)
-                            );
+                            const mappedChars = chars.docs.map(normalizeChar);
                             return res.send(mappedChars);
                         }
                         return res.send([]);
@@ -417,10 +414,8 @@ const GenshinCharacters: CollectionConfig = {
                             id: id,
                         });
 
-                        const _normalized_character = await normalizeChar(
-                            character,
-                            true
-                        );
+                        const _normalized_character = normalizeChar(character);
+                        await addCharExtra(character, _normalized_character);
                         return res.send(_normalized_character);
                     } catch (error) {
                         res.status(500).send(error);
