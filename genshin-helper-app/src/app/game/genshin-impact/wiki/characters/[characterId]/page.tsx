@@ -82,9 +82,9 @@ export default async function CharacterSlug(props: {
         console.error("CharacterSlug - threw an error", error);
         return null;
     }
-    if (!character.events || !character.books) {
-        console.log(character);
-    }
+    console.log(character.id);
+    // if (!character.events || !character.books) {
+    // }
     return (
         <main className="w-full mx-auto p-4 my-8 bg-electro-800 rounded inline-block items-start justify-center font-exo lg:w-[75%] sm:flex">
             <div className="flex-1 flex flex-col justify-center text-electro-50">
