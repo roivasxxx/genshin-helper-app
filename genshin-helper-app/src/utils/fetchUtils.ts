@@ -25,7 +25,13 @@ const cmsRequest = async (
         method: typeof params.method;
         credentials: "include";
         headers: Record<string, string>;
-    } = { method: params.method, credentials: "include", headers: {} };
+        cache: RequestCache;
+    } = {
+        method: params.method,
+        credentials: "include",
+        headers: {},
+        cache: "no-store",
+    };
 
     if (params.body) {
         fetchOptions.body = JSON.stringify(params.body);
