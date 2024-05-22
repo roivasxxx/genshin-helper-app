@@ -23,7 +23,7 @@ export default function Header() {
     const pathName = usePathname()?.split("/")[2] || "";
 
     return (
-        <header className="bg-electro-800 md:rounded font-exo text-electro-50 sticky top-0 w-full z-50">
+        <header className="bg-electro-800 md:rounded font-exo text-electro-50 fixed top-0 w-full z-50">
             <nav className="w-full flex items-center">
                 <div className="w-full h-16 flex flex-row items-center justify-between px-2">
                     <div className="w-36 h-full flex flex-row items-center">

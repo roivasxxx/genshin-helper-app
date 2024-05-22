@@ -25,12 +25,12 @@ const cmsRequest = async (
         method: typeof params.method;
         credentials: "include";
         headers: Record<string, string>;
-        cache: RequestCache;
+        next: { revalidate: 0 };
     } = {
         method: params.method,
         credentials: "include",
         headers: {},
-        cache: "no-store",
+        next: { revalidate: 0 },
     };
 
     if (params.body) {
