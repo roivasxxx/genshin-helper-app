@@ -3,6 +3,51 @@ import { GENSHIN_REGIONS, RARITY_LABELS } from "../../constants";
 import { Response } from "express";
 import { GenshinCharacter } from "../../../types/payload-types";
 import payload from "payload";
+import { slateEditor } from "@payloadcms/richtext-slate";
+import wruTextColorLeaf from "@wru/payloadcms-slate-plugin-textcolor-leaf";
+
+const editor = slateEditor({
+    admin: {
+        elements: ["h1", "h2", "h3", "h4", "ul", "ol"],
+        leaves: [
+            "bold",
+            "italic",
+            wruTextColorLeaf({
+                name: "color_picker",
+                colorList: [
+                    {
+                        label: "Geo",
+                        color: "#FFD780FF",
+                    },
+                    {
+                        label: "Anemo",
+                        color: "#80FFD7FF",
+                    },
+                    {
+                        label: "Electro",
+                        color: "#FFACFFFF",
+                    },
+                    {
+                        label: "Hydro",
+                        color: "#80C0FFFF",
+                    },
+                    {
+                        label: "Pyro",
+                        color: "#FF9999FF",
+                    },
+                    {
+                        label: "Cryo",
+                        color: "#99FFFFFF",
+                    },
+                    {
+                        label: "Dendro",
+                        color: "#99FF88FF",
+                    },
+                ],
+            }),
+        ],
+    },
+});
 
 const addCharExtra = async (
     char: GenshinCharacter,
@@ -66,6 +111,30 @@ const addCharExtra = async (
             };
         })
     );
+
+    Object.keys(char.constellations).forEach(
+        (key: keyof typeof char.constellations) => {
+            const icon = char.constellations[key].icon;
+            if (icon && typeof icon !== "string" && icon.cloudinary) {
+                newChar.constellations[key] = {
+                    name: char.constellations[key].name,
+                    description: char.constellations[key].descriptionRaw,
+                    icon: icon.cloudinary.secure_url,
+                };
+            }
+        }
+    );
+
+    Object.keys(char.skills).forEach((key: keyof typeof char.skills) => {
+        const icon = char.skills[key].icon;
+        if (icon && typeof icon !== "string" && icon.cloudinary) {
+            newChar.skills[key] = {
+                name: char.skills[key].name,
+                description: char.skills[key].descriptionRaw,
+                icon: icon.cloudinary.secure_url,
+            };
+        }
+    });
 };
 
 const normalizeChar = (char: GenshinCharacter) => {
@@ -78,6 +147,8 @@ const normalizeChar = (char: GenshinCharacter) => {
         birthday: char.birthday,
         events: [],
         patch: char.patch,
+        constellations: {},
+        skills: {},
     };
     if (char.icon && typeof char.icon === "object") {
         newChar["icon"] = char.icon.cloudinary.secure_url;
@@ -258,6 +329,317 @@ const GenshinCharacters: CollectionConfig = {
             name: "patch",
             type: "text",
         },
+        {
+            name: "constellations",
+            type: "group",
+            fields: [
+                {
+                    name: "c1",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "c2",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "c3",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "c4",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "c5",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "c6",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            name: "skills",
+            type: "group",
+            fields: [
+                {
+                    name: "combat1",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "combat2",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "combat3",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "combatsp",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "passive1",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "passive2",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+                {
+                    name: "passive3",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "textarea",
+                        },
+                        {
+                            name: "descriptionRaw",
+                            type: "textarea",
+                        },
+                        {
+                            name: "icon",
+                            type: "relationship",
+                            relationTo: "media",
+                        },
+                    ],
+                },
+            ],
+        },
         // elementField,
         // weaponTypeField,
         // {
@@ -330,7 +712,7 @@ const GenshinCharacters: CollectionConfig = {
         //             type: "number",
         //         },
         //         {
-        //             name: "description",
+        //             name: "descriptionText",
         //             type: "richText",
         //         },
         //     ],
@@ -352,7 +734,7 @@ const GenshinCharacters: CollectionConfig = {
         //                     type: "richText",
         //                 },
         //                 {
-        //                     name: "description",
+        //                     name: "descriptionText",
         //                     type: "richText",
         //                 },
         //                 {

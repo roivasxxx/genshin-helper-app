@@ -196,6 +196,88 @@ export interface GenshinCharacter {
   gem?: (string | null) | GenshinItem;
   birthday?: string | null;
   patch?: string | null;
+  constellations?: {
+    c1?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    c2?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    c3?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    c4?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    c5?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    c6?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+  };
+  skills?: {
+    combat1?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    combat2?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    combat3?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    combatsp?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    passive1?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    passive2?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+    passive3?: {
+      name?: string | null;
+      description?: string | null;
+      descriptionRaw?: string | null;
+      icon?: (string | null) | Media;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }

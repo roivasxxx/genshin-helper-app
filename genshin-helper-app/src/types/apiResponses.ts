@@ -5,6 +5,10 @@ export type NameIconDictionary = {
 
 export type NameIconWithIdDictionary = NameIconDictionary & { id: string };
 
+export type NameIconWithDescriptionDictionary = NameIconDictionary & {
+    description: string;
+};
+
 export type GenshinCharacter = {
     id: string;
     name: string;
@@ -39,6 +43,23 @@ export type ExtraGenshinCharacter = GenshinCharacter & {
             fiveStar2: NameIconWithIdDictionary | null;
         };
     }[];
+    constellations: {
+        c1: NameIconWithDescriptionDictionary;
+        c2: NameIconWithDescriptionDictionary;
+        c3: NameIconWithDescriptionDictionary;
+        c4: NameIconWithDescriptionDictionary;
+        c5: NameIconWithDescriptionDictionary;
+        c6: NameIconWithDescriptionDictionary;
+    };
+    skills: {
+        combat1: NameIconWithDescriptionDictionary;
+        combat2: NameIconWithDescriptionDictionary;
+        combat3: NameIconWithDescriptionDictionary;
+        combatsp?: NameIconWithDescriptionDictionary;
+        passive1: NameIconWithDescriptionDictionary;
+        passive2: NameIconWithDescriptionDictionary;
+        passive3?: NameIconWithDescriptionDictionary;
+    };
 };
 
 export type GenshinElementsResponse = NameIconDictionary & { id: string };
