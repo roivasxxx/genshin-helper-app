@@ -1,3 +1,4 @@
+import Footer from "@/components/footer";
 import Header from "@/components/root-layout/nav/header";
 
 export default async function GameLayout({
@@ -11,6 +12,7 @@ export default async function GameLayout({
                 <Header />
                 {children}
             </div>
+            <Footer />
         </>
     );
 }

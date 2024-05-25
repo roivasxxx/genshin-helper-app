@@ -24,10 +24,7 @@ export default async function RootLayout({
             className={`${inter.variable} ${exo.variable} ${silkscreen.variable} bg-electro-900`}
         >
             <AuthProvider session={session}>
-                <body>
-                    {children}
-                    <Footer />
-                </body>
+                <body>{children}</body>
             </AuthProvider>
         </html>
     );
