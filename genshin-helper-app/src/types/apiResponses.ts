@@ -82,3 +82,37 @@ export enum GenshinCharacterSubstats {
     def = "Def %",
     physical_dmg_bonus = "Physical DMG Bonus",
 }
+
+export enum GenshinWeaponTypes {
+    sword = "Sword",
+    catalyst = "Catalyst",
+    claymore = "Claymore",
+    polearm = "Polearm",
+    bow = "Bow",
+}
+
+export type GenshinWeapon = NameIconWithIdDictionary & {
+    rarity: number;
+    weaponType: keyof typeof GenshinWeaponTypes;
+    substat: keyof typeof GenshinCharacterSubstats;
+    version: string;
+    stats: {
+        primary: {
+            value: number;
+        };
+        secondary: {
+            value: number;
+            stat: keyof typeof GenshinCharacterSubstats;
+        };
+    };
+    refinements: {
+        text: string;
+        name: string;
+        values: string[][];
+    };
+    domain: NameIconWithIdDictionary[];
+    mobDrops: {
+        first: NameIconWithIdDictionary[];
+        second: NameIconWithIdDictionary[];
+    };
+};

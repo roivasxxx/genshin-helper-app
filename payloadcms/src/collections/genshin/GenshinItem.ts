@@ -12,6 +12,7 @@ const GenshinItems: CollectionConfig = {
         {
             name: "name",
             type: "text",
+            required: true,
         },
         {
             name: "rarity",
@@ -78,7 +79,7 @@ const GenshinItems: CollectionConfig = {
                 },
             ],
         },
-        { name: "icon", type: "upload", relationTo: "media" },
+        { name: "icon", type: "upload", relationTo: "media", required: true },
         { name: "region", type: "text" },
         {
             name: "days",

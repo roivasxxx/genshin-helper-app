@@ -2,14 +2,14 @@ import { GenshinAcountWishInfo } from "../types/types";
 
 // icons are not needed so no need to create a collection
 export const GENSHIN_SUBSTATS = [
-    { label: "ATK%", value: "TK%" },
-    { label: "HP%", value: "HP%" },
-    { label: "DEF%", value: "DEF%" },
-    { label: "Elemental Mastery", value: "Elemental Mastery" },
-    { label: "Energy Recharge", value: "Energy Recharge" },
-    { label: "CRIT Rate", value: "CRIT Rate" },
-    { label: "CRIT DMG", value: "CRIT DMG" },
-    { label: "Physical DMG Bonus", value: "Physical DMG Bonus" },
+    { label: "ATK%", value: "atk" },
+    { label: "HP%", value: "hp" },
+    { label: "DEF%", value: "def" },
+    { label: "Elemental Mastery", value: "elemental_mastery" },
+    { label: "Energy Recharge", value: "energy_recharge" },
+    { label: "CRIT Rate", value: "crit_rate" },
+    { label: "CRIT DMG", value: "crit_dmg" },
+    { label: "Physical DMG Bonus", value: "physical_dmg_bonus" },
 ];
 
 // icons are not needed so no need to create a collection

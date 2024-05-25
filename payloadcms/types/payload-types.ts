@@ -149,8 +149,67 @@ export interface GenshinAccount {
 export interface GenshinWeapon {
   id: string;
   name: string;
+  weaponType?: ('sword' | 'catalyst' | 'claymore' | 'polearm' | 'bow') | null;
+  version?: string | null;
+  refinements?: {
+    name?: string | null;
+    text?: string | null;
+    values?: string | null;
+  };
+  domain?: (string | GenshinItem)[] | null;
+  mobDrops?: {
+    first?: (string | GenshinItem)[] | null;
+    second?: (string | GenshinItem)[] | null;
+  };
+  stats?: {
+    primary?: {
+      value?: number | null;
+    };
+    secondary?: {
+      value?: number | null;
+      stat?:
+        | (
+            | 'atk'
+            | 'hp'
+            | 'def'
+            | 'elemental_mastery'
+            | 'energy_recharge'
+            | 'crit_rate'
+            | 'crit_dmg'
+            | 'physical_dmg_bonus'
+          )
+        | null;
+    };
+  };
   rarity: '3' | '4' | '5';
   icon: string | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface GenshinItem {
+  id: string;
+  name: string;
+  rarity?: number | null;
+  type?:
+    | (
+        | 'collectable'
+        | 'food'
+        | 'characterAscension'
+        | 'book'
+        | 'weaponMat'
+        | 'weaponAscensionMaterial'
+        | 'expBook'
+        | 'expOre'
+        | 'fish'
+        | 'mobDrop'
+        | 'bossDrop'
+        | 'trounceDrop'
+        | 'gem'
+      )
+    | null;
+  icon: string | Media;
+  region?: string | null;
+  days?: ('0' | '1' | '2' | '3' | '4' | '5' | '6') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -278,33 +337,6 @@ export interface GenshinCharacter {
       icon?: (string | null) | Media;
     };
   };
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinItem {
-  id: string;
-  name?: string | null;
-  rarity?: number | null;
-  type?:
-    | (
-        | 'collectable'
-        | 'food'
-        | 'characterAscension'
-        | 'book'
-        | 'weaponMat'
-        | 'weaponAscensionMaterial'
-        | 'expBook'
-        | 'expOre'
-        | 'fish'
-        | 'mobDrop'
-        | 'bossDrop'
-        | 'trounceDrop'
-        | 'gem'
-      )
-    | null;
-  icon?: string | Media | null;
-  region?: string | null;
-  days?: ('0' | '1' | '2' | '3' | '4' | '5' | '6') | null;
   updatedAt: string;
   createdAt: string;
 }

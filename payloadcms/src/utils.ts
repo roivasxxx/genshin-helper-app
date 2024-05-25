@@ -1,4 +1,4 @@
-import { RecordToMap, RecordWithIcon } from "../types/types";
+import { RecordToMap } from "../types/types";
 
 export const sleep = (time: number) => {
     return new Promise((res, _) => {

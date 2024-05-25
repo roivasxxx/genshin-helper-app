@@ -4,7 +4,7 @@ import cmsRequest from "@/utils/fetchUtils";
 
 export const dynamic = "force-static";
 
-export default async function GenshinRoot(props: any) {
+export default async function GenshinRoot() {
     let characters = [];
     let elements = [];
     try {

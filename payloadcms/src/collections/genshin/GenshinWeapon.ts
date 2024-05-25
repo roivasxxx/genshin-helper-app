@@ -1,8 +1,9 @@
-import { CollectionConfig } from "payload/types";
+import { CollectionConfig, PayloadRequest } from "payload/types";
 import weaponTypeField from "../../fields/WeaponTypeField";
 import { GENSHIN_SUBSTATS } from "../../constants";
 import { genshinSelectField } from "../../fields/fieldsConfig";
-import { normalizeName } from "../../utils";
+import { normalizeName, relationToDictionary } from "../../utils";
+import { Response } from "express";
 
 const GenshinWeapons: CollectionConfig = {
     slug: "genshin-weapons",
@@ -15,6 +16,104 @@ const GenshinWeapons: CollectionConfig = {
             name: "name",
             type: "text",
             required: true,
+        },
+        {
+            name: "weaponType",
+            type: "select",
+            options: [
+                {
+                    label: "Sword",
+                    value: "sword",
+                },
+                {
+                    label: "Catalyst",
+                    value: "catalyst",
+                },
+                {
+                    label: "Claymore",
+                    value: "claymore",
+                },
+                {
+                    label: "Polearm",
+                    value: "polearm",
+                },
+                {
+                    label: "Bow",
+                    value: "bow",
+                },
+            ],
+        },
+        {
+            name: "version",
+            type: "text",
+        },
+        {
+            name: "refinements",
+            type: "group",
+            fields: [
+                {
+                    name: "name",
+                    type: "text",
+                },
+                {
+                    name: "text",
+                    type: "text",
+                },
+                {
+                    name: "values",
+                    type: "text",
+                },
+            ],
+        },
+        {
+            name: "domain",
+            type: "relationship",
+            relationTo: "genshin-items",
+            hasMany: true,
+        },
+        {
+            name: "mobDrops",
+            type: "group",
+            fields: [
+                {
+                    name: "first",
+                    type: "relationship",
+                    relationTo: "genshin-items",
+                    hasMany: true,
+                },
+                {
+                    name: "second",
+                    type: "relationship",
+                    relationTo: "genshin-items",
+                    hasMany: true,
+                },
+            ],
+        },
+        {
+            name: "stats",
+            type: "group",
+            fields: [
+                {
+                    name: "primary",
+                    type: "group",
+                    fields: [{ name: "value", type: "number" }],
+                },
+                {
+                    name: "secondary",
+                    type: "group",
+                    fields: [
+                        {
+                            name: "value",
+                            type: "number",
+                        },
+                        {
+                            name: "stat",
+                            type: "select",
+                            options: GENSHIN_SUBSTATS,
+                        },
+                    ],
+                },
+            ],
         },
         // {
         //     name: "obtainedBy",
@@ -186,6 +285,57 @@ const GenshinWeapons: CollectionConfig = {
             type: "upload",
             relationTo: "media",
             required: true,
+        },
+    ],
+    endpoints: [
+        {
+            path: "/getWeapons",
+            method: "get",
+            handler: async (req: PayloadRequest, res: Response) => {
+                try {
+                    const weaponReq = await req.payload.find({
+                        collection: "genshin-weapons",
+                        pagination: false,
+                        sort: "name",
+                    });
+
+                    const weapons = weaponReq.docs.map((weapon) => {
+                        const mappedWeapon = {
+                            id: weapon.id,
+                            name: weapon.name,
+                            rarity: Number.parseInt(weapon.rarity),
+                            weaponType: weapon.weaponType,
+                            version: weapon.version,
+                            refinements: {
+                                ...weapon.refinements,
+                                values: JSON.parse(weapon.refinements.values),
+                            },
+                            stats: weapon.stats,
+                            icon: relationToDictionary(weapon),
+                            domain: weapon.domain.map((domain) =>
+                                relationToDictionary(domain)
+                            ),
+                            mobDrops: {
+                                first: weapon.mobDrops.first.map((drop) =>
+                                    relationToDictionary(drop)
+                                ),
+                                second: weapon.mobDrops.second.map((drop) =>
+                                    relationToDictionary(drop)
+                                ),
+                            },
+                        };
+                        if (weapon.icon && typeof weapon.icon === "object") {
+                            mappedWeapon["icon"] =
+                                weapon.icon.cloudinary.secure_url;
+                        }
+                        return mappedWeapon;
+                    });
+
+                    return res.status(200).send(weapons);
+                } catch (error) {
+                    return res.status(500).send(error);
+                }
+            },
         },
     ],
 };
