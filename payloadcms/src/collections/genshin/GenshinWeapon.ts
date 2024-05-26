@@ -4,6 +4,44 @@ import { GENSHIN_SUBSTATS } from "../../constants";
 import { genshinSelectField } from "../../fields/fieldsConfig";
 import { normalizeName, relationToDictionary } from "../../utils";
 import { Response } from "express";
+import { GenshinWeapon } from "../../../types/payload-types";
+
+const mapWeapon = (weapon: GenshinWeapon) => {
+    const mappedWeapon = {
+        id: weapon.id,
+        name: weapon.name,
+        rarity: Number.parseInt(weapon.rarity),
+        weaponType: weapon.weaponType,
+        version: weapon.version,
+        refinements: {
+            ...weapon.refinements,
+            values: JSON.parse(weapon.refinements.values),
+        },
+        stats: weapon.stats,
+        icon: relationToDictionary(weapon),
+        domain: weapon.domain
+            .sort((a, b) => {
+                if (typeof a === "object" && typeof b === "object") {
+                    return a.rarity - b.rarity;
+                } else if (typeof a === "string" && typeof b === "string") {
+                    return a.localeCompare(b);
+                }
+            })
+            .map((domain) => relationToDictionary(domain)),
+        mobDrops: {
+            first: weapon.mobDrops.first.map((drop) =>
+                relationToDictionary(drop)
+            ),
+            second: weapon.mobDrops.second.map((drop) =>
+                relationToDictionary(drop)
+            ),
+        },
+    };
+    if (weapon.icon && typeof weapon.icon === "object") {
+        mappedWeapon["icon"] = weapon.icon.cloudinary.secure_url;
+    }
+    return mappedWeapon;
+};
 
 const GenshinWeapons: CollectionConfig = {
     slug: "genshin-weapons",
@@ -299,39 +337,29 @@ const GenshinWeapons: CollectionConfig = {
                         sort: "name",
                     });
 
-                    const weapons = weaponReq.docs.map((weapon) => {
-                        const mappedWeapon = {
-                            id: weapon.id,
-                            name: weapon.name,
-                            rarity: Number.parseInt(weapon.rarity),
-                            weaponType: weapon.weaponType,
-                            version: weapon.version,
-                            refinements: {
-                                ...weapon.refinements,
-                                values: JSON.parse(weapon.refinements.values),
-                            },
-                            stats: weapon.stats,
-                            icon: relationToDictionary(weapon),
-                            domain: weapon.domain.map((domain) =>
-                                relationToDictionary(domain)
-                            ),
-                            mobDrops: {
-                                first: weapon.mobDrops.first.map((drop) =>
-                                    relationToDictionary(drop)
-                                ),
-                                second: weapon.mobDrops.second.map((drop) =>
-                                    relationToDictionary(drop)
-                                ),
-                            },
-                        };
-                        if (weapon.icon && typeof weapon.icon === "object") {
-                            mappedWeapon["icon"] =
-                                weapon.icon.cloudinary.secure_url;
-                        }
-                        return mappedWeapon;
-                    });
+                    const weapons = weaponReq.docs.map(mapWeapon);
 
                     return res.status(200).send(weapons);
+                } catch (error) {
+                    return res.status(500).send(error);
+                }
+            },
+        },
+        {
+            path: "/getWeapon",
+            method: "get",
+            handler: async (req: PayloadRequest, res: Response) => {
+                try {
+                    const { id } = req.query;
+                    if (typeof id !== "string") {
+                        return res.status(400).send("Invalid id");
+                    }
+                    const weapon = await req.payload.findByID({
+                        collection: "genshin-weapons",
+                        id: id,
+                    });
+
+                    return res.status(200).send(mapWeapon(weapon));
                 } catch (error) {
                     return res.status(500).send(error);
                 }
