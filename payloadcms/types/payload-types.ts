@@ -404,12 +404,12 @@ export interface GenshinMob {
 }
 export interface GenshinArtifact {
   id: string;
-  name?: string | null;
-  icon?: string | Media | null;
-  domain: string | GenshinDomain;
-  rarity?: ('1' | '2' | '3' | '4' | '5') | null;
-  '2pc'?: string | null;
-  '4pc'?: string | null;
+  name: string;
+  setPiece?: number[] | null;
+  icon: string | Media;
+  domains?: (string | GenshinDomain)[] | null;
+  rarity?: number[] | null;
+  bonuses?: string[] | null;
   updatedAt: string;
   createdAt: string;
 }

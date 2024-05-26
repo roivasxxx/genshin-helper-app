@@ -116,3 +116,13 @@ export type GenshinWeapon = NameIconWithIdDictionary & {
         second: NameIconWithIdDictionary[];
     };
 };
+
+export type GenshinArtifact = NameIconWithIdDictionary & {
+    rarity: number[];
+    setPiece: number[];
+    bonuses: string[];
+    domains: {
+        id: string;
+        name: string;
+    }[];
+};

@@ -1,8 +1,6 @@
 import { CollectionConfig, PayloadRequest } from "payload/types";
-import weaponTypeField from "../../fields/WeaponTypeField";
 import { GENSHIN_SUBSTATS } from "../../constants";
-import { genshinSelectField } from "../../fields/fieldsConfig";
-import { normalizeName, relationToDictionary } from "../../utils";
+import { relationToDictionary } from "../../utils";
 import { Response } from "express";
 import { GenshinWeapon } from "../../../types/payload-types";
 
