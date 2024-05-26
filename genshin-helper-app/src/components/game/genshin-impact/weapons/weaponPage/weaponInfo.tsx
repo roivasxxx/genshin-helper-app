@@ -62,26 +62,28 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                     <caption className="text-electro-50 text-2xl text-left">
                         {"Stats (Lv.90)"}
                     </caption>
-                    <tr>
-                        <td className="text-electro-50 text-xl text-left">
-                            Base Attack
-                        </td>
-                        <td className="text-electro-50 text-lg text-left px-2">
-                            {weapon.stats.primary.value}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="text-electro-50 text-xl text-left">
-                            {
-                                GenshinCharacterSubstats[
-                                    weapon.stats.secondary.stat
-                                ]
-                            }
-                        </td>
-                        <td className="text-electro-50 text-lg text-left px-2">
-                            {weapon.stats.secondary.value}
-                        </td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td className="text-electro-50 text-xl text-left">
+                                Base Attack
+                            </td>
+                            <td className="text-electro-50 text-lg text-left px-2">
+                                {weapon.stats.primary.value}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="text-electro-50 text-xl text-left">
+                                {
+                                    GenshinCharacterSubstats[
+                                        weapon.stats.secondary.stat
+                                    ]
+                                }
+                            </td>
+                            <td className="text-electro-50 text-lg text-left px-2">
+                                {weapon.stats.secondary.value}
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
 

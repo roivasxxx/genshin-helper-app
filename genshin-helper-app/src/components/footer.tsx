@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="w-full absolute px-4 py-2 text-sm text-electro-50/80">
+        <footer className="w-full relative px-4 py-2 text-sm text-electro-50/80">
             <div className="flex flex-row items-center justify-between w-full">
                 <div>
                     <p className="text-sm italic">
