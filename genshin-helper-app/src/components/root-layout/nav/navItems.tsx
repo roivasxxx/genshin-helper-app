@@ -1,4 +1,5 @@
 "use client";
+import ArrowToggle from "@/components/arrowToggle";
 import navConfig, { NavConfigPath } from "@/nav-config";
 import { GAMES } from "@/utils/constants";
 import Link from "next/link";
@@ -89,27 +90,10 @@ export default function NavItems() {
                                 {path.label}
 
                                 {resolution === "small" ? (
-                                    <svg
-                                        className={`w-5 h-5 transition-transform duration-300 transform ${
-                                            openStatus[pathIndex]
-                                                ? "rotate-180"
-                                                : ""
-                                        }`}
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d={
-                                                openStatus[pathIndex]
-                                                    ? "M5 15l7-7 7 7"
-                                                    : "M19 9l-7 7-7-7"
-                                            }
-                                        />
-                                    </svg>
+                                    <ArrowToggle
+                                        isOpen={openStatus[pathIndex]}
+                                        strokeWidth={2}
+                                    />
                                 ) : (
                                     <></>
                                 )}

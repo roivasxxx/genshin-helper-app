@@ -8,7 +8,7 @@ export default function ArtifactsShowcase(props: {
 
     return (
         <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 items-start">
                 {artifacts.map((artifact) => (
                     <ArtifactShowcaseElement
                         key={artifact.id}
