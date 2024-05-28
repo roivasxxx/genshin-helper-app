@@ -33,8 +33,11 @@ export type RecordToMap = Record<string, any> & {
     icon: string | Media;
 };
 
-export type RecordWithIcon = {
+export type SimpleRecord = {
     name: string;
-    icon: string;
     id: string;
+};
+
+export type RecordWithIcon = SimpleRecord & {
+    icon: string;
 };

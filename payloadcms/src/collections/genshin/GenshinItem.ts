@@ -1,6 +1,9 @@
 import { Response } from "express";
 import { CollectionConfig, PayloadRequest } from "payload/types";
 import authMiddleware from "../../api/authMiddleware";
+import { relationToDictionary } from "../../utils";
+import { RecordWithIcon, SimpleRecord } from "../../../types/types";
+import { GenshinItem } from "../../../types/payload-types";
 
 const GenshinItems: CollectionConfig = {
     slug: "genshin-items",
@@ -21,8 +24,6 @@ const GenshinItems: CollectionConfig = {
         {
             name: "type",
             type: "select",
-            // use genshinItemConfig whenever selecting from GenshinItems based on a type (so always)
-            // artifacts and weapons have their own collections, because otherwise this one would become very unreadable
             options: [
                 {
                     label: "Collectable", // plants,..., open world
@@ -77,6 +78,10 @@ const GenshinItems: CollectionConfig = {
                     label: "Gem",
                     value: "gem",
                 },
+                {
+                    label: "Specialty", // collectable items - cecilia, scarab, windwheel aster, etc...
+                    value: "specialty",
+                },
             ],
         },
         { name: "icon", type: "upload", relationTo: "media", required: true },
@@ -114,21 +119,19 @@ const GenshinItems: CollectionConfig = {
                     label: "Saturday",
                 },
             ],
+            hasMany: true,
         },
-        // {
-        //     // some item types exist in multiple variations -> use an array
-        //     // for example: books in weapon ascension, character ascension, etc
-        //     // those that only exist in one variation -> one item
-        //     name: "items",
-        //     type: "array",
-        //     fields: [
-        //         {
-        //             name: "name",
-        //             type: "text",
-        //         },
-        //         { name: "icon", type: "upload", relationTo: "media" },
-        //     ],
-        // },
+        {
+            name: "sibling",
+            type: "relationship", // trounce domain drops,
+            relationTo: "genshin-items",
+            hasMany: true,
+        },
+        {
+            name: "domain",
+            type: "relationship",
+            relationTo: "genshin-domains",
+        },
     ],
     endpoints: [
         {
@@ -177,6 +180,99 @@ const GenshinItems: CollectionConfig = {
                     }
                 },
             ],
+        },
+        {
+            method: "get",
+            path: "/getItems",
+            handler: async (req: PayloadRequest, res: Response) => {
+                const itemsReq = await req.payload.find({
+                    collection: "genshin-items",
+                    where: {
+                        or: [
+                            {
+                                and: [
+                                    {
+                                        sibling: {
+                                            exists: true, // trounceDrop, mobDrop, books, weaponMat
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                and: [
+                                    {
+                                        sibling: {
+                                            exists: false,
+                                        },
+                                    },
+                                    {
+                                        type: {
+                                            in: [
+                                                "specialty",
+                                                "bossDrop",
+                                                "gem",
+                                            ],
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    pagination: false,
+                });
+
+                const items = itemsReq.docs.map((item) => {
+                    const { sibling, domain, days, ...rest } = item;
+
+                    let mappedItem: {
+                        type: typeof item.type;
+                        value: (RecordWithIcon & {
+                            rarity: typeof item.rarity;
+                        })[];
+                        days?: typeof item.days;
+                        domain?: SimpleRecord;
+                    } = {
+                        type: rest.type,
+                        value: [],
+                    };
+                    const itemValue = relationToDictionary(rest);
+                    if (typeof itemValue !== "string") {
+                        mappedItem.value.push({
+                            ...itemValue,
+                            rarity: rest.rarity,
+                        });
+                    }
+                    if (days && days.length > 0) {
+                        mappedItem.days = days;
+                    }
+                    if (domain && typeof domain === "object") {
+                        mappedItem.domain = {
+                            id: domain.id,
+                            name: domain.name,
+                        };
+                    }
+                    if (
+                        sibling &&
+                        typeof sibling === "object" &&
+                        Array.isArray(sibling)
+                    ) {
+                        sibling.forEach((el) => {
+                            if (typeof el !== "string") {
+                                const siblingValue = relationToDictionary(el);
+                                if (typeof siblingValue !== "string") {
+                                    mappedItem.value.push({
+                                        ...siblingValue,
+                                        rarity: el.rarity,
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    return mappedItem;
+                });
+
+                return res.send(items);
+            },
         },
     ],
 };

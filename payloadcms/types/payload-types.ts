@@ -205,11 +205,14 @@ export interface GenshinItem {
         | 'bossDrop'
         | 'trounceDrop'
         | 'gem'
+        | 'specialty'
       )
     | null;
   icon: string | Media;
   region?: string | null;
-  days?: ('0' | '1' | '2' | '3' | '4' | '5' | '6') | null;
+  days?: ('0' | '1' | '2' | '3' | '4' | '5' | '6')[] | null;
+  sibling?: (string | GenshinItem)[] | null;
+  domain?: (string | null) | GenshinDomain;
   updatedAt: string;
   createdAt: string;
 }
@@ -236,6 +239,45 @@ export interface Media {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
+}
+export interface GenshinDomain {
+  id: string;
+  region?: string | null;
+  name?: string | null;
+  location?: string | null;
+  type?: ('artifacts' | 'books' | 'weapons' | 'trounce') | null;
+  details?: {
+    monday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    tuesday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    wednesday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    thursday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    friday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    saturday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+    sunday?: {
+      drops?: (string | GenshinItem)[] | null;
+      characters?: (string | GenshinCharacter)[] | null;
+    };
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 export interface GenshinCharacter {
   name: string;
@@ -351,45 +393,6 @@ export interface Job {
   id: string;
   status: 'NEW' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
   genshinAccount: string | GenshinAccount;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinDomain {
-  id: string;
-  region?: string | null;
-  name?: string | null;
-  location?: string | null;
-  type?: ('artifacts' | 'books' | 'weapons' | 'trounce') | null;
-  details?: {
-    monday?: {
-      drops?: (string | GenshinItem)[] | null;
-      characters?: (string | GenshinCharacter)[] | null;
-    };
-    tuesday?: {
-      drops?: (string | GenshinItem)[] | null;
-      characters?: (string | GenshinCharacter)[] | null;
-    };
-    wednesday?: {
-      drops?: (string | GenshinItem)[] | null;
-      characters?: (string | GenshinCharacter)[] | null;
-    };
-    thursday?: {
-      drops?: (string | GenshinItem)[] | null;
-      characters?: (string | GenshinCharacter)[] | null;
-    };
-    friday?: {
-      drops?: (string | GenshinItem)[] | null;
-      characters?: (string | GenshinCharacter)[] | null;
-    };
-    saturday?: {
-      drops?: (string | GenshinItem)[] | null;
-      characters?: (string | GenshinCharacter)[] | null;
-    };
-    sunday?: {
-      drops?: (string | GenshinItem)[] | null;
-      characters?: (string | GenshinCharacter)[] | null;
-    };
-  };
   updatedAt: string;
   createdAt: string;
 }
