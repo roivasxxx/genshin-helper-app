@@ -44,11 +44,12 @@ export const notifyUser = async (user: PublicUser) => {
     console.log("Notifying user: ", user.email);
     for (const item of user.tracking.items) {
         const items: GenshinItem[] = [];
+        const day = String(dayIndex) as GenshinItem["days"][number];
         if (
             typeof item === "object" &&
             "days" in item &&
             item.days &&
-            item.days.includes(String(dayIndex))
+            item.days.includes(day)
         ) {
             items.push(item);
         }
