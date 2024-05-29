@@ -218,6 +218,7 @@ const GenshinItems: CollectionConfig = {
                             },
                         ],
                     },
+                    sort: "name",
                     pagination: false,
                 });
 

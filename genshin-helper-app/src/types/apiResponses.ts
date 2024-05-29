@@ -126,3 +126,46 @@ export type GenshinArtifact = NameIconWithIdDictionary & {
         name: string;
     }[];
 };
+
+export type GenshinMaterialType =
+    | "weaponMat"
+    | "book"
+    | "mobDrop"
+    | "bossDrop"
+    | "trounceDrop"
+    | "gem"
+    | "specialty";
+
+export enum GenshinMaterialLabel {
+    weaponMat = "Weapon Materials",
+    book = "Books",
+    mobDrop = "Mob Drops",
+    bossDrop = "Boss Drops",
+    trounceDrop = "Weekly Boss Drops",
+    gem = "Gems",
+    specialty = "Regional Specialties",
+}
+
+export type GenshinMaterialBase = {
+    value: (NameIconWithIdDictionary & { rarity: number })[];
+};
+
+export type GenshinGenericItem = GenshinMaterialBase & {
+    type: "gem" | "specialty";
+};
+
+export type GenshinDomainMaterial = GenshinMaterialBase & {
+    type: Exclude<GenshinMaterialType, "gem" | "specialty">;
+    domain: NameIconWithIdDictionary;
+};
+
+export type GenshinDayDependentMaterial = GenshinDomainMaterial & {
+    type: "book" | "weaponMat";
+    days: string[];
+    domain: { name: string; id: string };
+};
+
+export type GenshinMaterial =
+    | GenshinGenericItem
+    | GenshinDomainMaterial
+    | GenshinDayDependentMaterial;

@@ -6,7 +6,7 @@ import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const weekdays = [
+export const WEEKDAYS = [
     "sunday",
     "monday",
     "tuesday",
@@ -53,7 +53,7 @@ export const getCurrentDay = (server: SERVER_TIME_OFFSET) => {
         day = 6;
     }
 
-    return weekdays[day];
+    return WEEKDAYS[day];
 };
 
 export const formatEventDuration = (start: string, end: string) => {
