@@ -147,6 +147,7 @@ export enum GenshinMaterialLabel {
 }
 
 export type GenshinMaterialBase = {
+    id: string;
     value: (NameIconWithIdDictionary & { rarity: number })[];
 };
 

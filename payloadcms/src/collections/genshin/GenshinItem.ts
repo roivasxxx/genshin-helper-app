@@ -226,6 +226,7 @@ const GenshinItems: CollectionConfig = {
                     const { sibling, domain, days, ...rest } = item;
 
                     let mappedItem: {
+                        id: string;
                         type: typeof item.type;
                         value: (RecordWithIcon & {
                             rarity: typeof item.rarity;
@@ -233,6 +234,7 @@ const GenshinItems: CollectionConfig = {
                         days?: typeof item.days;
                         domain?: SimpleRecord;
                     } = {
+                        id: item.id,
                         type: rest.type,
                         value: [],
                     };

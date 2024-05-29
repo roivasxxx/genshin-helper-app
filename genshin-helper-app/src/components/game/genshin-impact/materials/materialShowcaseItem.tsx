@@ -79,6 +79,7 @@ export default function MaterialShowcaseItem(props: {
                                                 dayIndex === todayIndex;
                                             return (
                                                 <span
+                                                    key={`${material.id}-day-${dayIndex}`}
                                                     className={`px-2 ${
                                                         isToday
                                                             ? "font-bold text-electro-5star-from"
@@ -105,7 +106,9 @@ export default function MaterialShowcaseItem(props: {
                         {isDomainItem ? (
                             <div className="flex flex-col md:flex-row text-md">
                                 <h4 className="md:pr-2">Domain</h4>
-                                <span>{material.domain.name}</span>
+                                <span className="font-bold">
+                                    {material.domain.name}
+                                </span>
                             </div>
                         ) : (
                             <></>

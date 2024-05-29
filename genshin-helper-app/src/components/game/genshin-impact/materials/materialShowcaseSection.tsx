@@ -16,7 +16,10 @@ export default function MaterialShowcaseSection(props: {
                 {GenshinMaterialLabel[materialType]}
             </h2>
             {materials.map((material) => (
-                <MaterialShowcaseItem material={material} />
+                <MaterialShowcaseItem
+                    material={material}
+                    key={`${materialType}-${material.id}`}
+                />
             ))}
         </div>
     );
