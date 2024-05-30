@@ -11,7 +11,7 @@ export default function MaterialShowcaseSection(props: {
 }) {
     const { materialType, materials } = props;
     return (
-        <div className="grid grid-cols-1 gap-2 bg-electro-800 p-4 rounded mb-4">
+        <div className="grid grid-cols-1 gap-2">
             <h2 className="text-2xl font-bold text-left">
                 {GenshinMaterialLabel[materialType]}
             </h2>
