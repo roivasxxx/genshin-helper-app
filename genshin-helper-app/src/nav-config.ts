@@ -40,10 +40,6 @@ const navConfig: NavConfig = {
                         path: "/materials",
                         label: "Materials",
                     },
-                    {
-                        path: "/enemies",
-                        label: "Enemies",
-                    },
                 ],
             },
         ],

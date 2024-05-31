@@ -1,9 +1,56 @@
 import { Response } from "express";
 import { CollectionConfig, PayloadRequest } from "payload/types";
-import authMiddleware from "../../api/authMiddleware";
 import { relationToDictionary } from "../../utils";
 import { RecordWithIcon, SimpleRecord } from "../../../types/types";
 import { GenshinItem } from "../../../types/payload-types";
+
+const mapGenshinItem = (item: GenshinItem) => {
+    const { sibling, domain, days, ...rest } = item;
+
+    let mappedItem: {
+        id: string;
+        type: typeof item.type;
+        value: (RecordWithIcon & {
+            rarity: typeof item.rarity;
+        })[];
+        days?: typeof item.days;
+        domain?: SimpleRecord;
+    } = {
+        id: item.id,
+        type: rest.type,
+        value: [],
+    };
+    const itemValue = relationToDictionary(rest);
+    if (typeof itemValue !== "string") {
+        mappedItem.value.push({
+            ...itemValue,
+            rarity: rest.rarity,
+        });
+    }
+    if (days && days.length > 0) {
+        mappedItem.days = days;
+    }
+    if (domain && typeof domain === "object") {
+        mappedItem.domain = {
+            id: domain.id,
+            name: domain.name,
+        };
+    }
+    if (sibling && typeof sibling === "object" && Array.isArray(sibling)) {
+        sibling.forEach((el) => {
+            if (typeof el !== "string") {
+                const siblingValue = relationToDictionary(el);
+                if (typeof siblingValue !== "string") {
+                    mappedItem.value.push({
+                        ...siblingValue,
+                        rarity: el.rarity,
+                    });
+                }
+            }
+        });
+    }
+    return mappedItem;
+};
 
 const GenshinItems: CollectionConfig = {
     slug: "genshin-items",
@@ -136,145 +183,81 @@ const GenshinItems: CollectionConfig = {
     endpoints: [
         {
             method: "get",
-            path: "/domainItems",
-            handler: [
-                authMiddleware,
-                async (req: PayloadRequest, res: Response) => {
-                    try {
-                        const docs = await req.payload.find({
-                            collection: "genshin-items",
-                            where: {
-                                and: [
-                                    {
-                                        rarity: {
-                                            equals: 2,
-                                        },
-                                    },
-                                    { type: { in: ["book", "weaponMat"] } },
-                                ],
-                            },
-                            pagination: false,
-                            sort: "name",
-                        });
-                        if (docs.docs) {
-                            const mappedItems = docs.docs.map((el) => {
-                                if (
-                                    typeof el.icon === "object" &&
-                                    "days" in el
-                                ) {
-                                    return {
-                                        id: el.id,
-                                        name: el.name,
-                                        icon: el.icon.cloudinary.secure_url,
-                                        type: el.type,
-                                        days: el.days,
-                                    };
-                                }
-                            });
-                            return res.send(mappedItems);
-                        }
-
-                        return res.send([]);
-                    } catch (error) {
-                        return res.status(500).send(error);
-                    }
-                },
-            ],
-        },
-        {
-            method: "get",
             path: "/getItems",
             handler: async (req: PayloadRequest, res: Response) => {
-                const itemsReq = await req.payload.find({
-                    collection: "genshin-items",
-                    where: {
-                        or: [
-                            {
-                                and: [
-                                    {
-                                        sibling: {
-                                            exists: true, // trounceDrop, mobDrop, books, weaponMat
+                try {
+                    const itemsReq = await req.payload.find({
+                        collection: "genshin-items",
+                        where: {
+                            or: [
+                                {
+                                    and: [
+                                        {
+                                            sibling: {
+                                                exists: true, // trounceDrop, mobDrop, books, weaponMat
+                                            },
                                         },
-                                    },
-                                ],
-                            },
-                            {
-                                and: [
-                                    {
-                                        sibling: {
-                                            exists: false,
+                                    ],
+                                },
+                                {
+                                    and: [
+                                        {
+                                            sibling: {
+                                                exists: false,
+                                            },
                                         },
-                                    },
-                                    {
-                                        type: {
-                                            in: [
-                                                "specialty",
-                                                "bossDrop",
-                                                "gem",
-                                            ],
+                                        {
+                                            type: {
+                                                in: [
+                                                    "specialty",
+                                                    "bossDrop",
+                                                    "gem",
+                                                ],
+                                            },
                                         },
+                                    ],
+                                },
+                            ],
+                        },
+                        sort: "name",
+                        pagination: false,
+                    });
+
+                    const items = itemsReq.docs.map(mapGenshinItem);
+
+                    return res.send(items);
+                } catch (error) {
+                    console.error("getItems threw an error: ", error);
+                    return res.status(500).send(error);
+                }
+            },
+        },
+        {
+            path: "/getDomainItems",
+            method: "get",
+            handler: async (req: PayloadRequest, res: Response) => {
+                try {
+                    const itemsReq = await req.payload.find({
+                        collection: "genshin-items",
+                        where: {
+                            and: [
+                                {
+                                    rarity: {
+                                        equals: 2,
                                     },
-                                ],
-                            },
-                        ],
-                    },
-                    sort: "name",
-                    pagination: false,
-                });
+                                },
+                                { type: { in: ["book", "weaponMat"] } },
+                            ],
+                        },
+                        sort: "name",
+                        pagination: false,
+                    });
 
-                const items = itemsReq.docs.map((item) => {
-                    const { sibling, domain, days, ...rest } = item;
-
-                    let mappedItem: {
-                        id: string;
-                        type: typeof item.type;
-                        value: (RecordWithIcon & {
-                            rarity: typeof item.rarity;
-                        })[];
-                        days?: typeof item.days;
-                        domain?: SimpleRecord;
-                    } = {
-                        id: item.id,
-                        type: rest.type,
-                        value: [],
-                    };
-                    const itemValue = relationToDictionary(rest);
-                    if (typeof itemValue !== "string") {
-                        mappedItem.value.push({
-                            ...itemValue,
-                            rarity: rest.rarity,
-                        });
-                    }
-                    if (days && days.length > 0) {
-                        mappedItem.days = days;
-                    }
-                    if (domain && typeof domain === "object") {
-                        mappedItem.domain = {
-                            id: domain.id,
-                            name: domain.name,
-                        };
-                    }
-                    if (
-                        sibling &&
-                        typeof sibling === "object" &&
-                        Array.isArray(sibling)
-                    ) {
-                        sibling.forEach((el) => {
-                            if (typeof el !== "string") {
-                                const siblingValue = relationToDictionary(el);
-                                if (typeof siblingValue !== "string") {
-                                    mappedItem.value.push({
-                                        ...siblingValue,
-                                        rarity: el.rarity,
-                                    });
-                                }
-                            }
-                        });
-                    }
-                    return mappedItem;
-                });
-
-                return res.send(items);
+                    return res.send(itemsReq.docs.map(mapGenshinItem));
+                } catch (error) {
+                    console.error("getDomainItems threw an error: ", error);
+                    return res.status(500).send(error);
+                }
             },
         },
     ],

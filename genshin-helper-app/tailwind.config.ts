@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
     content: [
@@ -11,6 +12,9 @@ const config: Config = {
     },
     theme: {
         extend: {
+            width: {
+                "1/7": "14.2857143%",
+            },
             backgroundImage: {
                 "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
                 "gradient-conic":
@@ -57,6 +61,22 @@ const config: Config = {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        plugin(function ({ matchUtilities, theme }) {
+            matchUtilities(
+                {
+                    "auto-fill": (value) => ({
+                        gridTemplateColumns: `repeat(auto-fill, minmax(min(${value}, 100%), 1fr))`,
+                    }),
+                    "auto-fit": (value) => ({
+                        gridTemplateColumns: `repeat(auto-fit, minmax(min(${value}, 100%), 1fr))`,
+                    }),
+                },
+                {
+                    values: theme("width"),
+                }
+            );
+        }),
+    ],
 };
 export default config;

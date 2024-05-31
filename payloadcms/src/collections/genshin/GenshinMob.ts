@@ -4,6 +4,10 @@ const GenshinMob: CollectionConfig = {
     slug: "genshin-mobs",
     fields: [
         {
+            name: "id",
+            type: "text",
+        },
+        {
             name: "name",
             type: "text",
         },

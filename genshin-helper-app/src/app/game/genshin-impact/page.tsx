@@ -1,36 +1,26 @@
-import CharacterShowcase from "@/components/game/genshin-impact/characterShowcase";
+import DomainItems from "@/components/game/genshin-impact/dashboard/domainItems";
 import { HTTP_METHOD } from "@/types";
+import { GenshinDayDependentMaterial } from "@/types/apiResponses";
 import cmsRequest from "@/utils/fetchUtils";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 export default async function GenshinRoot(props: any) {
-    let characters = [];
-    let elements = [];
+    let domainItems: GenshinDayDependentMaterial[] = [];
     try {
         const result = await cmsRequest({
-            path: "/api/genshin-characters/getGenshinCharacters",
+            path: "/api/genshin-items/getDomainItems",
             method: HTTP_METHOD.GET,
         });
-        characters = await result.json();
+        domainItems = await result.json();
     } catch (error) {
-        return null;
-    }
-
-    try {
-        const result = await cmsRequest({
-            path: "/api/genshin-elements/getElements",
-            method: HTTP_METHOD.GET,
-        });
-        elements = await result.json();
-    } catch (error) {
-        return null;
+        console.error("getDomainItems threw an error: ", error);
     }
 
     return (
-        <main className="w-full mx-auto p-4 my-8 bg-electro-800 rounded inline-block sm:flex items-start justify-center lg:w-[75%] font-exo">
-            <div className="flex-1 flex flex-col justify-center">
-                {/* <CharacterShowcase {...{ characters, elements }} /> */}
+        <main className="w-full mt-[7rem] mx-auto p-4 my-8 bg-electro-800 rounded inline-block items-start justify-center text-electro-50 font-exo lg:w-[75%] sm:flex">
+            <div className="flex-1 flex inline-block flex-col justify-center">
+                <DomainItems items={domainItems} />
             </div>
         </main>
     );
