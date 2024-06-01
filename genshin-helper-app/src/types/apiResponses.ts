@@ -170,3 +170,40 @@ export type GenshinMaterial =
     | GenshinGenericItem
     | GenshinDomainMaterial
     | GenshinDayDependentMaterial;
+
+type GenshinBaseEvent = {
+    end: string;
+    start: string;
+    timezoneDependent: boolean;
+    url?: string;
+    name: string;
+};
+
+export type GenshinGameEvent = GenshinBaseEvent & {
+    type: "event";
+};
+
+export type GenshinCharacterBanner = GenshinBaseEvent & {
+    type: "banner";
+    bannerType: "character";
+    characters: {
+        fiveStar1: NameIconWithIdDictionary;
+        fiveStar2?: NameIconWithIdDictionary;
+        fourStar: NameIconWithIdDictionary[];
+    };
+};
+
+export type GenshinWeaponBanner = GenshinBaseEvent & {
+    type: "banner";
+    bannerType: "weapon";
+    weapons: {
+        fiveStar1: NameIconWithIdDictionary;
+        fiveStar2?: NameIconWithIdDictionary;
+        fourStar: NameIconWithIdDictionary[];
+    };
+};
+
+export type GenshinEvent =
+    | GenshinGameEvent
+    | GenshinCharacterBanner
+    | GenshinWeaponBanner;

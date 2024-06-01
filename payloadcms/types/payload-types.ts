@@ -427,6 +427,8 @@ export interface GenshinEvent {
   weapons?: {
     fourStar?: (string | GenshinWeapon)[] | null;
     fiveStar?: (string | GenshinWeapon)[] | null;
+    fiveStar1?: (string | null) | GenshinCharacter;
+    fiveStar2?: (string | null) | GenshinCharacter;
   };
   characters?: {
     fourStar?: (string | GenshinCharacter)[] | null;

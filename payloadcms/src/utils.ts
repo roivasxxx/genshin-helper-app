@@ -1,4 +1,4 @@
-import { RecordToMap } from "../types/types";
+import { RecordToMap, RecordWithIcon } from "../types/types";
 
 export const sleep = (time: number) => {
     return new Promise((res, _) => {
@@ -15,8 +15,10 @@ export const normalizeName = (name: string) => {
         .join("_");
 };
 
-export const relationToDictionary = (doc: string | RecordToMap) => {
-    if (typeof doc === "string") return "";
+export const relationToDictionary = (
+    doc: string | RecordToMap | undefined | null
+): RecordWithIcon | null => {
+    if (!doc || typeof doc === "string") return null;
     let icon = "";
     if (
         doc.icon &&

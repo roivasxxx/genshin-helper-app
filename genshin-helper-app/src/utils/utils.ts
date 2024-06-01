@@ -1,3 +1,8 @@
+import {
+    GenshinCharacterBanner,
+    GenshinEvent,
+    GenshinWeaponBanner,
+} from "@/types/apiResponses";
 import { STAR_SYMBOL } from "./constants";
 
 export const capitalizeString = (str: string) => {
@@ -13,4 +18,20 @@ export const getStarString = (rarity: number) => {
         _rarity = 5;
     }
     return STAR_SYMBOL.repeat(_rarity);
+};
+
+export const isEvent = (event: GenshinEvent): event is GenshinEvent => {
+    return event.type === "event";
+};
+
+export const isCharacterBanner = (
+    event: GenshinEvent
+): event is GenshinCharacterBanner => {
+    return event.type === "banner" && event.bannerType === "character";
+};
+
+export const isWeaponBanner = (
+    event: GenshinEvent
+): event is GenshinWeaponBanner => {
+    return event.type === "banner" && event.bannerType === "weapon";
 };

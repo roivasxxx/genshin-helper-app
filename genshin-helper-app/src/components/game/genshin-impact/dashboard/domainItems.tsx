@@ -1,6 +1,8 @@
+"use client";
 import { GenshinDayDependentMaterial } from "@/types/apiResponses";
 import dayjs from "dayjs";
 import Image from "next/image";
+import { useMemo } from "react";
 
 function DomainItem(props: { item: GenshinDayDependentMaterial }) {
     const item = props.item;
@@ -44,26 +46,28 @@ export default function DomainItems(props: {
     items: GenshinDayDependentMaterial[];
 }) {
     const today = dayjs();
-
     const _items = props.items;
-    const items = {
-        books: _items.filter(
-            (item) =>
-                item.type === "book" && item.days.includes(String(today.day()))
-        ),
-        weapons: _items.filter(
-            (item) =>
-                item.type === "weaponMat" &&
-                item.days.includes(String(today.day()))
-        ),
-    };
+
+    const items = useMemo(() => {
+        return {
+            books: _items.filter(
+                (item) =>
+                    item.type === "book" &&
+                    item.days.includes(String(today.day()))
+            ),
+            weapons: _items.filter(
+                (item) =>
+                    item.type === "weaponMat" &&
+                    item.days.includes(String(today.day()))
+            ),
+        };
+    }, []);
 
     return (
         <div className="w-full mx-auto p-4 my-8 rounded inline-block sm:flex sm:flex-col items-start justify-center font-exo">
-            <h1 className="text-2xl">Today's Domains Drops</h1>
+            <h1 className="text-3xl">Today's Domain Drops</h1>
             <div className="flex flex-col w-full">
                 <div className="w-full">
-                    {/**put them into a flex row container with flex-wrap */}
                     <h2 className="text-left text-xl py-2">Books</h2>
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-2">
                         {items.books.map((item) => {

@@ -65,7 +65,16 @@ const Events: CollectionConfig = {
                     name: "fiveStar",
                     type: "relationship",
                     relationTo: "genshin-weapons",
-                    hasMany: true,
+                },
+                {
+                    name: "fiveStar1",
+                    type: "relationship",
+                    relationTo: "genshin-weapons",
+                },
+                {
+                    name: "fiveStar2",
+                    type: "relationship",
+                    relationTo: "genshin-weapons",
                 },
             ],
         },
@@ -150,11 +159,17 @@ const Events: CollectionConfig = {
                             timezoneDependent: boolean;
                             start: string;
                             end: string;
-                            url: string;
+                            url?: string;
                             bannerType?: string;
-                            featured?: {
-                                fourStar: (RecordWithIcon | string)[];
-                                fiveStar: (RecordWithIcon | string)[];
+                            characters?: {
+                                fiveStar1: RecordWithIcon;
+                                fiveStar2?: RecordWithIcon;
+                                fourStar: RecordWithIcon[];
+                            };
+                            weapons?: {
+                                fiveStar1: RecordWithIcon;
+                                fiveStar2?: RecordWithIcon;
+                                fourStar: RecordWithIcon[];
                             };
                         } = {
                             name: doc.name,
@@ -162,30 +177,37 @@ const Events: CollectionConfig = {
                             timezoneDependent: doc.timezoneDependent || false,
                             start: doc.start,
                             end: doc.end,
-                            url: doc.url,
+                            url: doc?.url || "",
                         };
 
                         if (doc.type === "banner") {
                             mappedDoc.bannerType = doc.bannerType;
-                            if (doc.bannerType === "weapon") {
-                                mappedDoc.featured = {
+                            if (doc.bannerType === "weapon" && doc.weapons) {
+                                mappedDoc.weapons = {
+                                    fiveStar1: relationToDictionary(
+                                        doc.weapons.fiveStar1
+                                    ),
+                                    fiveStar2: relationToDictionary(
+                                        doc.weapons.fiveStar2
+                                    ),
                                     fourStar:
-                                        doc.weapons.fourStar.map(
-                                            relationToDictionary
-                                        ),
-                                    fiveStar:
                                         doc.weapons.fourStar.map(
                                             relationToDictionary
                                         ),
                                 };
-                            } else if (doc.bannerType === "character") {
-                                mappedDoc.featured = {
+                            } else if (
+                                doc.bannerType === "character" &&
+                                doc.characters
+                            ) {
+                                mappedDoc.characters = {
+                                    fiveStar1: relationToDictionary(
+                                        doc.characters.fiveStar1
+                                    ),
+                                    fiveStar2: relationToDictionary(
+                                        doc.characters.fiveStar2
+                                    ),
                                     fourStar:
                                         doc.characters.fourStar.map(
-                                            relationToDictionary
-                                        ),
-                                    fiveStar:
-                                        doc.characters.fiveStar.map(
                                             relationToDictionary
                                         ),
                                 };
@@ -196,6 +218,41 @@ const Events: CollectionConfig = {
                     return res.status(200).send(events);
                 },
             ],
+        },
+        {
+            path: "/getDashboardEvents",
+            method: "get",
+            handler: async (req: PayloadRequest, res: Response) => {
+                const date = req.query.date;
+                if (!date) {
+                    return res.status(400).send("No date provided");
+                }
+                try {
+                    const eventsReq = await req.payload.find({
+                        collection: "genshin-events",
+                        where: {
+                            and: [
+                                {
+                                    start: {
+                                        less_than_equal: date,
+                                    },
+                                },
+                                {
+                                    end: {
+                                        greater_than_equal: date,
+                                    },
+                                },
+                            ],
+                        },
+                        sort: "start",
+                    });
+
+                    return res.status(200).send(event);
+                } catch (error) {
+                    console.error("getDashboardEvents threw an error: ", error);
+                    return res.status(500).send(error);
+                }
+            },
         },
     ],
 };
