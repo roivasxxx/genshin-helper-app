@@ -181,6 +181,7 @@ type GenshinBaseEvent = {
 
 export type GenshinGameEvent = GenshinBaseEvent & {
     type: "event";
+    icon?: string;
 };
 
 export type GenshinCharacterBanner = GenshinBaseEvent & {

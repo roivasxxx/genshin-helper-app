@@ -14,7 +14,7 @@ function ItemPreview(props: {
 }) {
     const item = props.item;
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center flex-1">
             {item.icon ? (
                 <Image
                     src={item.icon}
@@ -31,7 +31,7 @@ function ItemPreview(props: {
             <span className="text-electro-5star-from/80">
                 {getStarString(props.rarity)}
             </span>
-            <span className="text-center">{item.name}</span>
+            <span className="text-center text-wrap">{item.name}</span>
         </div>
     );
 }
@@ -44,7 +44,7 @@ export default function BannerItem(props: {
     const items = isCharacter ? item.characters : item?.weapons;
 
     return (
-        <div className="flex flex-col items-center bg-electro-850 rounded p-2 cursor-pointer flex-1">
+        <div className="flex flex-col items-center bg-electro-850 rounded p-2 cursor-pointer flex-1 overflow-auto">
             <h2 className="text-2xl py-2">
                 {!isCharacter ? "Weapon" : "Character"} Banner
             </h2>
@@ -67,7 +67,7 @@ export default function BannerItem(props: {
                             )}
                         </span>
                     </div>
-                    <div className="flex flex-row w-full justify-evenly items-center">
+                    <div className="flex flex-row w-full items-center">
                         <ItemPreview item={items.fiveStar1} rarity={5} />
                         {items.fiveStar2 ? (
                             <ItemPreview item={items.fiveStar2} rarity={5} />
@@ -75,7 +75,7 @@ export default function BannerItem(props: {
                             <></>
                         )}
                     </div>
-                    <div className="w-full flex flex-row justify-evenly overflow-x-auto gap-2 p-2">
+                    <div className="w-full flex flex-row overflow-x-auto gap-2 p-2">
                         {items.fourStar.map((item) => (
                             <ItemPreview
                                 key={"bannerDialog-" + item.name}

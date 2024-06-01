@@ -426,9 +426,9 @@ export interface GenshinEvent {
   timezoneDependent?: boolean | null;
   weapons?: {
     fourStar?: (string | GenshinWeapon)[] | null;
-    fiveStar?: (string | GenshinWeapon)[] | null;
-    fiveStar1?: (string | null) | GenshinCharacter;
-    fiveStar2?: (string | null) | GenshinCharacter;
+    fiveStar?: (string | null) | GenshinWeapon;
+    fiveStar1?: (string | null) | GenshinWeapon;
+    fiveStar2?: (string | null) | GenshinWeapon;
   };
   characters?: {
     fourStar?: (string | GenshinCharacter)[] | null;
@@ -438,6 +438,7 @@ export interface GenshinEvent {
   };
   url?: string | null;
   version?: string | null;
+  icon?: string | Media | null;
   updatedAt: string;
   createdAt: string;
 }

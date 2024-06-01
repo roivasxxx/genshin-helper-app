@@ -1,6 +1,6 @@
 import { CollectionConfig, PayloadRequest } from "payload/types";
 import { Response } from "express";
-import { relationToDictionary } from "../../utils";
+import { getIcon, relationToDictionary } from "../../utils";
 import { RecordWithIcon } from "../../../types/types";
 
 const Events: CollectionConfig = {
@@ -114,6 +114,12 @@ const Events: CollectionConfig = {
             name: "version",
             type: "text",
         },
+        {
+            name: "icon",
+            type: "upload",
+            relationTo: "media",
+            required: false,
+        },
         // characterField({
         //     visible: (data) => {
         //         return (
@@ -171,6 +177,7 @@ const Events: CollectionConfig = {
                                 fiveStar2?: RecordWithIcon;
                                 fourStar: RecordWithIcon[];
                             };
+                            icon?: string;
                         } = {
                             name: doc.name,
                             type: doc.type,
@@ -179,6 +186,10 @@ const Events: CollectionConfig = {
                             end: doc.end,
                             url: doc?.url || "",
                         };
+
+                        if (doc.type === "event") {
+                            mappedDoc.icon = getIcon(doc);
+                        }
 
                         if (doc.type === "banner") {
                             mappedDoc.bannerType = doc.bannerType;

@@ -15,21 +15,27 @@ export const normalizeName = (name: string) => {
         .join("_");
 };
 
-export const relationToDictionary = (
-    doc: string | RecordToMap | undefined | null
-): RecordWithIcon | null => {
-    if (!doc || typeof doc === "string") return null;
-    let icon = "";
+export const getIcon = (
+    doc: string | Record<string, any> | undefined | null
+) => {
+    if (!doc || typeof doc === "string") return "";
     if (
         doc.icon &&
         typeof doc.icon !== "string" &&
         doc.icon.cloudinary.secure_url
     ) {
-        icon = doc.icon.cloudinary.secure_url;
+        return doc.icon.cloudinary.secure_url;
     }
+    return "";
+};
+
+export const relationToDictionary = (
+    doc: string | RecordToMap | undefined | null
+): RecordWithIcon | null => {
+    if (!doc || typeof doc === "string") return null;
     return {
         name: doc.name,
         id: doc.id,
-        icon,
+        icon: getIcon(doc),
     };
 };

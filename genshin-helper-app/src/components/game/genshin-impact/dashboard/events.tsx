@@ -4,6 +4,7 @@ import { HTTP_METHOD } from "@/types";
 import {
     GenshinCharacterBanner,
     GenshinEvent,
+    GenshinGameEvent,
     GenshinWeaponBanner,
 } from "@/types/apiResponses";
 import { findCurrentBanner, findCurrentEvents } from "@/utils/eventUtils";
@@ -11,12 +12,13 @@ import cmsRequest from "@/utils/fetchUtils";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import BannerItem from "./bannerItem";
+import GameEvents from "./gameEvents";
 
 export default function DashboardEvents() {
     const [items, setItems] = useState<{
         char: GenshinCharacterBanner | null;
         weapon: GenshinWeaponBanner | null;
-        events: GenshinEvent[] | null;
+        events: GenshinGameEvent[] | null;
     }>({
         char: null,
         weapon: null,
@@ -43,7 +45,10 @@ export default function DashboardEvents() {
                     "weapon",
                     today
                 ) as GenshinWeaponBanner;
-                const events = findCurrentEvents(_items, today);
+                const events = findCurrentEvents(
+                    _items,
+                    today
+                ) as GenshinGameEvent[];
                 setItems({
                     char,
                     weapon,
@@ -66,10 +71,12 @@ export default function DashboardEvents() {
             ) : (
                 <>
                     <h1 className="w-full text-3xl py-2">Current Banners</h1>
-                    <div className="w-full flex flex-col md:flex-row md:justify-between gap-4">
+                    <div className="w-full flex flex-col md:flex-row gap-4">
                         <BannerItem item={items.char} />
                         <BannerItem item={items.weapon} />
                     </div>
+                    <h1 className="w-full text-3xl py-2">Current Events</h1>
+                    <GameEvents events={items.events} />
                 </>
             )}
         </div>
