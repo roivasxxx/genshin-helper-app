@@ -16,7 +16,7 @@ const mapWeapon = (weapon: GenshinWeapon) => {
             values: JSON.parse(weapon.refinements.values),
         },
         stats: weapon.stats,
-        icon: relationToDictionary(weapon),
+        icon: "",
         domain: weapon.domain
             .sort((a, b) => {
                 if (typeof a === "object" && typeof b === "object") {
@@ -34,10 +34,8 @@ const mapWeapon = (weapon: GenshinWeapon) => {
                 relationToDictionary(drop)
             ),
         },
+        ...relationToDictionary(weapon),
     };
-    if (weapon.icon && typeof weapon.icon === "object") {
-        mappedWeapon["icon"] = weapon.icon.cloudinary.secure_url;
-    }
     return mappedWeapon;
 };
 

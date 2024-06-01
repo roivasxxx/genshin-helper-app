@@ -32,7 +32,10 @@ export default function GameEvents(props: {
                             )}
                         </span>
                     </div>
-                    <div className="p-5 overflow-hidden">
+                    <a
+                        className="p-5 overflow-hidden"
+                        {...(el.url ? { href: el.url } : {})}
+                    >
                         {el.icon ? (
                             <Image
                                 src={el.icon}
@@ -45,7 +48,7 @@ export default function GameEvents(props: {
                         ) : (
                             <></>
                         )}
-                    </div>
+                    </a>
                 </div>
             ))}
         </div>
