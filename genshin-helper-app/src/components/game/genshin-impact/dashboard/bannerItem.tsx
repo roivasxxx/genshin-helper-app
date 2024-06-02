@@ -42,13 +42,13 @@ export default function BannerItem(props: {
     const items = isCharacter ? item.characters : item?.weapons;
 
     return (
-        <div className="flex p flex-col items-center bg-electro-850 rounded p-4 cursor-pointer flex-1">
+        <div className="flex p flex-col items-center bg-electro-850 rounded p-4 cursor-pointer flex-1 overflow-auto">
             <h2 className="text-2xl py-2">
                 {!isCharacter ? "Weapon" : "Character"} Banner
             </h2>
             {item && items ? (
-                <div className="w-full">
-                    <div className="flex flex-col w-full md:flex-row justify-center text-sm md:text-lg mb-2">
+                <div className="flex flex-col w-full items-center">
+                    <div className="flex flex-col w-full md:flex-row items-center justify-center text-sm md:text-lg mb-2">
                         <span className="text-center text-nowrap">
                             {formatEventDate(
                                 item.start,
@@ -65,7 +65,7 @@ export default function BannerItem(props: {
                             )}
                         </span>
                     </div>
-                    <div className="flex flex-row w-full gap-2 overflow-auto p-2">
+                    <div className="flex flex-row w-[90%] gap-2 justify-between md:w-full overflow-auto h-44">
                         <ItemPreview item={items.fiveStar1} rarity={5} />
                         {items.fiveStar2 ? (
                             <ItemPreview item={items.fiveStar2} rarity={5} />
