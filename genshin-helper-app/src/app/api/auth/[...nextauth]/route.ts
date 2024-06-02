@@ -134,24 +134,9 @@ const authOptions: AuthOptions = {
             url: string;
             baseUrl: string;
         }) => {
-            // decode URLs
-            url = decodeURIComponent(url);
-            baseUrl = decodeURIComponent(baseUrl);
-
-            // get callbackUrl parameter
-            if (url.includes("callbackUrl=")) {
-                const urlAfterCallbackParam = url.split("callbackUrl=")[1];
-                if (urlAfterCallbackParam) {
-                    if (urlAfterCallbackParam.includes("&")) {
-                        const callbackUrl = urlAfterCallbackParam.split("&")[0];
-                        if (callbackUrl) {
-                            return callbackUrl;
-                        }
-                    }
-                    return urlAfterCallbackParam;
-                }
-            }
-
+            if (url.startsWith("/")) return `${baseUrl}${url}`;
+            // Allows callback URLs on the same origin
+            else if (new URL(url).origin === baseUrl) return url;
             return baseUrl;
         },
     },
@@ -164,7 +149,6 @@ const authOptions: AuthOptions = {
     events: {
         signOut: async ({ session, token }) => {
             // manually remove payload cookie because next-auth doesnt do it for some reason
-            console.log("signign the user out!");
             nextCookies().delete("payload-token");
         },
     },

@@ -21,3 +21,11 @@ body {
     width: 100%;
     height: 100%;
 }
+
+input:-webkit-autofill {
+    caret-color: #fff; /* For the I-beam cursor when editing */
+    color: #fff;
+    background: inherit; /* webkit autofill */
+    -webkit-text-fill-color: #fff; /* Overrides the font color of autofill */
+    -webkit-background-clip: text;
+}

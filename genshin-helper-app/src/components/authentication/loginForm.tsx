@@ -7,11 +7,13 @@ import Link from "next/link";
 import Image from "next/image";
 import LoadingLogo from "../loadingLogo";
 import { emailValidator } from "@/utils/validationUtils";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
     const [state, setState] = useState({ email: "", password: "" });
     const [errorState, setErrorState] = useState("");
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
@@ -19,13 +21,15 @@ export default function LoginForm() {
 
         const loginResult = await signIn("credentials", {
             ...state,
-            redirect: false,
+            // redirect: true,
+            callbackUrl: "/me",
         });
+        setLoading(false);
         if (loginResult?.error) {
             setErrorState(loginResult?.error);
+            return;
         }
-
-        setLoading(false);
+        // router.replace("/me");
     };
 
     const onChange = (
@@ -75,7 +79,7 @@ export default function LoginForm() {
                         onChange={(e) => onChange("email", e)}
                         label="Email"
                         id="email"
-                        autoComplete="new-password" // disable autofill
+                        autoComplete="o" // disable autofill
                         required
                     />
                 </div>
@@ -89,9 +93,10 @@ export default function LoginForm() {
                     required
                 />
                 <button
-                    className={`w-full mt-4 bg-electro-500 text-electro-50 p-2 rounded hover:bg-electro-900 disabled:bg-gray-600`}
+                    className={`w-full mt-4 bg-electro-500 text-electro-50 p-2 rounded hover:bg-electro-900 disabled:bg-gray-600 flex justify-center`}
                     type="submit"
                     disabled={
+                        loading ||
                         !emailValidator.safeParse(state.email).success ||
                         state.password === ""
                     }
