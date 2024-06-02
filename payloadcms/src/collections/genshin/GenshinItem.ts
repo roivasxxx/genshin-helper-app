@@ -253,7 +253,77 @@ const GenshinItems: CollectionConfig = {
                         pagination: false,
                     });
 
-                    return res.send(itemsReq.docs.map(mapGenshinItem));
+                    const mappedItems = itemsReq.docs.map(mapGenshinItem);
+                    const itemsMap = {
+                        // once natlan comes out - update this
+                        books: [
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "book" &&
+                                    el.domain &&
+                                    el.domain.id === "forsaken_rift"
+                            ),
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "book" &&
+                                    el.domain &&
+                                    el.domain.id === "taishan_mansion"
+                            ),
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "book" &&
+                                    el.domain &&
+                                    el.domain.id === "violet_court"
+                            ),
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "book" &&
+                                    el.domain &&
+                                    el.domain.id === "steeple_of_ignorance"
+                            ),
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "book" &&
+                                    el.domain &&
+                                    el.domain.id === "pale_forgotten_glory"
+                            ),
+                        ],
+                        weapons: [
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "weaponMat" &&
+                                    el.domain &&
+                                    el.domain.id === "cecilia_garden"
+                            ),
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "weaponMat" &&
+                                    el.domain &&
+                                    el.domain.id ===
+                                        "hidden_palace_of_lianshan_formula"
+                            ),
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "weaponMat" &&
+                                    el.domain &&
+                                    el.domain.id === "court_of_flowing_sand"
+                            ),
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "weaponMat" &&
+                                    el.domain &&
+                                    el.domain.id === "tower_of_abject_pride"
+                            ),
+                            mappedItems.filter(
+                                (el) =>
+                                    el.type === "weaponMat" &&
+                                    el.domain &&
+                                    el.domain.id === "echoes_of_the_deep_tides"
+                            ),
+                        ],
+                    };
+
+                    return res.send(itemsMap);
                 } catch (error) {
                     console.error("getDomainItems threw an error: ", error);
                     return res.status(500).send(error);

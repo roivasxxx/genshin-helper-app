@@ -8,41 +8,46 @@ export default function GameEvents(props: {
     const events = props.events || [];
 
     return (
-        <div className="w-full h-full grid grid-cols-[repeat(auto-fit,_minmax(200px,1fr))] gap-4">
+        <div className="flex flex-col md:flex-row justify-start gap-4 w-full md:overflow-x-auto">
             {events.map((el) => (
                 <div
                     key={"event-" + el.name}
-                    className="h-full bg-electro-850 rounded p-2 flex flex-col items-center"
+                    className="h-full bg-electro-850 rounded p-2 flex flex-col items-center justify-between w-auto"
                 >
-                    <h2 className="text-2xl py-2">{el.name}</h2>
-                    <div className="flex flex-col w-full md:flex-row justify-center  text-lg">
-                        <span className="text-center">
-                            {formatEventDate(
-                                el.start,
-                                el.timezoneDependent,
-                                DATE_TIME_FORMAT
-                            )}
-                        </span>
-                        <span className="text-center px-2">-</span>
-                        <span className="text-center">
-                            {formatEventDate(
-                                el.end,
-                                el.timezoneDependent,
-                                DATE_TIME_FORMAT
-                            )}
-                        </span>
+                    <div className="w-full flex-1 flex flex-col items-center">
+                        <h2 className="text-2xl py-2 md:text-nowrap text-center">
+                            {el.name}
+                        </h2>
+                        <div className="flex flex-col w-full md:flex-row justify-center  text-lg">
+                            <span className="text-center text-nowrap">
+                                {formatEventDate(
+                                    el.start,
+                                    el.timezoneDependent,
+                                    DATE_TIME_FORMAT
+                                )}
+                            </span>
+                            <span className="text-center px-2">-</span>
+                            <span className="text-center text-nowrap">
+                                {formatEventDate(
+                                    el.end,
+                                    el.timezoneDependent,
+                                    DATE_TIME_FORMAT
+                                )}
+                            </span>
+                        </div>
                     </div>
+
                     <a
-                        className="p-5 overflow-hidden"
+                        className="p-5 overflow-hidden w-[300px] h-[150px] flex items-center justify-center"
                         {...(el.url ? { href: el.url } : {})}
                     >
                         {el.icon ? (
                             <Image
                                 src={el.icon}
                                 alt={el.name}
-                                width={0}
-                                height={0}
-                                className="h-full w-full rounded"
+                                width={300}
+                                height={150}
+                                className="h-full h-full rounded object-fill"
                                 sizes="100%"
                             />
                         ) : (

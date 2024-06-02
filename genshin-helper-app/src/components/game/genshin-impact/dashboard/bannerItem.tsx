@@ -7,14 +7,10 @@ import { DATE_TIME_FORMAT, formatEventDate } from "@/utils/dateUtils";
 import { getStarString } from "@/utils/utils";
 import Image from "next/image";
 
-function ItemPreview(props: {
-    item: NameIconDictionary;
-    rarity: number;
-    small?: boolean;
-}) {
+function ItemPreview(props: { item: NameIconDictionary; rarity: number }) {
     const item = props.item;
     return (
-        <div className="flex flex-col items-center flex-1">
+        <div className="flex flex-col items-center min-w-[72px] shrink-0 max-w-[140px]">
             {item.icon ? (
                 <Image
                     src={item.icon}
@@ -22,7 +18,7 @@ function ItemPreview(props: {
                     width={0}
                     height={0}
                     sizes="100%"
-                    className={props.small ? "w-10 h-10" : "w-20 h-20"}
+                    className={"w-20 h-20"}
                     title={item.name}
                 />
             ) : (
@@ -31,7 +27,9 @@ function ItemPreview(props: {
             <span className="text-electro-5star-from/80">
                 {getStarString(props.rarity)}
             </span>
-            <span className="text-center text-wrap">{item.name}</span>
+            <span className="text-center break-words text-sm md:text-md">
+                {item.name}
+            </span>
         </div>
     );
 }
@@ -44,14 +42,14 @@ export default function BannerItem(props: {
     const items = isCharacter ? item.characters : item?.weapons;
 
     return (
-        <div className="flex flex-col items-center bg-electro-850 rounded p-2 cursor-pointer flex-1 overflow-auto">
+        <div className="flex p flex-col items-center bg-electro-850 rounded p-4 cursor-pointer flex-1">
             <h2 className="text-2xl py-2">
                 {!isCharacter ? "Weapon" : "Character"} Banner
             </h2>
             {item && items ? (
                 <div className="w-full">
-                    <div className="flex flex-col w-full md:flex-row justify-center  text-lg">
-                        <span className="text-center">
+                    <div className="flex flex-col w-full md:flex-row justify-center text-sm md:text-lg mb-2">
+                        <span className="text-center text-nowrap">
                             {formatEventDate(
                                 item.start,
                                 item.timezoneDependent,
@@ -59,7 +57,7 @@ export default function BannerItem(props: {
                             )}
                         </span>
                         <span className="text-center px-2">-</span>
-                        <span className="text-center">
+                        <span className="text-center text-nowrap">
                             {formatEventDate(
                                 item.end,
                                 item.timezoneDependent,
@@ -67,21 +65,18 @@ export default function BannerItem(props: {
                             )}
                         </span>
                     </div>
-                    <div className="flex flex-row w-full items-center">
+                    <div className="flex flex-row w-full gap-2 overflow-auto p-2">
                         <ItemPreview item={items.fiveStar1} rarity={5} />
                         {items.fiveStar2 ? (
                             <ItemPreview item={items.fiveStar2} rarity={5} />
                         ) : (
                             <></>
                         )}
-                    </div>
-                    <div className="w-full flex flex-row overflow-x-auto gap-2 p-2">
                         {items.fourStar.map((item) => (
                             <ItemPreview
                                 key={"bannerDialog-" + item.name}
                                 item={item}
                                 rarity={4}
-                                small
                             />
                         ))}
                     </div>
