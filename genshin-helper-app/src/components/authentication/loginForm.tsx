@@ -101,7 +101,7 @@ export default function LoginForm() {
                         state.password === ""
                     }
                 >
-                    {loading ? <LoadingLogo size={"7"} /> : "Submit"}
+                    {loading ? <LoadingLogo size="size-7" /> : "Submit"}
                 </button>
                 <p className="py-2">
                     Don't have an account?

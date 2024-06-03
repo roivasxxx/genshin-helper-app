@@ -66,7 +66,7 @@ export default function DashboardEvents() {
         <div className="w-full mx-auto p-4 my-8  bg-electro-800 rounded inline-block sm:flex sm:flex-col items-start justify-center font-exo">
             {loading ? (
                 <div className="w-full flex items-center justify-center">
-                    <LoadingLogo size="50" />
+                    <LoadingLogo size="size-50" />
                 </div>
             ) : (
                 <>

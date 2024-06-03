@@ -5,6 +5,8 @@ import {
 } from "@/types/apiResponses";
 import { STAR_SYMBOL } from "./constants";
 
+export const createDeepCopy = (obj: object) => JSON.parse(JSON.stringify(obj));
+
 export const capitalizeString = (str: string) => {
     const split = str.split(/\s+/);
     return split

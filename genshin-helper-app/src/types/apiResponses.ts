@@ -208,3 +208,10 @@ export type GenshinEvent =
     | GenshinGameEvent
     | GenshinCharacterBanner
     | GenshinWeaponBanner;
+
+export type NotificationItemType = {
+    name: string;
+    id: string;
+    icon?: string;
+    days: string[];
+};

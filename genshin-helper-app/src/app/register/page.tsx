@@ -109,7 +109,7 @@ export default function Register() {
                             !credentialsValidator.safeParse(state).success
                         }
                     >
-                        {loading ? <LoadingLogo size={"7"} /> : "Submit"}
+                        {loading ? <LoadingLogo size="size-7" /> : "Submit"}
                     </button>
                     <p className="py-2">
                         Already have an account?

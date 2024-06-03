@@ -1,8 +1,10 @@
 import Image from "next/image";
 
 export default function LoadingLogo(props: { size: string }) {
+    // className=  {`size-${props.size}... does not work for some reason
+    const size = `h-${props.size} w-${props.size}`;
     return (
-        <div className={`size-${props.size} animate-spin`}>
+        <div className={`${props.size} animate-spin`}>
             <Image
                 src="/images/logo.svg"
                 alt="Spinning logo"

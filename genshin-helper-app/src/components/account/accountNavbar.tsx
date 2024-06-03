@@ -1,3 +1,5 @@
+"use client";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,10 +29,13 @@ export default function AccountNavbar() {
                             </>
                         </Link>
                     </div>
-                    <button className="relative group">
-                        <span className="absolute top-0 right-0 size-5 rounded-full border-electro-50 border-2 translate-x-[-50%] translate-y-[-50%] group-hover:border-electro-500" />
+                    <button
+                        className="relative group"
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                    >
+                        <span className="absolute top-0 right-0 size-5 rounded-full border-electro-50 border-2 translate-x-[-50%] translate-y-[-50%] group-hover:border-electro-500 group-active:border-electro-500" />
                         <div className="absolute top-[-1rem] right-0 size-5 rounded-full translate-x-[-50%] translate-y-[-50%] bg-electro-800">
-                            <span className="absolute bottom-0 left-[50%] h-4 w-1.5 bg-electro-50 border-electro-800 border-2 rounded translate-x-[-50%] translate-y-[40%] group-hover:bg-electro-500"></span>
+                            <span className="absolute bottom-0 left-[50%] h-4 w-1.5 bg-electro-50 border-electro-800 border-2 rounded translate-x-[-50%] translate-y-[40%] group-hover:bg-electro-500 group-active:bg-electro-500"></span>
                         </div>
                     </button>
                 </div>
