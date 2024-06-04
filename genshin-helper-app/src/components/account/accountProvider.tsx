@@ -1,7 +1,11 @@
 "use client";
 import { HTTP_METHOD } from "@/types";
 import { NotificationItemType } from "@/types/apiResponses";
-import { GAMES, GAME_ACCOUNT_ID } from "@/utils/constants";
+import {
+    GAMES,
+    GAME_ACCOUNT_ID,
+    GENSHIN_ACCOUNT_REGIONS,
+} from "@/utils/constants";
 import cmsRequest from "@/utils/fetchUtils";
 import { createDeepCopy } from "@/utils/utils";
 import {
@@ -13,11 +17,16 @@ import {
 } from "react";
 
 type BaseAccount = {
-    accounts: any[];
     game: GAMES;
 };
 
-type GenshinAccountState = BaseAccount & {
+export type GenshinAccountState = BaseAccount & {
+    accounts: {
+        id: string;
+        region: keyof typeof GENSHIN_ACCOUNT_REGIONS;
+        hoyoId?: string;
+        game: string;
+    }[];
     notifications: {
         events: boolean;
         banners: boolean;
@@ -37,27 +46,44 @@ const defaultGenshinState: GenshinAccountState = {
 
 export type GameAccountState = GenshinAccountState; // | StarRailAccountState | ZenAccountState;
 
-const defaultAccountState: Account = {
+const defaultAccountState: AccountContextState = {
     games: { [GAME_ACCOUNT_ID.GENSHIN]: defaultGenshinState },
     email: "",
     loading: true,
 };
 
-type Account = {
+const defaultAccountContext: AccountContext = {
+    state: { ...defaultAccountState },
+    createGenshinAccount: null,
+};
+
+type AccountContextState = {
     games: { [GAME_ACCOUNT_ID.GENSHIN]: GenshinAccountState };
     email: string;
     loading: boolean;
 };
+type AccountContext = {
+    state: AccountContextState;
+    createGenshinAccount:
+        | ((acc: {
+              region: keyof typeof GENSHIN_ACCOUNT_REGIONS;
+              hoyoId: string;
+          }) => Promise<string>)
+        | null;
+};
 
-const AccountContext = createContext<Account>(defaultAccountState);
+const AccountContext = createContext<AccountContext>(defaultAccountContext);
 
 export const useAccount = () => useContext(AccountContext);
 
 export default function AccountProvider(props: { children: ReactNode }) {
-    const [account, setAccount] = useState<Account>(defaultAccountState);
+    const [account, setAccount] =
+        useState<AccountContextState>(defaultAccountState);
 
     async function getAccountData() {
-        const _account = createDeepCopy(defaultAccountState);
+        const _account: AccountContextState =
+            createDeepCopy(defaultAccountState);
+        setAccount({ ...account, loading: true });
         try {
             const res = await cmsRequest({
                 path: "api/public-users/me",
@@ -73,7 +99,7 @@ export default function AccountProvider(props: { children: ReactNode }) {
                     data.user.genshinAccounts.length > 0
                 ) {
                     // we only really care about the user's genshin accounts
-                    _account.genshin.genshinAccounts =
+                    _account.games.genshin.accounts =
                         data.user.genshinAccounts.map((el: any) => ({
                             id: el.id,
                             region: el.region || "",
@@ -83,7 +109,7 @@ export default function AccountProvider(props: { children: ReactNode }) {
                 }
                 // and their notification settings
                 if (data.user.tracking) {
-                    _account.genshin.notifications = {
+                    _account.games.genshin.notifications = {
                         ...data.user.tracking,
                         items: data.user.tracking.items
                             ? data.user.tracking.items.map((el: any) => {
@@ -104,6 +130,27 @@ export default function AccountProvider(props: { children: ReactNode }) {
         setAccount({ ..._account, loading: false });
     }
 
+    const createGenshinAccount = async (acc: {
+        region: keyof typeof GENSHIN_ACCOUNT_REGIONS;
+        hoyoId: string;
+    }) => {
+        try {
+            const response = await cmsRequest({
+                path: "/api/genshin-accounts/create-genshin-account",
+                method: HTTP_METHOD.POST,
+                body: acc,
+            });
+            const data = await response.json();
+            if (data.accountId) {
+                await getAccountData();
+                return data.accountId as string;
+            }
+        } catch (error) {
+            console.error("Error creating genshin account", error);
+        }
+        return "";
+    };
+
     useEffect(() => {
         getAccountData();
     }, []);
@@ -111,7 +158,8 @@ export default function AccountProvider(props: { children: ReactNode }) {
     return (
         <AccountContext.Provider
             value={{
-                ...account,
+                state: account,
+                createGenshinAccount,
             }}
         >
             {props.children}
