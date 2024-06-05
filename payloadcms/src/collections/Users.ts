@@ -17,9 +17,14 @@ const Users: CollectionConfig = {
         // Email added by default
         // Add more fields as needed
         {
-            name: "role",
-            type: "text",
-            defaultValue: "user",
+            name: "roles",
+            type: "select",
+            options: [
+                {
+                    label: "Admin",
+                    value: "admin",
+                },
+            ],
         },
     ],
     endpoints: [],

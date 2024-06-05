@@ -215,3 +215,32 @@ export type NotificationItemType = {
     icon?: string;
     days: string[];
 };
+
+export interface Info {
+    wishInfo: WishInfo;
+    accountId: string;
+}
+export interface WishInfo {
+    standard: BannerInfo;
+    character: BannerInfo;
+    weapon: BannerInfo;
+}
+export interface BannerInfo {
+    pullCount: number;
+    last4Star: string | null;
+    last5Star: string | null;
+    pity4Star: number;
+    pity5Star: number;
+    lastId: string | null;
+}
+
+export interface Wish {
+    id: string;
+    date: string;
+    rarity: number;
+    hoyoId: string;
+    pity: number;
+    bannerType: string;
+    wishNumber: number;
+    item: NameIconDictionary;
+}

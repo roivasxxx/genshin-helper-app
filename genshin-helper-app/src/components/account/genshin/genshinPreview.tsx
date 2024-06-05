@@ -6,7 +6,7 @@ import Link from "next/link";
 import NotificationBell from "../notificationBell";
 import PlusSign from "@/components/plusSign";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useAccount } from "../accountProvider";
 import LoadingLogo from "@/components/loadingLogo";
 import SuccessCheckmark from "@/components/successCheckmark";
@@ -103,11 +103,10 @@ export default function GenshinPreview() {
                 {accounts.length > 0 ? (
                     accounts.map((account) => {
                         return (
-                            <>
+                            <Fragment key={"genshin-" + account.id}>
                                 <Link
                                     className="flex flex-row items-center justify-between group"
-                                    key={"genshin-" + account.id}
-                                    href="#"
+                                    href={`/me/genshin-impact/${account.id}`}
                                 >
                                     <div className="flex flex-col">
                                         <span>
@@ -129,7 +128,7 @@ export default function GenshinPreview() {
                                     />
                                 </Link>
                                 <hr className="border-[0.05rem] border-electro-50/50" />
-                            </>
+                            </Fragment>
                         );
                     })
                 ) : (

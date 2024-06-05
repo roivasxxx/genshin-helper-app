@@ -10,6 +10,7 @@ import { GenshinAccount, PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
 import exportWishHistory from "../../api/wishes/exporter";
 import { testLink } from "../../api/wishes/importer";
+import { accessControls } from "../../api/accessControls";
 
 const validateGenshinAccount = async (req: PayloadRequest) => {
     const user: PublicUser = await req.payload.findByID({
@@ -35,6 +36,7 @@ const validateGenshinAccount = async (req: PayloadRequest) => {
 
 const GenshinAccounts: CollectionConfig = {
     slug: "genshin-accounts",
+    access: accessControls,
     fields: [
         {
             // region
@@ -471,43 +473,54 @@ const GenshinAccounts: CollectionConfig = {
             handler: [
                 authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
-                    let accountId = await validateGenshinAccount(req);
-                    if (!accountId) {
-                        return res.status(403).send("Invalid accountId");
-                    }
-                    const doc = await req.payload.findByID({
-                        id: accountId,
-                        collection: "genshin-accounts",
-                    });
-                    const wishInfo = doc.wishInfo;
-                    const account = {
-                        wishInfo: {
-                            standard: wishInfo.standard,
-                            character: wishInfo.character,
-                            weapon: wishInfo.weapon,
-                        },
-                        accountId,
-                    };
-                    for (const key of ["character", "weapon", "standard"]) {
-                        if (
-                            wishInfo[key].last4Star &&
-                            wishInfo[key].last4Star.value &&
-                            typeof wishInfo[key].last4Star.value === "object"
-                        ) {
-                            account.wishInfo[key].last4Star =
-                                wishInfo[key].last4Star.value.name;
+                    try {
+                        let accountId = await validateGenshinAccount(req);
+                        if (!accountId) {
+                            return res.status(403).send("Invalid accountId");
                         }
-                        if (
-                            wishInfo[key].last5Star &&
-                            wishInfo[key].last5Star.value &&
-                            typeof wishInfo[key].last5Star.value === "object"
-                        ) {
-                            account.wishInfo[key].last5Star =
-                                wishInfo[key].last5Star.value.name;
+                        const doc = await req.payload.findByID({
+                            id: accountId,
+                            collection: "genshin-accounts",
+                        });
+                        const wishInfo = doc.wishInfo;
+                        const account = {
+                            wishInfo: {
+                                standard: wishInfo.standard,
+                                character: wishInfo.character,
+                                weapon: wishInfo.weapon,
+                            },
+                            accountId,
+                            region: doc.region,
+                        };
+                        for (const key of ["character", "weapon", "standard"]) {
+                            if (
+                                wishInfo[key].last4Star &&
+                                wishInfo[key].last4Star.value &&
+                                typeof wishInfo[key].last4Star.value ===
+                                    "object"
+                            ) {
+                                account.wishInfo[key].last4Star =
+                                    wishInfo[key].last4Star.value.name;
+                            }
+                            if (
+                                wishInfo[key].last5Star &&
+                                wishInfo[key].last5Star.value &&
+                                typeof wishInfo[key].last5Star.value ===
+                                    "object"
+                            ) {
+                                account.wishInfo[key].last5Star =
+                                    wishInfo[key].last5Star.value.name;
+                            }
                         }
-                    }
 
-                    res.send(account);
+                        return res.send(account);
+                    } catch (error) {
+                        console.error(
+                            "genshin-accounts/getAccount threw an exception: ",
+                            error
+                        );
+                        return res.status(500).send(error);
+                    }
                 },
             ],
         },
