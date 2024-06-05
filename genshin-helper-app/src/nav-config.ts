@@ -44,11 +44,11 @@ const navConfig: NavConfig = {
             },
         ],
     },
-    [GAMES.STAR_RAIL]: {
-        paths: [],
-    },
-    [GAMES.ZENLESS]: {
-        paths: [],
-    },
+    // [GAMES.STAR_RAIL]: {
+    //     paths: [],
+    // },
+    // [GAMES.ZENLESS]: {
+    //     paths: [],
+    // },
 };
 export default navConfig;
