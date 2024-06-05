@@ -2,6 +2,7 @@ import { SERVER_TIME_OFFSET } from "@/contants";
 import dayjs, { Dayjs } from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { capitalizeString } from "./utils";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -15,6 +16,10 @@ export const WEEKDAYS = [
     "friday",
     "saturday",
 ];
+
+export const SHORT_DAYS = WEEKDAYS.map((el) =>
+    capitalizeString(el.substring(0, 3))
+);
 
 export const DATE_FORMAT = "MMM DD,YYYY";
 

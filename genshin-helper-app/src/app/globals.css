@@ -45,3 +45,23 @@ input:-webkit-autofill {
     stroke-dasharray: 100, 100;
     animation: fill-checkmark 0.75s forwards;
 }
+
+@keyframes scale-up {
+    25% {
+        scale: 0.25;
+    }
+    50% {
+        scale: 0.5;
+    }
+    75% {
+        scale: 0.75;
+    }
+    100% {
+        scale: 1;
+    }
+}
+.animate-scale-up::before,
+.animate-scale-up::after {
+    scale: 0;
+    animation: scale-up 0.75s ease forwards;
+}

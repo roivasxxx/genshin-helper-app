@@ -93,7 +93,7 @@ export default function GenshinPreview() {
                             iconClass="bg-electro-50 border-2 rounded group-hover:border-electro-500 group-active:border-electro-500"
                         />
                     </button>
-                    <Link href="#">
+                    <Link href="/me/genshin-impact/notification-settings">
                         <NotificationBell className="size-10 fill-electro-50 hover:fill-electro-500 active:fill-electro-500 cursor-pointer" />
                     </Link>
                 </div>

@@ -1,4 +1,5 @@
 import AccountNavbar from "@/components/account/accountNavbar";
+import AccountProvider from "@/components/account/accountProvider";
 import Footer from "@/components/footer";
 
 export default async function AccountLayout({
@@ -9,8 +10,10 @@ export default async function AccountLayout({
     return (
         <>
             <div className="flex-grow">
-                <AccountNavbar />
-                {children}
+                <AccountProvider>
+                    <AccountNavbar />
+                    {children}
+                </AccountProvider>
             </div>
             <Footer />
         </>

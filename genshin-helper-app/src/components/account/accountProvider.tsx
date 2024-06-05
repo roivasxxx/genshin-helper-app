@@ -30,7 +30,7 @@ export type GenshinAccountState = BaseAccount & {
     notifications: {
         events: boolean;
         banners: boolean;
-        items: NotificationItemType[];
+        items: string[];
     };
 };
 
@@ -55,6 +55,8 @@ const defaultAccountState: AccountContextState = {
 const defaultAccountContext: AccountContext = {
     state: { ...defaultAccountState },
     createGenshinAccount: null,
+    setNotificationSettings: null,
+    saveNotificationSettings: null,
 };
 
 type AccountContextState = {
@@ -70,6 +72,13 @@ type AccountContext = {
               hoyoId: string;
           }) => Promise<string>)
         | null;
+    setNotificationSettings:
+        | (<T extends keyof GenshinAccountState["notifications"]>(
+              key: T,
+              value: GenshinAccountState["notifications"][T]
+          ) => Promise<void>)
+        | null;
+    saveNotificationSettings: (() => Promise<boolean>) | null;
 };
 
 const AccountContext = createContext<AccountContext>(defaultAccountContext);
@@ -113,12 +122,7 @@ export default function AccountProvider(props: { children: ReactNode }) {
                         ...data.user.tracking,
                         items: data.user.tracking.items
                             ? data.user.tracking.items.map((el: any) => {
-                                  return {
-                                      name: el.name,
-                                      id: el.id,
-                                      icon: el.icon.cloudinary.secure_url,
-                                      days: el.days,
-                                  };
+                                  return el.id;
                               })
                             : [],
                     };
@@ -151,6 +155,33 @@ export default function AccountProvider(props: { children: ReactNode }) {
         return "";
     };
 
+    const setNotificationSettings = async <
+        T extends keyof GenshinAccountState["notifications"]
+    >(
+        key: T,
+        value: GenshinAccountState["notifications"][T]
+    ) => {
+        const _account: AccountContextState = createDeepCopy(account);
+        _account.games.genshin.notifications[key] = value;
+        setAccount({ ..._account });
+    };
+
+    const saveNotificationSettings = async () => {
+        try {
+            await cmsRequest({
+                path: "api/public-users/setNotificationSettings",
+                method: HTTP_METHOD.POST,
+                body: {
+                    ...account.games.genshin.notifications,
+                },
+            });
+            return true;
+        } catch (error) {
+            console.error("Error saving notification settings", error);
+        }
+        return false;
+    };
+
     useEffect(() => {
         getAccountData();
     }, []);
@@ -160,6 +191,8 @@ export default function AccountProvider(props: { children: ReactNode }) {
             value={{
                 state: account,
                 createGenshinAccount,
+                setNotificationSettings,
+                saveNotificationSettings,
             }}
         >
             {props.children}
