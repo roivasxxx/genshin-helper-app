@@ -6,7 +6,7 @@ import {
 } from "../../constants";
 import { Response } from "express";
 import authMiddleware from "../../api/authMiddleware";
-import { GenshinAccount, PublicUser } from "../../../types/payload-types";
+import { GenshinAccount, Job, PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
 import exportWishHistory from "../../api/wishes/exporter";
 import { testLink } from "../../api/wishes/importer";
@@ -488,10 +488,23 @@ const GenshinAccounts: CollectionConfig = {
                                 standard: wishInfo.standard,
                                 character: wishInfo.character,
                                 weapon: wishInfo.weapon,
+                                lastUpdate: "",
                             },
                             accountId,
                             region: doc.region,
+                            importJobStatus: "NONE",
                         };
+                        if (
+                            doc.importJob &&
+                            typeof doc.importJob === "object"
+                        ) {
+                            account.importJobStatus = doc.importJob.status;
+                        }
+
+                        if (wishInfo.lastUpdate) {
+                            account.wishInfo.lastUpdate = wishInfo.lastUpdate;
+                        }
+
                         for (const key of ["character", "weapon", "standard"]) {
                             if (
                                 wishInfo[key].last4Star &&
@@ -577,6 +590,39 @@ const GenshinAccounts: CollectionConfig = {
                     } catch (error) {
                         console.error(
                             "exportWishHistory threw an exception:",
+                            error
+                        );
+                        return res.status(500).send(error);
+                    }
+                },
+            ],
+        },
+        {
+            path: "/getImportStatus",
+            method: "get",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    try {
+                        const accountId = await validateGenshinAccount(req);
+                        if (!accountId) {
+                            return res.status(403).send("Invalid accountId");
+                        }
+                        const account = await req.payload.findByID({
+                            id: accountId,
+                            collection: "genshin-accounts",
+                        });
+                        let jobStatus = "NONE";
+                        if (
+                            account.importJob &&
+                            typeof account.importJob === "object"
+                        ) {
+                            jobStatus = account.importJob.status;
+                        }
+                        return res.send(jobStatus);
+                    } catch (error) {
+                        console.error(
+                            "getImportStatus threw an exception:",
                             error
                         );
                         return res.status(500).send(error);

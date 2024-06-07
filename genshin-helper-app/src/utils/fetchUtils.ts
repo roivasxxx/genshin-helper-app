@@ -56,3 +56,40 @@ const cmsRequest = async (
 };
 
 export default cmsRequest;
+
+/**
+ * Wrapping promises for the React.Suspense component
+ */
+const wrapPromise = (promise: Promise<Response>) => {
+    let status = "pending";
+    let result: Response | null = null;
+    let suspender = promise.then(
+        (r) => {
+            status = "success";
+            result = r;
+        },
+        (e) => {
+            status = "error";
+            result = e;
+        }
+    );
+    return {
+        read() {
+            if (status === "pending") {
+                throw suspender;
+            } else if (status === "error") {
+                throw result;
+            }
+            return result;
+        },
+    };
+};
+
+/**
+ * Used to make requests to the backend when using React.Suspense
+ */
+export const createResource = (request: Promise<Response>) => {
+    return wrapPromise(request);
+};
+
+export type ResourceType = ReturnType<typeof createResource>;

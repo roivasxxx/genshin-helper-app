@@ -18,7 +18,7 @@ export default async function ArtifactsPage() {
     }
 
     return (
-        <main className="w-full mt-[7rem] mx-auto p-4 my-8 bg-electro-800 rounded inline-block items-start justify-center text-electro-50 font-exo lg:w-[75%] sm:flex">
+        <main className="w-full mt-[7rem] mx-auto p-4 my-8 700/90 rounded inline-block items-start justify-center text-electro-50 font-exo lg:w-[75%] sm:flex">
             <div className="flex-1 flex inline-block flex-col justify-center">
                 <ArtifactsShowcase artifacts={artifacts} />
             </div>

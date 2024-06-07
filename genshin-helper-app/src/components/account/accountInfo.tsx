@@ -26,7 +26,7 @@ export default function AccountInfo() {
     const { state } = useAccount();
 
     return (
-        <div className="w-full flex flex-col bg-electro-800 rounded bg-electro-800 rounded min-h-[10rem] p-2">
+        <div className="w-full flex flex-col bg-electro-800 rounded rounded min-h-[10rem] p-2">
             {state.loading ? (
                 <div className="w-full flex items-center justify-center">
                     <LoadingLogo size="size-40" />

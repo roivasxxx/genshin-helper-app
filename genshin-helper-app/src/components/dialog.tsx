@@ -13,11 +13,11 @@ const DialogModal = forwardRef<HTMLDivElement, Props>(function Dialog(
     ref
 ) {
     const dialogClass =
-        "fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-electro-850 w-10/12 h-1 rounded p-4 min-h-[250px]" +
+        "fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-electro-850 w-10/12 rounded p-4 min-h-[250px] max-h-[60%] overflow-y-auto z-50" +
         (props.dialogClass || "");
 
     return (
-        <div className="fixed top-0 left-0 w-full h-full bg-gray-600/50">
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-600/50 z-50">
             <div className={dialogClass} ref={ref}>
                 <button
                     onClick={props.setVisibility}

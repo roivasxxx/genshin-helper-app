@@ -71,7 +71,7 @@ export default function GenshinPreview() {
 
     return (
         <div className="w-full h-auto">
-            <div className="w-full h-20 flex flex-row items-center justify-between bg-electro-850 p-2">
+            <div className="w-full h-20 flex flex-row items-center justify-between bg-electro-800 p-2 rounded">
                 <div className="rounded h-auto flex">
                     <Image
                         src={"/images/games/icons/genshin-impact.png"}
@@ -89,7 +89,7 @@ export default function GenshinPreview() {
                         onClick={() => setAccountModalVisible(true)}
                     >
                         <PlusSign
-                            containerClass="bg-electro-800 rounded-full size-12 hover:bg-electro-900 active:border-electro-900"
+                            containerClass="bg-electro-900 rounded-full size-12 hover:bg-electro-900/60 active:border-electro-900/60"
                             iconClass="bg-electro-50 border-2 rounded group-hover:border-electro-500 group-active:border-electro-500"
                         />
                     </button>
@@ -99,7 +99,7 @@ export default function GenshinPreview() {
                 </div>
             </div>
 
-            <div className="max-h-20 overflow-y-auto my-2 md:max-h-40 bg-electro-850 p-2 rounded">
+            <div className="max-h-20 overflow-y-auto my-2 md:max-h-40 bg-electro-800 p-2 rounded">
                 {accounts.length > 0 ? (
                     accounts.map((account) => {
                         return (
@@ -178,7 +178,7 @@ export default function GenshinPreview() {
                                         return (
                                             <button
                                                 key={"genshin-" + region}
-                                                className={`p-2 rounded bg-electro-800 hover:bg-electro-900 active:bg-electro-900 ${
+                                                className={`p-2 rounded bg-electro-900 hover:bg-electro-900/60 active:bg-electro-900/60 ${
                                                     newAccountFormState.region ===
                                                     region
                                                         ? "bg-electro-900 text-electro-50"

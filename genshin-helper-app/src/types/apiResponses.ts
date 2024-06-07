@@ -216,14 +216,26 @@ export type NotificationItemType = {
     days: string[];
 };
 
-export interface Info {
+export enum IMPORT_STATUS {
+    "NONE" = "None",
+    "NEW" = "In queue",
+    "IN_PROGRESS" = "In progress",
+    "COMPLETED" = "Completed",
+    "FAILED" = "Failed",
+    "CANCELLED" = "Cancelled",
+}
+
+export interface GenshinAccount {
     wishInfo: WishInfo;
+    region: string;
     accountId: string;
+    importJobStatus: keyof typeof IMPORT_STATUS;
 }
 export interface WishInfo {
     standard: BannerInfo;
     character: BannerInfo;
     weapon: BannerInfo;
+    lastUpdate?: string;
 }
 export interface BannerInfo {
     pullCount: number;

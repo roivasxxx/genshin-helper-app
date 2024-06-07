@@ -176,7 +176,10 @@ const initAgenda = async () => {
                             collection: "genshin-accounts",
                             data: {
                                 importJob: "",
-                                wishInfo: lastIds,
+                                wishInfo: {
+                                    ...lastIds,
+                                    lastUpdate: new Date().toISOString(),
+                                },
                             },
                         });
                         // update job
