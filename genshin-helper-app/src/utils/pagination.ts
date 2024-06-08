@@ -1,7 +1,7 @@
 export function paginate(c: number, m: number) {
     const current = c,
         last = m,
-        delta = 2,
+        delta = 1,
         left = current - delta,
         right = current + delta + 1,
         range = [],
@@ -17,12 +17,12 @@ export function paginate(c: number, m: number) {
     for (let i of range) {
         if (l) {
             if (i - l === 2) {
-                rangeWithDots.push((l + 1).toString());
+                rangeWithDots.push(l + 1);
             } else if (i - l !== 1) {
                 rangeWithDots.push("...");
             }
         }
-        rangeWithDots.push(i.toString());
+        rangeWithDots.push(i);
         l = i;
     }
 

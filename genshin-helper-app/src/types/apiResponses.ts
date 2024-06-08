@@ -254,5 +254,12 @@ export interface Wish {
     pity: number;
     bannerType: string;
     wishNumber: number;
-    item: NameIconDictionary;
+    item: {
+        value: string;
+        icon?: {
+            alt: string;
+            originalName: string;
+            url: string;
+        };
+    };
 }

@@ -1,12 +1,29 @@
+import HistoryIcon from "@/components/historyIcon";
 import { BannerInfo, WishInfo } from "@/types/apiResponses";
 import { BannerType, PRIMOS_PER_WISH, STAR_SYMBOL } from "@/utils/constants";
 import Image from "next/image";
+import Link from "next/link";
 
-function BannerItem(props: { bannerInfo: BannerInfo; type: BannerType }) {
+function BannerItem(props: {
+    bannerInfo: BannerInfo;
+    type: BannerType;
+    accountId: string;
+}) {
     const bannerInfo = props.bannerInfo;
     return (
-        <div className="bg-electro-900 rounded p-2 text-lg">
-            <h2 className="text-xl font-bold text-left">{props.type} banner</h2>
+        <Link
+            href={`/me/genshin-impact/${
+                props.accountId
+            }/${props.type.toLowerCase()}?page=1`}
+            className="bg-electro-900 rounded p-2 text-lg"
+            title="View history"
+        >
+            <div className="flex flex-row justify-between items-center">
+                <h2 className="text-xl font-bold text-left">
+                    {props.type} banner
+                </h2>
+                <HistoryIcon className="size-10 fill-electro-50 py-2 hover:fill-electro-500 active:fill-electro-500" />
+            </div>
             <hr />
             <div className="w-full flex justify-between">
                 <span className="flex-1">Pull count</span>
@@ -71,24 +88,30 @@ function BannerItem(props: { bannerInfo: BannerInfo; type: BannerType }) {
                     className="ml-2 object-contain"
                 />
             </div>
-        </div>
+        </Link>
     );
 }
 
-export default function AccountBannerOverview(props: { wishInfo: WishInfo }) {
+export default function AccountBannerOverview(props: {
+    wishInfo: WishInfo;
+    accountId: string;
+}) {
     return (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-2">
             <BannerItem
                 bannerInfo={props.wishInfo.character}
                 type={BannerType.CHARACTER}
+                accountId={props.accountId}
             />
             <BannerItem
                 bannerInfo={props.wishInfo.weapon}
                 type={BannerType.WEAPON}
+                accountId={props.accountId}
             />
             <BannerItem
                 bannerInfo={props.wishInfo.standard}
                 type={BannerType.STANDARD}
+                accountId={props.accountId}
             />
         </div>
     );

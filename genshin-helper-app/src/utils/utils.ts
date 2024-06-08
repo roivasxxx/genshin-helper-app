@@ -37,3 +37,7 @@ export const isWeaponBanner = (
 ): event is GenshinWeaponBanner => {
     return event.type === "banner" && event.bannerType === "weapon";
 };
+
+export const isNumber = (value?: string | number) => {
+    return value != null && value !== "" && !isNaN(Number(value.toString()));
+};

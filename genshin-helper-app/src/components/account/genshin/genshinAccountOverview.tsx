@@ -146,7 +146,10 @@ export default function GenshinAccountOverview(props: { accountId: string }) {
                         errorVisible={errorVisible}
                         setErrorVisible={() => setErrorVisible(false)}
                     />
-                    <AccountBannerOverview wishInfo={accountData.wishInfo} />
+                    <AccountBannerOverview
+                        wishInfo={accountData.wishInfo}
+                        accountId={accountId}
+                    />
                 </>
             )}
         </div>

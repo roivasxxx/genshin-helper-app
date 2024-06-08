@@ -333,9 +333,36 @@ const GenshinAccounts: CollectionConfig = {
                             return { ...wish, item: _itemId };
                         });
 
+                        // const bannersReq = await req.payload.find({
+                        //     collection: "genshin-events",
+                        //     where: {
+                        //         and: [
+                        //             {
+                        //                 type: {
+                        //                     equals: "banner",
+                        //                 },
+                        //             },
+                        //             {
+                        //                 start: {
+                        //                     greater_than_equal:
+                        //                         wishes[wishes.length - 1].date,
+                        //                 },
+                        //             },
+                        //             {
+                        //                 end: {
+                        //                     less_than_equal: wishes[0].date,
+                        //                 },
+                        //             },
+                        //         ],
+                        //     },
+                        //     sort: "-start",
+                        // });
+
                         res.send({
                             history: wishes,
                             hasMore: wishesReq.hasNextPage,
+                            totalPages: wishesReq.totalPages,
+                            // banners: bannersReq.docs,
                         });
                     } catch (error) {
                         console.error(

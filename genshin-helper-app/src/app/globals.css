@@ -65,3 +65,8 @@ input:-webkit-autofill {
     scale: 0;
     animation: scale-up 0.75s ease forwards;
 }
+
+.wishTable tbody td {
+    padding: 0.5rem;
+    border-top: solid rgba(251, 249, 252, 0.5) 1px;
+}
