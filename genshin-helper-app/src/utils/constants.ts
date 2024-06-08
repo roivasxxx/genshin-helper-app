@@ -49,3 +49,11 @@ export enum GENSHIN_WEAPONS {
 }
 
 export const STAR_SYMBOL = "\u2605";
+
+export const PRIMOS_PER_WISH = 160;
+
+export enum BannerType {
+    CHARACTER = "Character",
+    WEAPON = "Weapon",
+    STANDARD = "Standard",
+}

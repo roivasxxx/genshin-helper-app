@@ -1,16 +1,21 @@
 "use client";
-import CSVIcon from "@/components/csvIcon";
-import JsonIcon from "@/components/jsonIcon";
+
 import LoadingLogo from "@/components/loadingLogo";
 import { HTTP_METHOD } from "@/types";
 import { GenshinAccount, IMPORT_STATUS } from "@/types/apiResponses";
-import cmsRequest, { createResource } from "@/utils/fetchUtils";
+import cmsRequest from "@/utils/fetchUtils";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import OverviewHeader from "./overviewHeader";
+import AccountBannerOverview from "./accountBannerOverview";
 
 export default function GenshinAccountOverview(props: { accountId: string }) {
     const { accountId } = props;
+
+    const timerRef = useRef<{
+        timer: NodeJS.Timeout | null;
+        abortController: AbortController | null;
+    }>({ timer: null, abortController: null });
 
     const [accountData, setAccountData] = useState<GenshinAccount>({
         accountId,
@@ -44,6 +49,7 @@ export default function GenshinAccountOverview(props: { accountId: string }) {
         importJobStatus: "NONE",
     });
     const [isLoading, setIsLoading] = useState(true);
+    const [errorVisible, setErrorVisible] = useState(false);
 
     const router = useRouter();
 
@@ -65,26 +71,16 @@ export default function GenshinAccountOverview(props: { accountId: string }) {
             }
             setIsLoading(false);
 
-            const timer = setTimeout(async () => {
-                const req = await cmsRequest({
-                    method: HTTP_METHOD.GET,
-                    path: `api/genshin-accounts/getImportStatus?accountId=${accountId}`,
-                    abortController,
-                });
-                const result = await req.text();
-                if (result !== accountData.importJobStatus) {
-                    console.log(result, accountData.importJobStatus);
-                    setAccountData({
-                        ...accountData,
-                        importJobStatus:
-                            result as typeof accountData.importJobStatus,
-                    });
-                }
-            }, 10000);
-
             return () => {
+                console.log("unmount?");
                 abortController.abort();
-                clearTimeout(timer);
+                if (
+                    timerRef.current.abortController &&
+                    timerRef.current.timer
+                ) {
+                    timerRef.current.abortController.abort();
+                    clearInterval(timerRef.current.timer);
+                }
             };
         };
 
@@ -105,11 +101,33 @@ export default function GenshinAccountOverview(props: { accountId: string }) {
                 ...accountData,
                 importJobStatus: "NEW",
             });
+
+            const abortController = new AbortController();
+            timerRef.current.abortController = abortController;
+            timerRef.current.timer = setInterval(async () => {
+                const req = await cmsRequest({
+                    method: HTTP_METHOD.GET,
+                    path: `api/genshin-accounts/getImportStatus?accountId=${accountId}`,
+                    abortController: abortController,
+                });
+                const result = (await req.text()) as keyof typeof IMPORT_STATUS;
+                setAccountData((state) => {
+                    return {
+                        ...state,
+                        importJobStatus:
+                            result as typeof accountData.importJobStatus,
+                    };
+                });
+                if (
+                    !["IN_PROGRESS", "NEW"].includes(result) &&
+                    timerRef.current?.timer
+                ) {
+                    clearInterval(timerRef.current?.timer);
+                }
+            }, 10000);
         } catch (error) {
-            setAccountData({
-                ...accountData,
-                importJobStatus: "FAILED",
-            });
+            // invalid link provided
+            setErrorVisible(true);
         }
     };
 
@@ -125,7 +143,10 @@ export default function GenshinAccountOverview(props: { accountId: string }) {
                     <OverviewHeader
                         accountData={accountData}
                         importHistory={importHistory}
+                        errorVisible={errorVisible}
+                        setErrorVisible={() => setErrorVisible(false)}
                     />
+                    <AccountBannerOverview wishInfo={accountData.wishInfo} />
                 </>
             )}
         </div>

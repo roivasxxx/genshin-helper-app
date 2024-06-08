@@ -9,11 +9,13 @@ import ImportFAQ from "./importFAQ";
 import FloatingLabelInput from "@/components/floatingLabelInput";
 import dayjs from "dayjs";
 import { DATE_TIME_FORMAT } from "@/utils/dateUtils";
-import cmsRequest from "@/utils/fetchUtils";
+import { linkValidator } from "@/utils/validationUtils";
 
 export default function OverviewHeader(props: {
     accountData: GenshinAccount;
     importHistory: (link: string) => Promise<void>;
+    errorVisible: boolean;
+    setErrorVisible: () => void;
 }) {
     const { isVisible, setVisibility, ref } = useClickOutside(false);
     const {
@@ -28,16 +30,17 @@ export default function OverviewHeader(props: {
     const dateOrStatus = () => {
         if (accountData.importJobStatus === "NONE") {
             return (
-                <span>
+                <div className="flex flex-col md:flex-row gap-1">
+                    <span>Last update:</span>
                     {accountData.wishInfo.lastUpdate
                         ? dayjs(
                               new Date(accountData.wishInfo.lastUpdate)
                           ).format(DATE_TIME_FORMAT)
                         : "No data"}
-                </span>
+                </div>
             );
         } else {
-            let color = "text-electro-50";
+            let color = "text-electro-5star-from";
             switch (accountData.importJobStatus) {
                 case "FAILED":
                     color = "text-red-500";
@@ -48,7 +51,7 @@ export default function OverviewHeader(props: {
             }
             return (
                 <span className={color}>
-                    IMPORT_STATUS[accountData.importJobStatus];
+                    {IMPORT_STATUS[accountData.importJobStatus]}
                 </span>
             );
         }
@@ -59,7 +62,7 @@ export default function OverviewHeader(props: {
             <h2 className="text-xl text-center">{props.accountData.region}</h2>
             <hr className="my-2 border-[0.12rem] rounded px-2" />
             <div className="w-full md:w-1/2 m-auto">
-                <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row justify-between items-center py-2">
                     <h2 className="text-2xl py-2">Wish History</h2>
                     {dateOrStatus()}
                 </div>
@@ -107,21 +110,32 @@ export default function OverviewHeader(props: {
                     <div className="flex-1">
                         <FloatingLabelInput
                             value={link}
-                            onChange={(e) => setLink(e.target.value)}
+                            onChange={(e) => {
+                                setLink(e.target.value);
+                                props.setErrorVisible();
+                            }}
                             id=""
                             label="Link"
+                            validation={linkValidator}
                         />
                     </div>
                     <button
                         className="bg-electro-900 text-lg p-2 rounded cursor-pointer flex-1 disabled:bg-gray-600 hover:bg-electro-900/50 active:bg-electro-900/60"
                         disabled={
-                            link.length === 0 ||
-                            props.accountData.importJobStatus === "NONE"
+                            !linkValidator.safeParse(link).success ||
+                            props.accountData.importJobStatus !== "NONE"
                         }
                         onClick={() => props.importHistory(link)}
                     >
                         Import
                     </button>
+                    {props.errorVisible ? (
+                        <p className="text-red-500">
+                            Invalid/expired link, please try again
+                        </p>
+                    ) : (
+                        <></>
+                    )}
                 </div>
                 <div className="flex flex-row items-start items-center gap-2 p-2">
                     <h2 className="text-xl">Export</h2>

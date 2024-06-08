@@ -51,3 +51,5 @@ export const credentialsValidator = z.object({
     email: emailValidator,
     password: passwordValidator,
 });
+
+export const linkValidator = z.string().url("This is not a valid link");
