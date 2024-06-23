@@ -7,9 +7,12 @@ import {
 } from "../../constants";
 import { normalizeName, sleep } from "../../utils";
 import {
+    FiftyFiftyStatus,
     GenshinAcountWishInfo,
     GenshinApiResponseWish,
 } from "../../../types/types";
+import payload from "payload";
+import { GenshinEvent, GenshinWish } from "../../../types/payload-types";
 
 export const parseAuthedUrl = (authedLink: string, region: WISH_REGIONS) => {
     const originalURL = new URL(authedLink);
@@ -43,12 +46,47 @@ export const testLink = async (authedLink: string, region: WISH_REGIONS) => {
     await makeApiRequest(url, WISH_BANNER_CODES.STANDARD);
 };
 
+const getBannerItems = async () => {
+    const chars: GenshinEvent[] = [];
+    const weapons: GenshinEvent[] = [];
+    const items = await payload.find({
+        collection: "genshin-events",
+        where: {
+            type: {
+                equals: "banner",
+            },
+        },
+        sort: "start",
+        depth: 0,
+        pagination: false,
+    });
+    items.docs.forEach((doc) => {
+        doc.bannerType === "character" ? chars.push(doc) : weapons.push(doc);
+    });
+    return [chars, weapons];
+};
+
+const findMatchingBanner = (
+    wish: GenshinWish,
+    lastBannerIndex: number,
+    banners: GenshinEvent[]
+) => {
+    for (let i = lastBannerIndex; i < banners.length; i++) {
+        if (banners[i].start <= wish.date && wish.date <= banners[i].end) {
+            return i;
+        }
+    }
+    return lastBannerIndex;
+};
+
 export const wishImporter = async (
     authedLink: string,
     accountId: string,
     wishInfo: GenshinAcountWishInfo,
     region: WISH_REGIONS
 ) => {
+    const [characterBanners, weaponBanners] = await getBannerItems();
+
     const history = {};
 
     for (let i = 0; i < Object.keys(WISH_HISTORY).length; i++) {
@@ -61,6 +99,16 @@ export const wishImporter = async (
             WISH_BANNER_CODES[key],
             wishInfo[bannerType].lastId
         );
+        let banners: GenshinEvent[] = [];
+        switch (bannerType) {
+            case WISH_HISTORY.CHARACTER:
+                banners = characterBanners;
+                break;
+            case WISH_HISTORY.WEAPON:
+                banners = weaponBanners;
+                break;
+        }
+
         const { wishes, stoppedByLastId } = result;
 
         if (!wishes) {
@@ -82,20 +130,66 @@ export const wishImporter = async (
         let last4Star = wishInfo[bannerType].last4Star;
         let last5Star = wishInfo[bannerType].last5Star;
         const lastId = wishInfo[bannerType].lastId || "";
+        // guaranteed 5 star flag
+        let guaranteed5Star = stoppedByLastId
+            ? wishInfo[bannerType].guaranteed5Star ?? false
+            : false;
+        // current banner, starts from first - oldest banner
+        let bannerIndex = 0;
+        let currentBanner = banners[bannerIndex];
 
         for (let i = wishes.length - 1; i >= 0; i--) {
             const el = wishes[i];
             pity4Star++;
             pity5Star++;
             let pity = 1;
+            let fiftyFiftyStatus: FiftyFiftyStatus = "none";
+            if (currentBanner && el.date > currentBanner.end) {
+                // find matching banner
+                bannerIndex = findMatchingBanner(el, bannerIndex, banners);
+                currentBanner = banners[bannerIndex];
+            }
+
             if (el.rarity === 4) {
                 pity = pity4Star;
                 pity4Star = 0;
                 last4Star = el.itemId;
+                if (currentBanner) {
+                    // standard banner doesnt have banners
+                    if (bannerType === WISH_HISTORY.WEAPON) {
+                        fiftyFiftyStatus =
+                            currentBanner.weapons.fourStar.includes(el.itemId)
+                                ? "won"
+                                : "lost";
+                    } else if (bannerType === WISH_HISTORY.CHARACTER) {
+                        fiftyFiftyStatus =
+                            currentBanner.characters.fourStar.includes(
+                                el.itemId
+                            )
+                                ? "won"
+                                : "lost";
+                    }
+                }
             } else if (el.rarity === 5) {
                 pity = pity5Star;
                 pity5Star = 0;
                 last5Star = el.itemId;
+                if (currentBanner) {
+                    if (bannerType === WISH_HISTORY.WEAPON) {
+                        const won =
+                            currentBanner.weapons.fiveStar1 === el.itemId ||
+                            currentBanner.weapons.fiveStar2 === el.itemId;
+                        if (!won) {
+                            fiftyFiftyStatus = "lost";
+                            guaranteed5Star = true;
+                        } else {
+                            fiftyFiftyStatus = guaranteed5Star
+                                ? "guaranteed"
+                                : "won";
+                            guaranteed5Star = false;
+                        }
+                    }
+                }
             }
             const wishNumber =
                 wishInfo[bannerType].pullCount + wishes.length - (i + 1);
@@ -105,6 +199,8 @@ export const wishImporter = async (
                 genshinAccount: accountId,
                 bannerType,
                 wishNumber,
+                fiftyFiftyStatus,
+                bannerId: currentBanner?.id,
             };
         }
 

@@ -35,6 +35,29 @@ const GenshinWishes: CollectionConfig = {
             name: "hoyoId",
             type: "text",
         },
+        {
+            name: "fiftyFiftyStatus",
+            type: "select",
+            options: [
+                {
+                    label: "Won",
+                    value: "won",
+                },
+                {
+                    label: "Lost",
+                    value: "lost",
+                },
+                {
+                    label: "Guaranteed",
+                    value: "guaranteed",
+                },
+                {
+                    // standard banner
+                    label: "None",
+                    value: "none",
+                },
+            ],
+        },
         // {
         //     // this will be filled in based on the date -> find which banner was active during specified date
         //     // only for non-standard pulls
@@ -77,6 +100,11 @@ const GenshinWishes: CollectionConfig = {
             // for character banners, this tells us whether its the first or second character banner
             name: "gachaType",
             type: "text",
+        },
+        {
+            name: "bannerId",
+            type: "relationship",
+            relationTo: "genshin-events",
         },
         // {
         //     // userId + bannerType + wishNumber - userId-standard-0, userId-weapon-1,...

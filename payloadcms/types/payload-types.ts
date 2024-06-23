@@ -22,7 +22,6 @@ export interface Config {
     'genshin-items': GenshinItem;
     'genshin-wishes': GenshinWish;
     'genshin-articles': GenshinArticle;
-    'genshin-patches': GenshinPatch;
     jobs: Job;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -31,7 +30,7 @@ export interface Config {
 }
 export interface User {
   id: string;
-  role?: string | null;
+  roles?: 'admin' | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -91,6 +90,7 @@ export interface GenshinAccount {
       pity4Star: number;
       pity5Star: number;
       lastId?: string | null;
+      guaranteed5Star?: boolean | null;
     };
     weapon: {
       pullCount: number;
@@ -115,6 +115,7 @@ export interface GenshinAccount {
       pity4Star: number;
       pity5Star: number;
       lastId?: string | null;
+      guaranteed5Star?: boolean | null;
     };
     character: {
       pullCount: number;
@@ -139,6 +140,7 @@ export interface GenshinAccount {
       pity4Star: number;
       pity5Star: number;
       lastId?: string | null;
+      guaranteed5Star?: boolean | null;
     };
     lastUpdate?: string | null;
   };
@@ -448,6 +450,7 @@ export interface GenshinWish {
   date?: string | null;
   pity?: number | null;
   hoyoId?: string | null;
+  fiftyFiftyStatus?: ('won' | 'lost' | 'guaranteed' | 'none') | null;
   genshinAccount?: (string | null) | GenshinAccount;
   itemId?:
     | ({
@@ -461,6 +464,7 @@ export interface GenshinWish {
   wishNumber?: number | null;
   rarity?: number | null;
   gachaType?: string | null;
+  bannerId?: (string | null) | GenshinEvent;
   updatedAt: string;
   createdAt: string;
 }
@@ -525,18 +529,6 @@ export interface GenshinArticle {
             | null;
         };
         id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-export interface GenshinPatch {
-  id: string;
-  patchNumber?: string | null;
-  releaseDate?: string | null;
-  changes?:
-    | {
-        [k: string]: unknown;
       }[]
     | null;
   updatedAt: string;

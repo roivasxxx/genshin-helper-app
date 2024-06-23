@@ -11,6 +11,8 @@ import { agenda } from "../../agenda";
 import exportWishHistory from "../../api/wishes/exporter";
 import { testLink } from "../../api/wishes/importer";
 import { accessControls } from "../../api/accessControls";
+import payload from "payload";
+import { notifyUsers } from "../../notifications";
 
 const validateGenshinAccount = async (req: PayloadRequest) => {
     const user: PublicUser = await req.payload.findByID({
@@ -19,7 +21,6 @@ const validateGenshinAccount = async (req: PayloadRequest) => {
         depth: 0,
     });
     let accountId = "";
-
     if (typeof req.query.accountId === "string") {
         accountId = req.query.accountId;
     } else if (
@@ -27,6 +28,9 @@ const validateGenshinAccount = async (req: PayloadRequest) => {
         typeof req.query.accountId[0] === "string"
     ) {
         accountId = req.query.accountId[0];
+    }
+    if (req.body && req.body.accountId) {
+        accountId = req.body.accountId;
     }
     if (!accountId || !user.genshinAccounts.includes(accountId)) {
         return "";
@@ -99,6 +103,10 @@ const GenshinAccounts: CollectionConfig = {
                             name: "lastId",
                             type: "text",
                         },
+                        {
+                            name: "guaranteed5Star",
+                            type: "checkbox",
+                        },
                     ],
                 },
                 {
@@ -142,6 +150,10 @@ const GenshinAccounts: CollectionConfig = {
                             name: "lastId",
                             type: "text",
                         },
+                        {
+                            name: "guaranteed5Star",
+                            type: "checkbox",
+                        },
                     ],
                 },
                 {
@@ -184,6 +196,10 @@ const GenshinAccounts: CollectionConfig = {
                         {
                             name: "lastId",
                             type: "text",
+                        },
+                        {
+                            name: "guaranteed5Star",
+                            type: "checkbox",
                         },
                     ],
                 },
@@ -418,7 +434,8 @@ const GenshinAccounts: CollectionConfig = {
                 async (req: PayloadRequest, res: Response) => {
                     const query = req.body;
                     try {
-                        if (!query.accountId || !query.link) {
+                        const accountId = await validateGenshinAccount(req);
+                        if (!accountId || !query.link) {
                             return res.status(400).send("Invalid request");
                         }
 
@@ -445,6 +462,8 @@ const GenshinAccounts: CollectionConfig = {
                                     ? account.importJob
                                     : account.importJob.id;
                             try {
+                                // previous job might still exist/being processed
+                                // cancel it
                                 await req.payload.update({
                                     collection: "jobs",
                                     id: importJob,
@@ -453,8 +472,6 @@ const GenshinAccounts: CollectionConfig = {
                                     },
                                 });
                             } catch (error) {
-                                // previous job might still exist/being processed
-                                // remove it from the db
                                 console.error("Found invalid job: ", importJob);
                                 return res.status(500).send("SERVER ERROR");
                             }

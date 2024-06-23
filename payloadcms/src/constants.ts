@@ -80,6 +80,7 @@ export const DEFAULT_GENSHIN_WISH_INFO: GenshinAcountWishInfo = {
         pity4Star: 0,
         pity5Star: 0,
         lastId: null,
+        guaranteed5Star: false,
     },
     weapon: {
         pullCount: 0,
@@ -88,6 +89,7 @@ export const DEFAULT_GENSHIN_WISH_INFO: GenshinAcountWishInfo = {
         pity4Star: 0,
         pity5Star: 0,
         lastId: null,
+        guaranteed5Star: false,
     },
     character: {
         pullCount: 0,
@@ -96,6 +98,7 @@ export const DEFAULT_GENSHIN_WISH_INFO: GenshinAcountWishInfo = {
         pity4Star: 0,
         pity5Star: 0,
         lastId: null,
+        guaranteed5Star: false,
     },
 };
 

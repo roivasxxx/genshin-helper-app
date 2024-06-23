@@ -36,6 +36,5 @@ export const collections: CollectionConfig[] = [
     GenshinItems,
     GenshinWishes,
     GenshinArticles,
-    GenshinPatches,
     Jobs,
 ];
