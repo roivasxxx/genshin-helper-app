@@ -188,6 +188,19 @@ export const wishImporter = async (
                                 : "won";
                             guaranteed5Star = false;
                         }
+                    } else if (bannerType === WISH_HISTORY.CHARACTER) {
+                        const won =
+                            currentBanner.characters.fiveStar1 === el.itemId ||
+                            currentBanner.characters.fiveStar2 === el.itemId;
+                        if (!won) {
+                            fiftyFiftyStatus = "lost";
+                            guaranteed5Star = true;
+                        } else {
+                            fiftyFiftyStatus = guaranteed5Star
+                                ? "guaranteed"
+                                : "won";
+                            guaranteed5Star = false;
+                        }
                     }
                 }
             }

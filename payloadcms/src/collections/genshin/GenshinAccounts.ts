@@ -434,6 +434,22 @@ const GenshinAccounts: CollectionConfig = {
                 async (req: PayloadRequest, res: Response) => {
                     const query = req.body;
                     try {
+                        const releases = await req.payload.find({
+                            collection: "releases",
+                            where: {},
+                            limit: 1,
+                            sort: "-version",
+                        });
+
+                        if (
+                            releases.docs.length > 0 &&
+                            !releases.docs[0]?.allowImport
+                        ) {
+                            // check if import is enabled
+                            // should be disabled while adding characters, weapons, events,...
+                            return res.status(403).send("Import disabled");
+                        }
+
                         const accountId = await validateGenshinAccount(req);
                         if (!accountId || !query.link) {
                             return res.status(400).send("Invalid request");

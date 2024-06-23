@@ -124,42 +124,53 @@ const PublicUsers: CollectionConfig = {
             handler: [
                 authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
-                    const body = req.body;
-                    if (typeof body !== "object") {
-                        return res.status(400).send("Invalid body");
-                    }
-                    const notifications = {
-                        events: false,
-                        banners: false,
-                        items: [],
-                    };
-
-                    if (typeof body.events === "boolean") {
-                        notifications.events = body.events;
-                    }
-                    if (typeof body.banners === "boolean") {
-                        notifications.banners = body.banners;
-                    }
-                    if (body.items && Array.isArray(body.items)) {
-                        // check valid domains
-                        for (const item of body.items) {
-                            if (typeof item === "string") {
-                                try {
-                                    await payload.findByID({
-                                        collection: "genshin-items",
-                                        id: item,
-                                    });
-                                    notifications.items.push(item);
-                                } catch (error) {
-                                    console.error(
-                                        `genshin-accounts/setNotificationSettings: invalid item provided ${item}`
-                                    );
+                    try {
+                        const body = req.body;
+                        if (typeof body !== "object") {
+                            return res.status(400).send("Invalid body");
+                        }
+                        const notifications = {
+                            events: false,
+                            banners: false,
+                            items: [],
+                        };
+                        const items = {};
+                        (
+                            await req.payload.find({
+                                collection: "genshin-items",
+                                where: {
+                                    and: [
+                                        {
+                                            rarity: {
+                                                equals: 2,
+                                            },
+                                        },
+                                        { type: { in: ["book", "weaponMat"] } },
+                                    ],
+                                },
+                                depth: 0,
+                                pagination: false,
+                            })
+                        ).docs.forEach((el) => {
+                            items[el.id] = true;
+                        });
+                        if (typeof body.events === "boolean") {
+                            notifications.events = body.events;
+                        }
+                        if (typeof body.banners === "boolean") {
+                            notifications.banners = body.banners;
+                        }
+                        if (body.items && Array.isArray(body.items)) {
+                            // check valid domains
+                            for (const item of body.items) {
+                                if (typeof item === "string") {
+                                    if (items[item]) {
+                                        notifications.items.push(item);
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    try {
                         await req.payload.update({
                             collection: "public-users",
                             where: {
@@ -169,6 +180,7 @@ const PublicUsers: CollectionConfig = {
                             },
                             data: { tracking: notifications },
                         });
+                        return res.send("OK");
                     } catch (error) {
                         console.error(
                             "genshin-accounts/setNotificationSettings threw an exception when saving notification settings: ",
@@ -176,7 +188,6 @@ const PublicUsers: CollectionConfig = {
                         );
                         return res.status(500).send(error);
                     }
-                    res.send("OK");
                 },
             ],
         },

@@ -23,6 +23,7 @@ export interface Config {
     'genshin-wishes': GenshinWish;
     'genshin-articles': GenshinArticle;
     jobs: Job;
+    releases: Release;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -528,6 +529,20 @@ export interface GenshinArticle {
               }[]
             | null;
         };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+export interface Release {
+  id: string;
+  allowImport?: boolean | null;
+  version?: string | null;
+  content?:
+    | {
+        title?: string | null;
+        content?: string | null;
         id?: string | null;
       }[]
     | null;

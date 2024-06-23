@@ -37,55 +37,16 @@ const notifyConfig: NotificationConfig[] = [
 ];
 
 async function defineNotificationJobs() {
-    // if (process.env.NODE_ENV !== "production") {
-    //     console.log("Skipping notification setup in development mode");
-    //     return;
-    // }
-    // just change this to cron jobs
-    for (const config of notifyConfig) {
-        console.log("Set up notifications job for: ", config.region);
-        agenda.define(`notify${config.region}`, async (job, done) => {
-            const jobAttributes = job.attrs.data as { region: WISH_REGIONS };
+    agenda.define("sendNotifications", async (job, done) => {
+        await notifyUsers();
+        done();
+    });
 
-            console.log(`Notification job running for ${jobAttributes.region}`);
-            await notifyUsers(jobAttributes.region);
-            done();
-        });
-
-        const notifyJob = agenda.create(`notify${config.region}`, {
-            region: config.region,
-        });
-        notifyJob.repeatEvery(config.startDate, {
-            timezone: config.timezone,
-        });
-        await notifyJob.save();
-    }
-
-    // agenda.define("notifyOneTime", async (job, done) => {
-    //     const jobAttributes = job.attrs.data as { region: WISH_REGIONS };
-
-    //     const config = notifyConfig.find(
-    //         (config) => config.region === jobAttributes.region
-    //     );
-    //     const notifyJob = agenda.create(`notify${jobAttributes.region}`, {
-    //         region: jobAttributes.region,
-    //     });
-    //     notifyJob.repeatEvery("24 hours", {
-    //         timezone: config.timezone,
-    //     });
-    //     await notifyJob.save();
-    //     done();
-    // });
-
-    // for (const config of notifyConfig) {
-    //     const notifyJob = await agenda.schedule(
-    //         config.startDate,
-    //         "notifyOneTime",
-    //         { region: config.region }
-    //     );
-
-    //     await notifyJob.save();
-    // }
+    const notifyJob = agenda.create("sendNotifications", {});
+    notifyJob.repeatEvery("0 20 * * *", {
+        timezone: "Europe/Berlin",
+    });
+    await notifyJob.save();
 }
 
 const initAgenda = async () => {

@@ -1,5 +1,10 @@
 import { WISH_REGIONS } from "../src/constants";
-import { GenshinAccount, Media } from "./payload-types";
+import {
+    GenshinAccount,
+    Media,
+    GenshinWish,
+    GenshinEvent,
+} from "./payload-types";
 
 export type GenshinAcountWishInfo = {
     character: GenshinAccount["wishInfo"]["character"];
@@ -41,3 +46,7 @@ export type SimpleRecord = {
 export type RecordWithIcon = SimpleRecord & {
     icon: string;
 };
+
+export type FiftyFiftyStatus = GenshinWish["fiftyFiftyStatus"];
+
+export const isBanner = (event: GenshinEvent) => event.type === "banner";
