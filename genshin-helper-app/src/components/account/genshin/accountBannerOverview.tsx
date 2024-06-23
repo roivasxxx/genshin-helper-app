@@ -97,7 +97,7 @@ export default function AccountBannerOverview(props: {
     accountId: string;
 }) {
     return (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-2">
+        <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] justify-center gap-2">
             <BannerItem
                 bannerInfo={props.wishInfo.character}
                 type={BannerType.CHARACTER}
