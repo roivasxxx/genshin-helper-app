@@ -2,45 +2,6 @@
 import { GenshinDayDependentMaterial } from "@/types/apiResponses";
 import dayjs from "dayjs";
 import Image from "next/image";
-import { useMemo } from "react";
-
-function DomainItem(props: { item: GenshinDayDependentMaterial }) {
-    const item = props.item;
-    const name = props.item.value[0].name;
-
-    return (
-        <div
-            className="flex flex-col items-center justify-between bg-electro-850 rounded p-2"
-            title={name}
-        >
-            <h3 className="text-lg">{name}</h3>
-            <h3 className="text-md italic">{item.domain.name}</h3>
-            <div className="flex flex-row">
-                {item.value.map((value) => {
-                    return (
-                        <div
-                            className="h-10 w-10 lg:w-12 lg:h-12"
-                            key={`value-${value.id}`}
-                        >
-                            {value.icon ? (
-                                <Image
-                                    src={value.icon}
-                                    alt={value.name}
-                                    height={0}
-                                    width={0}
-                                    sizes="100%"
-                                    className="w-full h-full"
-                                />
-                            ) : (
-                                <></>
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
-    );
-}
 
 function DomainItemWrapper(props: { items: GenshinDayDependentMaterial[] }) {
     const items = props.items;
@@ -93,28 +54,26 @@ export default function DomainItems(props: {
     const today = dayjs();
     const _items = props.items;
 
-    const items = useMemo(() => {
-        return {
-            books: _items.books.map((items) =>
-                items.filter(
-                    (item) =>
-                        item.type === "book" &&
-                        item.days.includes(String(today.day()))
-                )
-            ),
-            weapons: _items.weapons.map((items) =>
-                items.filter(
-                    (item) =>
-                        item.type === "weaponMat" &&
-                        item.days.includes(String(today.day()))
-                )
-            ),
-        };
-    }, []);
+    const items = {
+        books: _items.books.map((items) =>
+            items.filter(
+                (item) =>
+                    item.type === "book" &&
+                    item.days.includes(String(today.day()))
+            )
+        ),
+        weapons: _items.weapons.map((items) =>
+            items.filter(
+                (item) =>
+                    item.type === "weaponMat" &&
+                    item.days.includes(String(today.day()))
+            )
+        ),
+    };
 
     return (
         <div className="w-full flex flex-col p-4 my-8  bg-electro-800 rounded sm:flex sm:flex-col items-start justify-center font-exo">
-            <h1 className="text-3xl">Today's Domain Drops</h1>
+            <h1 className="text-3xl">Farmable today</h1>
             <div className="flex flex-col w-full ">
                 <div className="w-full">
                     <h2 className="text-left text-xl py-2">Books</h2>

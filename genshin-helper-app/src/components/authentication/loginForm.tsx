@@ -107,9 +107,17 @@ export default function LoginForm() {
                     Don't have an account?
                     <Link
                         href="/register"
-                        className="text-electro-500 px-2 underline hover:text-electro-900"
+                        className="text-electro-500 px-2 hover:text-electro-900"
                     >
                         Sign up!
+                    </Link>
+                </p>
+                <p className="py-2">
+                    <Link
+                        href="/forgotten-password"
+                        className="text-electro-500 px-2 hover:text-electro-900"
+                    >
+                        Forgot your password?
                     </Link>
                 </p>
             </form>

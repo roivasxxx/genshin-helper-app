@@ -21,4 +21,5 @@ export enum AUTH_ERRORS {
     INVALID_CREDENTIALS = "You have entered an invalid username or password",
     UNKNOWN = "Something went wrong",
     RATE_LIMIT = "Too many requests, please try again later",
+    NO_CREDENTIALS = "No credentials provided",
 }

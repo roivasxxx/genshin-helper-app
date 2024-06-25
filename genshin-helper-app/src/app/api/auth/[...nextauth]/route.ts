@@ -11,7 +11,6 @@ const setPayloadCookie = (resCookies: string[]) => {
     for (const c of resCookies) {
         if (c.includes("payload-token")) {
             const parsedCookie = cookie.parse(c);
-            // get expire and return it as timestamp
             const { "payload-token": value, ...rest } = parsedCookie;
             nextCookies().set("payload-token", value, {
                 ...rest,
@@ -20,9 +19,10 @@ const setPayloadCookie = (resCookies: string[]) => {
                 expires: new Date(rest["Expires"]),
                 domain: `.${process.env.ROOT_DOMAIN}`,
             });
+            return true;
         }
     }
-    return null;
+    return false;
 };
 
 const authOptions: AuthOptions = {
@@ -43,11 +43,9 @@ const authOptions: AuthOptions = {
                         });
                         const user = await res.json();
                         const cookies = res.headers.getSetCookie();
-                        if (cookies) {
-                            setPayloadCookie(cookies);
-                        }
+                        setPayloadCookie(cookies);
+
                         const { email, id, createdAt } = user.user;
-                        // user.exp is in seconds, convert to ms by * 1000
                         return {
                             email,
                             id,
@@ -68,7 +66,7 @@ const authOptions: AuthOptions = {
                         return Promise.reject(new Error(AUTH_ERRORS.UNKNOWN));
                     }
                 }
-                return Promise.reject(new Error("No credentials provided"));
+                return Promise.reject(new Error(AUTH_ERRORS.NO_CREDENTIALS));
             },
         }),
     ],
@@ -123,7 +121,6 @@ const authOptions: AuthOptions = {
         },
         session: async ({ session, token }: { session: any; token: JWT }) => {
             const { email, id, createdAt } = token;
-            // need to destructure token, because it keeps returning the tokens jti, iat, exp and sub
             session.user = { email, id, createdAt };
             return session;
         },
@@ -148,7 +145,6 @@ const authOptions: AuthOptions = {
     },
     events: {
         signOut: async ({ session, token }) => {
-            // manually remove payload cookie because next-auth doesnt do it for some reason
             nextCookies().delete("payload-token");
         },
     },
