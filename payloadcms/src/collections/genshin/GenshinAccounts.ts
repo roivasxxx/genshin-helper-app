@@ -106,6 +106,10 @@ const GenshinAccounts: CollectionConfig = {
                             name: "guaranteed5Star",
                             type: "checkbox",
                         },
+                        {
+                            name: "guaranteed4Star",
+                            type: "checkbox",
+                        },
                     ],
                 },
                 {
@@ -153,6 +157,10 @@ const GenshinAccounts: CollectionConfig = {
                             name: "guaranteed5Star",
                             type: "checkbox",
                         },
+                        {
+                            name: "guaranteed4Star",
+                            type: "checkbox",
+                        },
                     ],
                 },
                 {
@@ -198,6 +206,10 @@ const GenshinAccounts: CollectionConfig = {
                         },
                         {
                             name: "guaranteed5Star",
+                            type: "checkbox",
+                        },
+                        {
+                            name: "guaranteed4Star",
                             type: "checkbox",
                         },
                     ],

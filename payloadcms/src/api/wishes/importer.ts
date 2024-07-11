@@ -131,6 +131,9 @@ export const wishImporter = async (
         let last5Star = wishInfo[bannerType].last5Star;
         const lastId = wishInfo[bannerType].lastId || "";
         // guaranteed 5 star flag
+        let guaranteed4Star = stoppedByLastId
+            ? wishInfo[bannerType].guaranteed4Star ?? false
+            : false;
         let guaranteed5Star = stoppedByLastId
             ? wishInfo[bannerType].guaranteed5Star ?? false
             : false;
@@ -140,8 +143,10 @@ export const wishImporter = async (
 
         for (let i = wishes.length - 1; i >= 0; i--) {
             const el = wishes[i];
+            // increment pities
             pity4Star++;
             pity5Star++;
+            // set regular pity to 1, used to save into db
             let pity = 1;
             let fiftyFiftyStatus: FiftyFiftyStatus = "none";
             if (currentBanner && el.date > currentBanner.end) {
@@ -156,18 +161,24 @@ export const wishImporter = async (
                 last4Star = el.itemId;
                 if (currentBanner) {
                     // standard banner doesnt have banners
+                    let won = false;
                     if (bannerType === WISH_HISTORY.WEAPON) {
-                        fiftyFiftyStatus =
-                            currentBanner.weapons.fourStar.includes(el.itemId)
-                                ? "won"
-                                : "lost";
+                        won = currentBanner.weapons.fourStar.includes(
+                            el.itemId
+                        );
                     } else if (bannerType === WISH_HISTORY.CHARACTER) {
-                        fiftyFiftyStatus =
-                            currentBanner.characters.fourStar.includes(
-                                el.itemId
-                            )
-                                ? "won"
-                                : "lost";
+                        won = currentBanner.characters.fourStar.includes(
+                            el.itemId
+                        );
+                    }
+                    if (!won) {
+                        fiftyFiftyStatus = "lost";
+                        guaranteed4Star = true;
+                    } else {
+                        fiftyFiftyStatus = guaranteed4Star
+                            ? "guaranteed"
+                            : "won";
+                        guaranteed4Star = false;
                     }
                 }
             } else if (el.rarity === 5) {

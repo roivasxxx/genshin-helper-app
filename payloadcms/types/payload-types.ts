@@ -92,6 +92,7 @@ export interface GenshinAccount {
       pity5Star: number;
       lastId?: string | null;
       guaranteed5Star?: boolean | null;
+      guaranteed4Star?: boolean | null;
     };
     weapon: {
       pullCount: number;
@@ -117,6 +118,7 @@ export interface GenshinAccount {
       pity5Star: number;
       lastId?: string | null;
       guaranteed5Star?: boolean | null;
+      guaranteed4Star?: boolean | null;
     };
     character: {
       pullCount: number;
@@ -142,6 +144,7 @@ export interface GenshinAccount {
       pity5Star: number;
       lastId?: string | null;
       guaranteed5Star?: boolean | null;
+      guaranteed4Star?: boolean | null;
     };
     lastUpdate?: string | null;
   };
