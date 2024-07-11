@@ -40,7 +40,7 @@ export const GAME_INFO: Record<GAMES, GameInfo> = {
 
 export const DEFAULT_GAME = GAMES.GENSHIN;
 
-export enum GENSHIN_WEAPONS {
+export enum GENSHIN_WEAPON {
     SWORD = "sword",
     CLAYMORE = "claymore",
     POLEARM = "polearm",
@@ -52,8 +52,15 @@ export const STAR_SYMBOL = "\u2605";
 
 export const PRIMOS_PER_WISH = 160;
 
-export enum BannerType {
-    CHARACTER = "Character",
-    WEAPON = "Weapon",
-    STANDARD = "Standard",
+export enum BANNER_TYPE {
+    CHARACTER = "character",
+    WEAPON = "weapon",
+    STANDARD = "standard",
+}
+
+export enum GACHA_TYPE {
+    WEAPON = "302",
+    STANDARD = "200",
+    CHARACTER = "301",
+    CHARACTER_2 = "400",
 }

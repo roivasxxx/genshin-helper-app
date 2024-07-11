@@ -11,6 +11,7 @@ import { agenda } from "../../agenda";
 import exportWishHistory from "../../api/wishes/exporter";
 import { testLink } from "../../api/wishes/importer";
 import { accessControls } from "../../api/accessControls";
+import { mapGenshinEvent } from "../../utils";
 
 const validateGenshinAccount = async (req: PayloadRequest) => {
     const user: PublicUser = await req.payload.findByID({
@@ -323,9 +324,16 @@ const GenshinAccounts: CollectionConfig = {
                         });
 
                         const wishes = wishesReq.docs.map((el) => {
-                            const { itemId, genshinAccount, ...rest } = el;
+                            const {
+                                itemId,
+                                genshinAccount,
+                                bannerId,
+                                ...rest
+                            } = el;
                             const wish = { ...rest };
                             const value = el.itemId.value;
+                            let banner: ReturnType<typeof mapGenshinEvent> =
+                                null;
                             let _itemId = null;
                             if (
                                 value &&
@@ -344,14 +352,16 @@ const GenshinAccounts: CollectionConfig = {
                                     value: value.name,
                                 };
                             }
-                            return { ...wish, item: _itemId };
+                            if (typeof bannerId !== "string") {
+                                banner = mapGenshinEvent(bannerId);
+                            }
+                            return { ...wish, item: _itemId, banner };
                         });
 
                         res.send({
                             history: wishes,
                             hasMore: wishesReq.hasNextPage,
                             totalPages: wishesReq.totalPages,
-                            // banners: bannersReq.docs,
                         });
                     } catch (error) {
                         console.error(

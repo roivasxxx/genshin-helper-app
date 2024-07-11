@@ -2,7 +2,7 @@
 import { GenshinWeapon } from "@/types/apiResponses";
 import { useDeferredValue, useMemo, useState } from "react";
 import ShowcaseClickable from "../showcaseClickable";
-import { GENSHIN_WEAPONS, STAR_SYMBOL } from "@/utils/constants";
+import { GENSHIN_WEAPON, STAR_SYMBOL } from "@/utils/constants";
 import Image from "next/image";
 import { capitalizeString } from "@/utils/utils";
 import CloseIcon from "@/components/closeIcon";
@@ -45,9 +45,9 @@ export default function WeaponShowcase(props: { weapons: GenshinWeapon[] }) {
     return (
         <>
             <div className="w-full min-h-14 grid grid-cols-8 gap-1 xl:grid-cols-9 place-items-center my-2">
-                {Object.keys(GENSHIN_WEAPONS).map((weapon) => {
+                {Object.keys(GENSHIN_WEAPON).map((weapon) => {
                     const key =
-                        GENSHIN_WEAPONS[weapon as keyof typeof GENSHIN_WEAPONS];
+                        GENSHIN_WEAPON[weapon as keyof typeof GENSHIN_WEAPON];
                     const selected = filter.weaponType === key;
                     return (
                         <ShowcaseClickable
@@ -174,8 +174,8 @@ export default function WeaponShowcase(props: { weapons: GenshinWeapon[] }) {
                                         sizes="100%"
                                         className="absolute right-0 bottom-1 w-7 h-7"
                                         title={
-                                            GENSHIN_WEAPONS[
-                                                weapon.weaponType as keyof typeof GENSHIN_WEAPONS
+                                            GENSHIN_WEAPON[
+                                                weapon.weaponType as keyof typeof GENSHIN_WEAPON
                                             ]
                                         }
                                     />

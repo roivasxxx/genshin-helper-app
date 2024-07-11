@@ -1,3 +1,5 @@
+import { BANNER_TYPE, GACHA_TYPE } from "@/utils/constants";
+
 export type NameIconDictionary = {
     name: string;
     icon?: string;
@@ -209,6 +211,8 @@ export type GenshinEvent =
     | GenshinCharacterBanner
     | GenshinWeaponBanner;
 
+export type GenshinBanner = GenshinCharacterBanner | GenshinWeaponBanner;
+
 export type NotificationItemType = {
     name: string;
     id: string;
@@ -246,14 +250,14 @@ export interface BannerInfo {
     lastId: string | null;
 }
 
-export interface Wish {
+export interface BaseWish {
     id: string;
     date: string;
     rarity: number;
     hoyoId: string;
     pity: number;
-    bannerType: string;
     wishNumber: number;
+    gachaType: GACHA_TYPE;
     item: {
         value: string;
         icon?: {
@@ -263,3 +267,29 @@ export interface Wish {
         };
     };
 }
+
+export enum FiftyFiftyStatus {
+    "NONE" = "none",
+    "WON" = "won",
+    "LOST" = "lost",
+    "GUARANTEED" = "guaranteed",
+}
+
+export type StandardWish = BaseWish & {
+    type: BANNER_TYPE.STANDARD;
+    banner: null;
+    fiftyFiftyStatus: FiftyFiftyStatus.NONE;
+};
+
+export type CharacterBanner = BaseWish & {
+    type: BANNER_TYPE.CHARACTER;
+    banner: GenshinCharacterBanner;
+    fiftyFiftyStatus: FiftyFiftyStatus;
+};
+export type WeaponBanner = BaseWish & {
+    type: BANNER_TYPE.WEAPON;
+    banner: GenshinWeaponBanner;
+    fiftyFiftyStatus: FiftyFiftyStatus;
+};
+
+export type Wish = StandardWish | CharacterBanner | WeaponBanner;

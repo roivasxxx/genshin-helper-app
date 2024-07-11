@@ -1,12 +1,13 @@
 import HistoryIcon from "@/components/historyIcon";
 import { BannerInfo, WishInfo } from "@/types/apiResponses";
-import { BannerType, PRIMOS_PER_WISH, STAR_SYMBOL } from "@/utils/constants";
+import { BANNER_TYPE, PRIMOS_PER_WISH, STAR_SYMBOL } from "@/utils/constants";
+import { capitalizeString } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 
 function BannerItem(props: {
     bannerInfo: BannerInfo;
-    type: BannerType;
+    type: BANNER_TYPE;
     accountId: string;
 }) {
     const bannerInfo = props.bannerInfo;
@@ -20,7 +21,7 @@ function BannerItem(props: {
         >
             <div className="flex flex-row justify-between items-center">
                 <h2 className="text-xl font-bold text-left">
-                    {props.type} banner
+                    {capitalizeString(props.type)} banner
                 </h2>
                 <HistoryIcon className="size-10 fill-electro-50 py-2 hover:fill-electro-500 active:fill-electro-500" />
             </div>
@@ -100,17 +101,17 @@ export default function AccountBannerOverview(props: {
         <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] justify-center gap-2">
             <BannerItem
                 bannerInfo={props.wishInfo.character}
-                type={BannerType.CHARACTER}
+                type={BANNER_TYPE.CHARACTER}
                 accountId={props.accountId}
             />
             <BannerItem
                 bannerInfo={props.wishInfo.weapon}
-                type={BannerType.WEAPON}
+                type={BANNER_TYPE.WEAPON}
                 accountId={props.accountId}
             />
             <BannerItem
                 bannerInfo={props.wishInfo.standard}
-                type={BannerType.STANDARD}
+                type={BANNER_TYPE.STANDARD}
                 accountId={props.accountId}
             />
         </div>

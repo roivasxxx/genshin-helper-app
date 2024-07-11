@@ -1,7 +1,6 @@
 import { CollectionConfig, PayloadRequest } from "payload/types";
 import { Response } from "express";
-import { getIcon, relationToDictionary } from "../../utils";
-import { RecordWithIcon } from "../../../types/types";
+import { mapGenshinEvent } from "../../utils";
 
 const Events: CollectionConfig = {
     slug: "genshin-events",
@@ -158,74 +157,7 @@ const Events: CollectionConfig = {
                         limit: 10,
                         sort: "-start",
                     });
-                    const events = _events.docs.map((doc) => {
-                        const mappedDoc: {
-                            name: string;
-                            type: string;
-                            timezoneDependent: boolean;
-                            start: string;
-                            end: string;
-                            url?: string;
-                            bannerType?: string;
-                            characters?: {
-                                fiveStar1: RecordWithIcon;
-                                fiveStar2?: RecordWithIcon;
-                                fourStar: RecordWithIcon[];
-                            };
-                            weapons?: {
-                                fiveStar1: RecordWithIcon;
-                                fiveStar2?: RecordWithIcon;
-                                fourStar: RecordWithIcon[];
-                            };
-                            icon?: string;
-                        } = {
-                            name: doc.name,
-                            type: doc.type,
-                            timezoneDependent: doc.timezoneDependent || false,
-                            start: doc.start,
-                            end: doc.end,
-                            url: doc?.url || "",
-                        };
-
-                        if (doc.type === "event") {
-                            mappedDoc.icon = getIcon(doc);
-                        }
-
-                        if (doc.type === "banner") {
-                            mappedDoc.bannerType = doc.bannerType;
-                            if (doc.bannerType === "weapon" && doc.weapons) {
-                                mappedDoc.weapons = {
-                                    fiveStar1: relationToDictionary(
-                                        doc.weapons.fiveStar1
-                                    ),
-                                    fiveStar2: relationToDictionary(
-                                        doc.weapons.fiveStar2
-                                    ),
-                                    fourStar:
-                                        doc.weapons.fourStar.map(
-                                            relationToDictionary
-                                        ),
-                                };
-                            } else if (
-                                doc.bannerType === "character" &&
-                                doc.characters
-                            ) {
-                                mappedDoc.characters = {
-                                    fiveStar1: relationToDictionary(
-                                        doc.characters.fiveStar1
-                                    ),
-                                    fiveStar2: relationToDictionary(
-                                        doc.characters.fiveStar2
-                                    ),
-                                    fourStar:
-                                        doc.characters.fourStar.map(
-                                            relationToDictionary
-                                        ),
-                                };
-                            }
-                        }
-                        return mappedDoc;
-                    });
+                    const events = _events.docs.map(mapGenshinEvent);
                     return res.status(200).send(events);
                 },
             ],

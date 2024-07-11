@@ -1,5 +1,5 @@
 import { GenshinCharacterSubstats, GenshinWeapon } from "@/types/apiResponses";
-import { GENSHIN_WEAPONS } from "@/utils/constants";
+import { GENSHIN_WEAPON } from "@/utils/constants";
 import { getStarString } from "@/utils/utils";
 import Image from "next/image";
 import { ReactNode } from "react";
@@ -49,8 +49,8 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                         sizes="100%"
                         className="object-scale-down"
                         title={
-                            GENSHIN_WEAPONS[
-                                weapon.weaponType as keyof typeof GENSHIN_WEAPONS
+                            GENSHIN_WEAPON[
+                                weapon.weaponType as keyof typeof GENSHIN_WEAPON
                             ]
                         }
                     />

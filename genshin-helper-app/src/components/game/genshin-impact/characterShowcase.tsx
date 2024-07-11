@@ -4,7 +4,7 @@ import {
     GenshinCharacter,
     GenshinElementsResponse,
 } from "@/types/apiResponses";
-import { GENSHIN_WEAPONS, STAR_SYMBOL } from "@/utils/constants";
+import { GENSHIN_WEAPON, STAR_SYMBOL } from "@/utils/constants";
 import ShowcaseClickable from "./showcaseClickable";
 import { useDeferredValue, useMemo, useState } from "react";
 import CloseIcon from "@/components/closeIcon";
@@ -95,9 +95,9 @@ export default function CharacterShowcase(props: {
                     );
                 })}
 
-                {Object.keys(GENSHIN_WEAPONS).map((weapon) => {
+                {Object.keys(GENSHIN_WEAPON).map((weapon) => {
                     const key =
-                        GENSHIN_WEAPONS[weapon as keyof typeof GENSHIN_WEAPONS];
+                        GENSHIN_WEAPON[weapon as keyof typeof GENSHIN_WEAPON];
                     const selected = filter.weapon === key;
                     return (
                         <ShowcaseClickable
