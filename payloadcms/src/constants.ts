@@ -49,12 +49,20 @@ export enum WISH_BANNER_CODES {
     CHARACTER = 301,
     CHARACTER_2 = 400,
 }
+
 export enum WISH_REGIONS {
     EUROPE = "os_euro",
     ASIA = "os_asia",
     AMERICA = "os_usa",
     CHINA = "os_cht",
 }
+
+export const WISH_REGION_TIMEZONES = {
+    [WISH_REGIONS.EUROPE]: 1,
+    [WISH_REGIONS.ASIA]: 8,
+    [WISH_REGIONS.AMERICA]: -5,
+    [WISH_REGIONS.CHINA]: 8,
+};
 
 export const getWishApiUrl = (region: WISH_REGIONS) => {
     return region === WISH_REGIONS.AMERICA || region === WISH_REGIONS.EUROPE

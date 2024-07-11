@@ -8,7 +8,7 @@ import cmsRequest from "@/utils/fetchUtils";
 import { paginate } from "@/utils/pagination";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function BannerHistory(props: {
     bannerType: string;
@@ -30,7 +30,7 @@ export default function BannerHistory(props: {
     const pathname = usePathname();
     const router = useRouter();
 
-    const getData = async (page: number) => {
+    const getData = useCallback(async (page: number) => {
         setState((state) => ({ ...state, loading: true }));
         const req = await cmsRequest({
             method: HTTP_METHOD.GET,
@@ -49,7 +49,7 @@ export default function BannerHistory(props: {
             params.set("page", page.toString());
             router.push(`${pathname}?${params.toString()}`);
         }
-    };
+    }, []);
 
     useEffect(() => {
         getData(props.page);

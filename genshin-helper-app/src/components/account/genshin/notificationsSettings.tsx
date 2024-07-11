@@ -93,14 +93,7 @@ export default function GenshinNotificationSettings() {
                     </div>
                 ) : (
                     <>
-                        <div className="w-full flex justify-between items-center">
-                            <button
-                                className="bg-electro-700 p-4 rounded hover:bg-electro-900 disabled:bg-electro-900 disabled:cursor-not-allowed"
-                                disabled={status === "loading"}
-                                onClick={save}
-                            >
-                                Save
-                            </button>
+                        <div className="w-full flex justify-end items-center">
                             <div className="flex items-center">
                                 <div className="px-2">
                                     {status === "saving" ? (
@@ -126,27 +119,14 @@ export default function GenshinNotificationSettings() {
                                         <></>
                                     )}
                                 </div>
-                                <NotificationSwitch
-                                    label="Events"
-                                    isChecked={notificationsState.events}
-                                    onChange={() =>
-                                        notificationChangeHandler(
-                                            "events",
-                                            !notificationsState.events
-                                        )
-                                    }
-                                />
-                                <NotificationSwitch
-                                    label="Banners"
-                                    isChecked={notificationsState.banners}
-                                    onChange={() =>
-                                        notificationChangeHandler(
-                                            "banners",
-                                            !notificationsState.banners
-                                        )
-                                    }
-                                />
                             </div>
+                            <button
+                                className="bg-electro-700 p-4 text-lg font-bold rounded hover:bg-electro-900 disabled:bg-electro-900 disabled:cursor-not-allowed"
+                                disabled={status === "loading"}
+                                onClick={save}
+                            >
+                                Save
+                            </button>
                         </div>
                         <div>
                             <h2 className="text-2xl">Daily Domain Drops</h2>

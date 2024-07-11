@@ -216,27 +216,6 @@ const PublicUsers: CollectionConfig = {
                 res.send("OK");
             },
         },
-        {
-            path: "/sendExpoNotifications",
-            method: "get",
-            handler: [
-                authMiddleware,
-                async (req: PayloadRequest, res: Response) => {
-                    try {
-                        await notifyUser(req.user);
-                        return res.status(200).send("OK");
-                    } catch (error) {
-                        console.error(
-                            "sendExpoNotification threw an exception",
-                            error
-                        );
-                        return res
-                            .status(500)
-                            .send("Failed to send notification");
-                    }
-                },
-            ],
-        },
     ],
     access: {
         create: () => true,

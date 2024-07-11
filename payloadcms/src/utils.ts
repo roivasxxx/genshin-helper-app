@@ -1,4 +1,11 @@
 import { RecordToMap, RecordWithIcon } from "../types/types";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import { WISH_REGIONS, WISH_REGION_TIMEZONES } from "./constants";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const sleep = (time: number) => {
     return new Promise((res, _) => {
@@ -38,4 +45,13 @@ export const relationToDictionary = (
         id: doc.id,
         icon: getIcon(doc),
     };
+};
+
+export const convertWishDateToUTC = (date: string, region: WISH_REGIONS) => {
+    const offset = WISH_REGION_TIMEZONES[region];
+
+    const localDate = dayjs(date).utc(true);
+    const utcDate = localDate.subtract(offset, "hour");
+
+    return utcDate.utc().format("YYYY-MM-DD HH:mm:ss");
 };

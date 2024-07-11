@@ -5,7 +5,7 @@ import {
     WISH_REGIONS,
     getWishApiUrl,
 } from "../../constants";
-import { normalizeName, sleep } from "../../utils";
+import { convertWishDateToUTC, normalizeName, sleep } from "../../utils";
 import {
     FiftyFiftyStatus,
     GenshinAcountWishInfo,
@@ -89,15 +89,15 @@ export const wishImporter = async (
 
     const history = {};
 
+    const newUrl = parseAuthedUrl(authedLink, region);
     for (let i = 0; i < Object.keys(WISH_HISTORY).length; i++) {
-        const newUrl = parseAuthedUrl(authedLink, region);
-
         const key = Object.keys(WISH_HISTORY)[i];
         const bannerType: WISH_HISTORY = WISH_HISTORY[key];
         const result = await getHistory(
             newUrl,
             WISH_BANNER_CODES[key],
-            wishInfo[bannerType].lastId
+            wishInfo[bannerType].lastId,
+            region
         );
         let banners: GenshinEvent[] = [];
         switch (bannerType) {
@@ -242,7 +242,8 @@ export const wishImporter = async (
 const pushToWishHistory = (
     wishes: any[],
     newWishes: any[],
-    lastId: string | null
+    lastId: string | null,
+    region: WISH_REGIONS
 ) => {
     for (let i = 0; i < newWishes.length; i++) {
         const wish: GenshinApiResponseWish = newWishes[i];
@@ -257,7 +258,7 @@ const pushToWishHistory = (
             value: normalizeName(wish.name),
         };
         const newWish = {
-            date: wish.time,
+            date: convertWishDateToUTC(wish.time, region), // dates are specific to region
             itemId: item,
             gachaType: wish.gacha_type, // 301 = character banner 1, 400 = character banner 2
             rarity: Number.parseInt(wish.rank_type),
@@ -271,7 +272,8 @@ const pushToWishHistory = (
 const getHistory = async (
     url: URL,
     bannerCode: WISH_BANNER_CODES,
-    lastId: string | null
+    lastId: string | null,
+    region: WISH_REGIONS
 ) => {
     url.searchParams.set("gacha_type", String(bannerCode));
     url.searchParams.set("size", "20");
@@ -284,7 +286,7 @@ const getHistory = async (
         if (!result.data || result.retcode === -101) {
             throw new Error("Invalid link provided");
         }
-        if (pushToWishHistory(wishes, result.data.list, lastId)) {
+        if (pushToWishHistory(wishes, result.data.list, lastId, region)) {
             // if lastId is found, stop fetching, return found wishes
             return { wishes, stoppedByLastId: true };
         }
@@ -301,7 +303,7 @@ const getHistory = async (
                 throw new Error("Invalid link provided");
             }
             const resultData = result.data.list;
-            if (pushToWishHistory(wishes, resultData, lastId)) {
+            if (pushToWishHistory(wishes, resultData, lastId, region)) {
                 return { wishes, stoppedByLastId: true };
             }
             endId =

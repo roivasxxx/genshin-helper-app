@@ -230,41 +230,6 @@ const Events: CollectionConfig = {
                 },
             ],
         },
-        {
-            path: "/getDashboardEvents",
-            method: "get",
-            handler: async (req: PayloadRequest, res: Response) => {
-                const date = req.query.date;
-                if (!date) {
-                    return res.status(400).send("No date provided");
-                }
-                try {
-                    const eventsReq = await req.payload.find({
-                        collection: "genshin-events",
-                        where: {
-                            and: [
-                                {
-                                    start: {
-                                        less_than_equal: date,
-                                    },
-                                },
-                                {
-                                    end: {
-                                        greater_than_equal: date,
-                                    },
-                                },
-                            ],
-                        },
-                        sort: "start",
-                    });
-
-                    return res.status(200).send(event);
-                } catch (error) {
-                    console.error("getDashboardEvents threw an error: ", error);
-                    return res.status(500).send(error);
-                }
-            },
-        },
     ],
 };
 

@@ -11,6 +11,7 @@ import { createDeepCopy } from "@/utils/utils";
 import {
     ReactNode,
     createContext,
+    useCallback,
     useContext,
     useEffect,
     useState,
@@ -89,7 +90,7 @@ export default function AccountProvider(props: { children: ReactNode }) {
     const [account, setAccount] =
         useState<AccountContextState>(defaultAccountState);
 
-    async function getAccountData() {
+    const getAccountData = useCallback(async () => {
         const _account: AccountContextState =
             createDeepCopy(defaultAccountState);
         setAccount({ ...account, loading: true });
@@ -132,41 +133,45 @@ export default function AccountProvider(props: { children: ReactNode }) {
             console.error("Error getting account data", error);
         }
         setAccount({ ..._account, loading: false });
-    }
+    }, []);
 
-    const createGenshinAccount = async (acc: {
-        region: keyof typeof GENSHIN_ACCOUNT_REGIONS;
-        hoyoId: string;
-    }) => {
-        try {
-            const response = await cmsRequest({
-                path: "/api/genshin-accounts/create-genshin-account",
-                method: HTTP_METHOD.POST,
-                body: acc,
-            });
-            const data = await response.json();
-            if (data.accountId) {
-                await getAccountData();
-                return data.accountId as string;
+    const createGenshinAccount = useCallback(
+        async (acc: {
+            region: keyof typeof GENSHIN_ACCOUNT_REGIONS;
+            hoyoId: string;
+        }) => {
+            try {
+                const response = await cmsRequest({
+                    path: "/api/genshin-accounts/create-genshin-account",
+                    method: HTTP_METHOD.POST,
+                    body: acc,
+                });
+                const data = await response.json();
+                if (data.accountId) {
+                    await getAccountData();
+                    return data.accountId as string;
+                }
+            } catch (error) {
+                console.error("Error creating genshin account", error);
             }
-        } catch (error) {
-            console.error("Error creating genshin account", error);
-        }
-        return "";
-    };
+            return "";
+        },
+        []
+    );
 
-    const setNotificationSettings = async <
-        T extends keyof GenshinAccountState["notifications"]
-    >(
-        key: T,
-        value: GenshinAccountState["notifications"][T]
-    ) => {
-        const _account: AccountContextState = createDeepCopy(account);
-        _account.games.genshin.notifications[key] = value;
-        setAccount({ ..._account });
-    };
+    const setNotificationSettings = useCallback(
+        async <T extends keyof GenshinAccountState["notifications"]>(
+            key: T,
+            value: GenshinAccountState["notifications"][T]
+        ) => {
+            const _account: AccountContextState = createDeepCopy(account);
+            _account.games.genshin.notifications[key] = value;
+            setAccount({ ..._account });
+        },
+        []
+    );
 
-    const saveNotificationSettings = async () => {
+    const saveNotificationSettings = useCallback(async () => {
         try {
             await cmsRequest({
                 path: "api/public-users/setNotificationSettings",
@@ -180,10 +185,11 @@ export default function AccountProvider(props: { children: ReactNode }) {
             console.error("Error saving notification settings", error);
         }
         return false;
-    };
+    }, []);
 
     useEffect(() => {
         getAccountData();
+        return () => {};
     }, []);
 
     return (

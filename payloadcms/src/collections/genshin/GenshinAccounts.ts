@@ -6,13 +6,11 @@ import {
 } from "../../constants";
 import { Response } from "express";
 import authMiddleware from "../../api/authMiddleware";
-import { GenshinAccount, Job, PublicUser } from "../../../types/payload-types";
+import { GenshinAccount, PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
 import exportWishHistory from "../../api/wishes/exporter";
 import { testLink } from "../../api/wishes/importer";
 import { accessControls } from "../../api/accessControls";
-import payload from "payload";
-import { notifyUsers } from "../../notifications";
 
 const validateGenshinAccount = async (req: PayloadRequest) => {
     const user: PublicUser = await req.payload.findByID({
@@ -348,31 +346,6 @@ const GenshinAccounts: CollectionConfig = {
                             }
                             return { ...wish, item: _itemId };
                         });
-
-                        // const bannersReq = await req.payload.find({
-                        //     collection: "genshin-events",
-                        //     where: {
-                        //         and: [
-                        //             {
-                        //                 type: {
-                        //                     equals: "banner",
-                        //                 },
-                        //             },
-                        //             {
-                        //                 start: {
-                        //                     greater_than_equal:
-                        //                         wishes[wishes.length - 1].date,
-                        //                 },
-                        //             },
-                        //             {
-                        //                 end: {
-                        //                     less_than_equal: wishes[0].date,
-                        //                 },
-                        //             },
-                        //         ],
-                        //     },
-                        //     sort: "-start",
-                        // });
 
                         res.send({
                             history: wishes,
