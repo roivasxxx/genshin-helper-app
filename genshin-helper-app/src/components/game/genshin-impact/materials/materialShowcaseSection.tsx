@@ -2,7 +2,7 @@ import {
     GenshinMaterial,
     GenshinMaterialLabel,
     GenshinMaterialType,
-} from "@/types/apiResponses";
+} from "@/types/genshinTypes";
 import MaterialShowcaseItem from "./materialShowcaseItem";
 
 export default function MaterialShowcaseSection(props: {

@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import NotificationSwitch from "./notificationSwitch";
 import LoadingLogo from "@/components/loadingLogo";
 import SuccessCheckmark from "@/components/successCheckmark";
-import { GenshinDayDependentMaterial } from "@/types/apiResponses";
+import { GenshinDayDependentMaterial } from "@/types/genshinTypes";
 import Image from "next/image";
 import { SHORT_DAYS } from "@/utils/dateUtils";
 

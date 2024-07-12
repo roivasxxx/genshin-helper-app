@@ -1,4 +1,4 @@
-import { GenshinEvent } from "@/types/apiResponses";
+import { GenshinEvent } from "@/types/genshinTypes";
 import dayjs, { Dayjs } from "dayjs";
 import { dateMatches } from "./dateUtils";
 

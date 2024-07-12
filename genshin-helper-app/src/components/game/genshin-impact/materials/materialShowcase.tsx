@@ -3,7 +3,7 @@ import {
     GenshinMaterialType,
     GenshinMaterial,
     GenshinMaterialLabel,
-} from "@/types/apiResponses";
+} from "@/types/genshinTypes";
 import MaterialShowcaseSection from "./materialShowcaseSection";
 import { useMemo, useState } from "react";
 import Image from "next/image";

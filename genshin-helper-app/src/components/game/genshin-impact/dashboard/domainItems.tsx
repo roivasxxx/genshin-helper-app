@@ -1,5 +1,5 @@
 "use client";
-import { GenshinDayDependentMaterial } from "@/types/apiResponses";
+import { GenshinDayDependentMaterial } from "@/types/genshinTypes";
 import dayjs from "dayjs";
 import Image from "next/image";
 

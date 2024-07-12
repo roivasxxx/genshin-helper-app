@@ -1,6 +1,6 @@
 import MaterialShowcase from "@/components/game/genshin-impact/materials/materialShowcase";
 import { HTTP_METHOD } from "@/types";
-import { GenshinMaterial } from "@/types/apiResponses";
+import { GenshinMaterial } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 
 export const dynamic = "force-static";

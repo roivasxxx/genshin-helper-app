@@ -1,4 +1,4 @@
-import { NameIconWithDescriptionDictionary } from "@/types/apiResponses";
+import { NameIconWithDescriptionDictionary } from "@/types/genshinTypes";
 import Image from "next/image";
 
 export default function PassiveConstellation(props: {

@@ -1,5 +1,5 @@
 "use client";
-import { GenshinWeapon } from "@/types/apiResponses";
+import { GenshinWeapon } from "@/types/genshinTypes";
 import { useDeferredValue, useMemo, useState } from "react";
 import ShowcaseClickable from "../showcaseClickable";
 import { GENSHIN_WEAPON, STAR_SYMBOL } from "@/utils/constants";

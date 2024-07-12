@@ -1,4 +1,4 @@
-import { GenshinCharacterSubstats, GenshinWeapon } from "@/types/apiResponses";
+import { GenshinCharacterSubstats, GenshinWeapon } from "@/types/genshinTypes";
 import { GENSHIN_WEAPON } from "@/utils/constants";
 import { getStarString } from "@/utils/utils";
 import Image from "next/image";

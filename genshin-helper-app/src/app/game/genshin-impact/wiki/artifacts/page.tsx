@@ -1,6 +1,6 @@
 import ArtifactsShowcase from "@/components/game/genshin-impact/artifacts/artifactShowcase";
 import { HTTP_METHOD } from "@/types";
-import { GenshinArtifact } from "@/types/apiResponses";
+import { GenshinArtifact } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 
 export const dynamic = "force-static";

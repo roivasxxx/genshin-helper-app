@@ -1,4 +1,4 @@
-import { ExtraGenshinCharacter } from "@/types/apiResponses";
+import { ExtraGenshinCharacter } from "@/types/genshinTypes";
 import CharacterSkill from "./skill";
 import PassiveConstellation from "./passive-constellation";
 

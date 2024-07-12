@@ -6,7 +6,7 @@ import {
     GenshinEvent,
     GenshinGameEvent,
     GenshinWeaponBanner,
-} from "@/types/apiResponses";
+} from "@/types/genshinTypes";
 import { findCurrentBanner, findCurrentEvents } from "@/utils/eventUtils";
 import cmsRequest from "@/utils/fetchUtils";
 import dayjs from "dayjs";

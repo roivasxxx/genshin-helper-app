@@ -1,4 +1,4 @@
-import { NameIconWithIdDictionary } from "@/types/apiResponses";
+import { NameIconWithIdDictionary } from "@/types/genshinTypes";
 import Image from "next/image";
 import Link from "next/link";
 

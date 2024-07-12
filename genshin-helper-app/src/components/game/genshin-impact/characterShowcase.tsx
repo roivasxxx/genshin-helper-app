@@ -3,7 +3,7 @@
 import {
     GenshinCharacter,
     GenshinElementsResponse,
-} from "@/types/apiResponses";
+} from "@/types/genshinTypes";
 import { GENSHIN_WEAPON, STAR_SYMBOL } from "@/utils/constants";
 import ShowcaseClickable from "./showcaseClickable";
 import { useDeferredValue, useMemo, useState } from "react";

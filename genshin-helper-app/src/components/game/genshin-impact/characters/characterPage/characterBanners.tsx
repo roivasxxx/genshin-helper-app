@@ -1,4 +1,4 @@
-import { ExtraGenshinCharacter } from "@/types/apiResponses";
+import { ExtraGenshinCharacter } from "@/types/genshinTypes";
 import BannerCharacterPreview from "./bannerCharacterPreview";
 import { formatEventDuration } from "@/utils/dateUtils";
 

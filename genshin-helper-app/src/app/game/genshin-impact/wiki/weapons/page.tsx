@@ -1,6 +1,6 @@
 import WeaponShowcase from "@/components/game/genshin-impact/weapons/weaponShowcase";
 import { HTTP_METHOD } from "@/types";
-import { GenshinWeapon } from "@/types/apiResponses";
+import { GenshinWeapon } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 
 export const dynamic = "force-static";

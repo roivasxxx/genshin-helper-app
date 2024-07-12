@@ -1,4 +1,4 @@
-import { GenshinGameEvent } from "@/types/apiResponses";
+import { GenshinGameEvent } from "@/types/genshinTypes";
 import { DATE_TIME_FORMAT, formatEventDate } from "@/utils/dateUtils";
 import Image from "next/image";
 

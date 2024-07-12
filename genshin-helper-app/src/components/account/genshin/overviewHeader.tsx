@@ -1,7 +1,7 @@
 import CSVIcon from "@/components/csvIcon";
 import DialogModal from "@/components/dialog";
 import JsonIcon from "@/components/jsonIcon";
-import { GenshinAccount, IMPORT_STATUS } from "@/types/apiResponses";
+import { GenshinAccount, IMPORT_STATUS } from "@/types/genshinTypes";
 import { useState } from "react";
 import WishFAQ from "./wishFAQ";
 import useClickOutside from "@/utils/hooks/useClickOutside";

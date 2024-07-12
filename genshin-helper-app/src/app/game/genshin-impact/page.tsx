@@ -1,7 +1,7 @@
 import DomainItems from "@/components/game/genshin-impact/dashboard/domainItems";
 import DashboardEvents from "@/components/game/genshin-impact/dashboard/events";
 import { HTTP_METHOD } from "@/types";
-import { GenshinDayDependentMaterial } from "@/types/apiResponses";
+import { GenshinDayDependentMaterial } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 
 export const dynamic = "force-dynamic";

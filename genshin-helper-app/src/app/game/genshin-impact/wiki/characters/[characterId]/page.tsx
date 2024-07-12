@@ -2,7 +2,7 @@ import CharacterBanners from "@/components/game/genshin-impact/characters/charac
 import CharacterInfo from "@/components/game/genshin-impact/characters/characterPage/characterInfo";
 import SkillsAndConstellations from "@/components/game/genshin-impact/characters/characterPage/skillsAndConstellations";
 import { HTTP_METHOD } from "@/types";
-import { ExtraGenshinCharacter } from "@/types/apiResponses";
+import { ExtraGenshinCharacter } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 import Image from "next/image";
 import React from "react";

@@ -1,6 +1,6 @@
 "use client";
 import ArrowToggle from "@/components/arrowToggle";
-import { GenshinMaterial } from "@/types/apiResponses";
+import { GenshinMaterial } from "@/types/genshinTypes";
 import { WEEKDAYS } from "@/utils/dateUtils";
 import { capitalizeString } from "@/utils/utils";
 import Image from "next/image";

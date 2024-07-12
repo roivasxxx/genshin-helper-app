@@ -1,5 +1,5 @@
 import HistoryIcon from "@/components/historyIcon";
-import { BannerInfo, WishInfo } from "@/types/apiResponses";
+import { BannerInfo, WishInfo } from "@/types/genshinTypes";
 import { BANNER_TYPE, PRIMOS_PER_WISH, STAR_SYMBOL } from "@/utils/constants";
 import { capitalizeString } from "@/utils/utils";
 import Image from "next/image";

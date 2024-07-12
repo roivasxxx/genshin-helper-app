@@ -1,6 +1,6 @@
 "use client";
 import { HTTP_METHOD } from "@/types";
-import { NotificationItemType } from "@/types/apiResponses";
+import { NotificationItemType } from "@/types/genshinTypes";
 import {
     GAMES,
     GAME_ACCOUNT_ID,

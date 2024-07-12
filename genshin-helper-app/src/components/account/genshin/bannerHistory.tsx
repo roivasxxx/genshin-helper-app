@@ -2,26 +2,27 @@
 import Arrow from "@/components/arrow";
 import LoadingLogo from "@/components/loadingLogo";
 import { HTTP_METHOD } from "@/types";
-import { Wish } from "@/types/apiResponses";
-import { STAR_SYMBOL } from "@/utils/constants";
+import { Wish } from "@/types/genshinTypes";
+import { BANNER_TYPE } from "@/utils/constants";
 import cmsRequest from "@/utils/fetchUtils";
 import { paginate } from "@/utils/pagination";
-import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import BannerHistoryRow from "./bannerHistoryRow";
 
 export default function BannerHistory(props: {
-    bannerType: string;
+    bannerType: BANNER_TYPE;
     accountId: string;
     page: number;
 }) {
+    const { bannerType, accountId, page } = props;
     const [state, setState] = useState<{
         currentPage: number;
         items: Wish[];
         totalPages: number;
         loading: boolean;
     }>({
-        currentPage: props.page,
+        currentPage: page,
         items: [],
         totalPages: 0,
         loading: true,
@@ -34,7 +35,7 @@ export default function BannerHistory(props: {
         setState((state) => ({ ...state, loading: true }));
         const req = await cmsRequest({
             method: HTTP_METHOD.GET,
-            path: `/api/genshin-accounts/getWishHistory?accountId=${props.accountId}&type=${props.bannerType}&offset=${page}`,
+            path: `/api/genshin-accounts/getWishHistory?accountId=${accountId}&type=${bannerType}&offset=${page}`,
         });
         const data = await req.json();
         setState(() => ({
@@ -55,6 +56,13 @@ export default function BannerHistory(props: {
         getData(props.page);
     }, []);
 
+    // TOOD
+    // TOOD
+    // TOOD
+    // TOOD
+    // TOOD
+    // add pity counter, create modal, that will fetch stats about specific banner
+
     return (
         <div className="w-full  flex flex-col bg-electro-800 rounded p-5">
             <h1 className="text-2xl">Wish history</h1>
@@ -71,57 +79,13 @@ export default function BannerHistory(props: {
                             </tr>
                         </thead>
                         <tbody className="text-left text-base">
-                            {state.items.map((wish) => {
-                                let bgColor = "inherit";
-                                let starColor = "text-sky-300";
-                                if (wish.rarity === 5) {
-                                    bgColor =
-                                        "bg-gradient-to-r from-electro-900 via-electro-5star-from/50 to-electro-900";
-                                    starColor = "text-electro-5star-from";
-                                } else if (wish.rarity === 4) {
-                                    bgColor =
-                                        "bg-gradient-to-r from-electro-900 via-electro-4star-from/50 to-electro-900";
-                                    starColor = "text-electro-4star-from";
-                                }
-
-                                return (
-                                    <tr
-                                        key={wish.hoyoId}
-                                        className={
-                                            "text-lg font-bold " + bgColor
-                                        }
-                                    >
-                                        <td className="text-base">
-                                            {wish.date}
-                                        </td>
-                                        <td className="">
-                                            {wish.item.icon ? (
-                                                <Image
-                                                    src={wish.item.icon.url}
-                                                    alt={wish.item.value}
-                                                    width={40}
-                                                    height={40}
-                                                    className="md:inline"
-                                                />
-                                            ) : (
-                                                <></>
-                                            )}
-                                            {wish.item.value}
-                                        </td>
-                                        <td
-                                            className={
-                                                starColor + " text-center"
-                                            }
-                                        >{`${wish.rarity} ${STAR_SYMBOL}`}</td>
-                                        <td className="text-center">
-                                            {wish.pity}
-                                        </td>
-                                        <td className="text-center">
-                                            {wish.wishNumber + 1}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                            {state.items.map((wish) => (
+                                <BannerHistoryRow
+                                    wish={wish}
+                                    key={wish.hoyoId}
+                                    bannerType={props.bannerType}
+                                />
+                            ))}
                         </tbody>
                     </table>
                     <div className="flex flex-row items-stretch justify-end w-full mt-2 gap-2">

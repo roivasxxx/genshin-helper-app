@@ -2,7 +2,7 @@
 
 import LoadingLogo from "@/components/loadingLogo";
 import { HTTP_METHOD } from "@/types";
-import { GenshinAccount, IMPORT_STATUS } from "@/types/apiResponses";
+import { GenshinAccount, IMPORT_STATUS } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";

@@ -1,7 +1,7 @@
 import {
     ExtraGenshinCharacter,
     GenshinCharacterSubstats,
-} from "@/types/apiResponses";
+} from "@/types/genshinTypes";
 import { capitalizeString, getStarString } from "@/utils/utils";
 import Image from "next/image";
 

@@ -1,4 +1,4 @@
-import { GenshinArtifact } from "@/types/apiResponses";
+import { GenshinArtifact } from "@/types/genshinTypes";
 import ArtifactShowcaseElement from "./artifactShowcaseElement";
 
 export default function ArtifactsShowcase(props: {

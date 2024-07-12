@@ -1,6 +1,6 @@
 import WeaponInfo from "@/components/game/genshin-impact/weapons/weaponPage/weaponInfo";
 import { HTTP_METHOD } from "@/types";
-import { GenshinWeapon, GenshinWeaponTypes } from "@/types/apiResponses";
+import { GenshinWeapon, GenshinWeaponTypes } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 import Image from "next/image";
 

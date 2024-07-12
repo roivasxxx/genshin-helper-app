@@ -2,7 +2,7 @@ import {
     GenshinCharacterBanner,
     GenshinWeaponBanner,
     NameIconDictionary,
-} from "@/types/apiResponses";
+} from "@/types/genshinTypes";
 import { DATE_TIME_FORMAT, formatEventDate } from "@/utils/dateUtils";
 import { getStarString } from "@/utils/utils";
 import Image from "next/image";

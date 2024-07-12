@@ -1,6 +1,6 @@
 "use client";
 import ArrowToggle from "@/components/arrowToggle";
-import { GenshinArtifact } from "@/types/apiResponses";
+import { GenshinArtifact } from "@/types/genshinTypes";
 import { STAR_SYMBOL } from "@/utils/constants";
 import Image from "next/image";
 import React, { ReactNode, useState } from "react";

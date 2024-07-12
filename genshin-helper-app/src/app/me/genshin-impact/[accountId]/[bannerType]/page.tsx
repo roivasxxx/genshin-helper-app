@@ -1,4 +1,5 @@
 import BannerHistory from "@/components/account/genshin/bannerHistory";
+import { BANNER_TYPE } from "@/utils/constants";
 import { isNumber } from "@/utils/utils";
 
 export const dynamic = "force-dynamic";
@@ -6,7 +7,7 @@ export const dynamic = "force-dynamic";
 export default function BannerHistoryPage(props: {
     params: {
         accountId: string;
-        bannerType: string;
+        bannerType: BANNER_TYPE;
     };
     searchParams: {
         page: string;

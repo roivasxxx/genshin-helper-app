@@ -2,7 +2,7 @@ import {
     GenshinCharacterBanner,
     GenshinEvent,
     GenshinWeaponBanner,
-} from "@/types/apiResponses";
+} from "@/types/genshinTypes";
 import { STAR_SYMBOL } from "./constants";
 
 export const createDeepCopy = (obj: object) => JSON.parse(JSON.stringify(obj));
