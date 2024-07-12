@@ -1,3 +1,9 @@
+import {
+    FIFTY_FIFTY_STATUS,
+    GENSHIN_MATERIAL_TYPE,
+    GENSHIN_SUBSTAT,
+} from "@/types/genshinTypes";
+
 type GameInfo = {
     path: string;
     label: string;
@@ -64,3 +70,45 @@ export enum GACHA_TYPE {
     CHARACTER = "301",
     CHARACTER_2 = "400",
 }
+
+export const FIFTY_FIFTY_TEXT_SHORT = {
+    [FIFTY_FIFTY_STATUS.NONE]: "",
+    [FIFTY_FIFTY_STATUS.WON]: "W",
+    [FIFTY_FIFTY_STATUS.LOST]: "L",
+    [FIFTY_FIFTY_STATUS.GUARANTEED]: "G",
+};
+export const FIFTY_FIFTY_TEXT_LONG = {
+    [FIFTY_FIFTY_STATUS.NONE]: "",
+    [FIFTY_FIFTY_STATUS.WON]: "Won 50/50",
+    [FIFTY_FIFTY_STATUS.LOST]: "Lost 50/50",
+    [FIFTY_FIFTY_STATUS.GUARANTEED]: "Guaranteed 50/50",
+};
+
+export const GENSHIN_MATERIAL_TEXT = {
+    [GENSHIN_MATERIAL_TYPE.WEAPON_MAT]: "Weapon Materials",
+    [GENSHIN_MATERIAL_TYPE.BOOK]: "Books",
+    [GENSHIN_MATERIAL_TYPE.MOB_DROP]: "Mob Drops",
+    [GENSHIN_MATERIAL_TYPE.BOSS_DROP]: "Boss Drops",
+    [GENSHIN_MATERIAL_TYPE.TROUNCE_DROP]: "Weekly Boss Drops",
+    [GENSHIN_MATERIAL_TYPE.GEM]: "Gems",
+    [GENSHIN_MATERIAL_TYPE.SPECIALTY]: "Regional Specialties",
+};
+
+export const GENSHIN_SUBSTAT_TEXT = {
+    [GENSHIN_SUBSTAT.GEO_DMG]: "Geo Damage Bonus",
+    [GENSHIN_SUBSTAT.DENDRO_DMG]: "Dendro DMG Bonus",
+    [GENSHIN_SUBSTAT.CRYO_DMG]: "Cryo DMG Bonus",
+    [GENSHIN_SUBSTAT.ATK]: "Atk %",
+    [GENSHIN_SUBSTAT.CRIT_RATE]: "Crit Rate",
+    [GENSHIN_SUBSTAT.HP]: "HP %",
+    [GENSHIN_SUBSTAT.ELECTRO_DMG]: "Electro DMG Bonus",
+    [GENSHIN_SUBSTAT.ENERGY_RECHARGE]: "Energy Recharge",
+    [GENSHIN_SUBSTAT.HYDRO_DMG]: "Hydro DMG Bonus",
+    [GENSHIN_SUBSTAT.CRIT_DMG]: "Crit Damage",
+    [GENSHIN_SUBSTAT.HEALING_BONUS]: "Healing Bonus",
+    [GENSHIN_SUBSTAT.ELEMENTAL_MASTERY]: "Elemental Mastery",
+    [GENSHIN_SUBSTAT.PYRO_DMG]: "Pyro DMG Bonus",
+    [GENSHIN_SUBSTAT.ANEMO_DMG]: "Anemo DMG Bonus",
+    [GENSHIN_SUBSTAT.DEF]: "Def %",
+    [GENSHIN_SUBSTAT.PHYSICAL_DMG]: "Physical DMG Bonus",
+};

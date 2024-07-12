@@ -1,5 +1,10 @@
-import { Wish } from "@/types/genshinTypes";
-import { BANNER_TYPE, STAR_SYMBOL } from "@/utils/constants";
+import { FIFTY_FIFTY_STATUS, Wish } from "@/types/genshinTypes";
+import {
+    BANNER_TYPE,
+    FIFTY_FIFTY_TEXT_LONG,
+    FIFTY_FIFTY_TEXT_SHORT,
+    STAR_SYMBOL,
+} from "@/utils/constants";
 import Image from "next/image";
 
 export default function BannerHistoryRow(props: {
@@ -19,11 +24,22 @@ export default function BannerHistoryRow(props: {
         starColor = "text-electro-4star-from";
     }
 
-    let pity = wish.pity;
-    if (bannerType !== BANNER_TYPE.STANDARD) {
-        const fiftyFiftyStatus = wish.fiftyFiftyStatus;
-        if (fiftyFiftyStatus === "won") {
-        }
+    const pity = wish.pity;
+    const fiftyFiftyStatus = wish.fiftyFiftyStatus;
+    const fiftyFiftyShort = FIFTY_FIFTY_TEXT_SHORT[wish.fiftyFiftyStatus];
+    const fiftyFiftyLong = FIFTY_FIFTY_TEXT_LONG[wish.fiftyFiftyStatus];
+    let fiftyFiftyStatusColor = "text-sky-300";
+
+    switch (fiftyFiftyStatus) {
+        case FIFTY_FIFTY_STATUS.GUARANTEED:
+            fiftyFiftyStatusColor = "text-electro-5star-from";
+            break;
+        case FIFTY_FIFTY_STATUS.WON:
+            fiftyFiftyStatusColor = "text-green-500";
+            break;
+        case FIFTY_FIFTY_STATUS.LOST:
+            fiftyFiftyStatusColor = "text-red-500";
+            break;
     }
 
     return (
@@ -46,7 +62,13 @@ export default function BannerHistoryRow(props: {
             <td
                 className={starColor + " text-center"}
             >{`${wish.rarity} ${STAR_SYMBOL}`}</td>
-            <td className="text-center">{wish.pity}</td>
+            <td
+                className={fiftyFiftyStatusColor + " text-center"}
+                title={fiftyFiftyLong}
+            >
+                {fiftyFiftyShort}
+            </td>
+            <td className="text-center">{pity}</td>
             <td className="text-center">{wish.wishNumber + 1}</td>
         </tr>
     );

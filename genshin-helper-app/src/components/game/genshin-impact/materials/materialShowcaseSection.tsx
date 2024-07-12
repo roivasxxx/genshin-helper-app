@@ -1,9 +1,6 @@
-import {
-    GenshinMaterial,
-    GENSHIN_MATERIAL_TEXT,
-    GENSHIN_MATERIAL_TYPE,
-} from "@/types/genshinTypes";
+import { GenshinMaterial, GENSHIN_MATERIAL_TYPE } from "@/types/genshinTypes";
 import MaterialShowcaseItem from "./materialShowcaseItem";
+import { GENSHIN_MATERIAL_TEXT } from "@/utils/constants";
 
 export default function MaterialShowcaseSection(props: {
     materialType: GENSHIN_MATERIAL_TYPE;

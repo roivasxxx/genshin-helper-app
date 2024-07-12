@@ -1,4 +1,5 @@
-import { ExtraGenshinCharacter, GENSHIN_SUBSTAT } from "@/types/genshinTypes";
+import { ExtraGenshinCharacter } from "@/types/genshinTypes";
+import { GENSHIN_SUBSTAT_TEXT } from "@/utils/constants";
 import { capitalizeString, getStarString } from "@/utils/utils";
 import Image from "next/image";
 
@@ -57,7 +58,7 @@ export default function CharacterInfo(props: {
                             Level Up Stat
                         </td>
                         <td className="text-electro-50 text-md">
-                            {GENSHIN_SUBSTAT[character.substat]}
+                            {GENSHIN_SUBSTAT_TEXT[character.substat]}
                         </td>
                     </tr>
                 </tbody>

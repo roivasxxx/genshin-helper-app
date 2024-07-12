@@ -15,7 +15,7 @@ export type GenshinCharacter = {
     id: string;
     name: string;
     icon: string;
-    substat: keyof typeof GENSHIN_SUBSTAT;
+    substat: GENSHIN_SUBSTAT;
     weaponType: string;
     rarity: number;
     element: NameIconDictionary & { id: string };
@@ -66,7 +66,7 @@ export type ExtraGenshinCharacter = GenshinCharacter & {
 
 export type GenshinElementsResponse = NameIconDictionary & { id: string };
 
-export enum GENSHIN_SUBSTAT_ENUM {
+export enum GENSHIN_SUBSTAT {
     GEO_DMG = "geo_dmg_bonus",
     DENDRO_DMG = "dendro_dmg_bonus",
     CRYO_DMG = "cryo_dmg_bonus",
@@ -85,25 +85,6 @@ export enum GENSHIN_SUBSTAT_ENUM {
     PHYSICAL_DMG = "physical_dmg_bonus",
 }
 
-export const GENSHIN_SUBSTAT = {
-    [GENSHIN_SUBSTAT_ENUM.GEO_DMG]: "Geo Damage Bonus",
-    [GENSHIN_SUBSTAT_ENUM.DENDRO_DMG]: "Dendro DMG Bonus",
-    [GENSHIN_SUBSTAT_ENUM.CRYO_DMG]: "Cryo DMG Bonus",
-    [GENSHIN_SUBSTAT_ENUM.ATK]: "Atk %",
-    [GENSHIN_SUBSTAT_ENUM.CRIT_RATE]: "Crit Rate",
-    [GENSHIN_SUBSTAT_ENUM.HP]: "HP %",
-    [GENSHIN_SUBSTAT_ENUM.ELECTRO_DMG]: "Electro DMG Bonus",
-    [GENSHIN_SUBSTAT_ENUM.ENERGY_RECHARGE]: "Energy Recharge",
-    [GENSHIN_SUBSTAT_ENUM.HYDRO_DMG]: "Hydro DMG Bonus",
-    [GENSHIN_SUBSTAT_ENUM.CRIT_DMG]: "Crit Damage",
-    [GENSHIN_SUBSTAT_ENUM.HEALING_BONUS]: "Healing Bonus",
-    [GENSHIN_SUBSTAT_ENUM.ELEMENTAL_MASTERY]: "Elemental Mastery",
-    [GENSHIN_SUBSTAT_ENUM.PYRO_DMG]: "Pyro DMG Bonus",
-    [GENSHIN_SUBSTAT_ENUM.ANEMO_DMG]: "Anemo DMG Bonus",
-    [GENSHIN_SUBSTAT_ENUM.DEF]: "Def %",
-    [GENSHIN_SUBSTAT_ENUM.PHYSICAL_DMG]: "Physical DMG Bonus",
-};
-
 export enum GenshinWeaponTypes {
     SWORD = "sword",
     CATALYST = "catalyst",
@@ -115,7 +96,7 @@ export enum GenshinWeaponTypes {
 export type GenshinWeapon = NameIconWithIdDictionary & {
     rarity: number;
     weaponType: keyof typeof GenshinWeaponTypes;
-    substat: GENSHIN_SUBSTAT_ENUM;
+    substat: GENSHIN_SUBSTAT;
     version: string;
     stats: {
         primary: {
@@ -123,7 +104,7 @@ export type GenshinWeapon = NameIconWithIdDictionary & {
         };
         secondary: {
             value: number;
-            stat: GENSHIN_SUBSTAT_ENUM;
+            stat: GENSHIN_SUBSTAT;
         };
     };
     refinements: {
@@ -157,16 +138,6 @@ export enum GENSHIN_MATERIAL_TYPE {
     GEM = "gem",
     SPECIALTY = "specialty",
 }
-
-export const GENSHIN_MATERIAL_TEXT = {
-    [GENSHIN_MATERIAL_TYPE.WEAPON_MAT]: "Weapon Materials",
-    [GENSHIN_MATERIAL_TYPE.BOOK]: "Books",
-    [GENSHIN_MATERIAL_TYPE.MOB_DROP]: "Mob Drops",
-    [GENSHIN_MATERIAL_TYPE.BOSS_DROP]: "Boss Drops",
-    [GENSHIN_MATERIAL_TYPE.TROUNCE_DROP]: "Weekly Boss Drops",
-    [GENSHIN_MATERIAL_TYPE.GEM]: "Gems",
-    [GENSHIN_MATERIAL_TYPE.SPECIALTY]: "Regional Specialties",
-};
 
 export type GenshinMaterialBase = {
     id: string;
@@ -294,14 +265,6 @@ export enum FIFTY_FIFTY_STATUS {
     "LOST" = "lost",
     "GUARANTEED" = "guaranteed",
 }
-
-export const FIFTY_FIFTY_TEXT = {
-    [FIFTY_FIFTY_STATUS.NONE]: "",
-    [FIFTY_FIFTY_STATUS.WON]: "W",
-    [FIFTY_FIFTY_STATUS.LOST]: "L",
-    [FIFTY_FIFTY_STATUS.GUARANTEED]: "G",
-};
-
 export type StandardWish = BaseWish & {
     type: BANNER_TYPE.STANDARD;
     banner: null;

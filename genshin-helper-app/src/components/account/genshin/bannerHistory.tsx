@@ -64,30 +64,33 @@ export default function BannerHistory(props: {
     // add pity counter, create modal, that will fetch stats about specific banner
 
     return (
-        <div className="w-full  flex flex-col bg-electro-800 rounded p-5">
+        <div className="w-full flex flex-col bg-electro-800 rounded p-5">
             <h1 className="text-2xl">Wish history</h1>
             {!state.loading ? (
-                <>
-                    <table className="bg-electro-900 mt-2 rounded wishTable">
-                        <thead>
-                            <tr className="text-left text-xl font-bold">
-                                <td className="p-2">Date</td>
-                                <td className="p-2">Item</td>
-                                <td className="text-center p-2">Rarity</td>
-                                <td className="text-center p-2">Pity</td>
-                                <td className="text-center p-2">Wish #</td>
-                            </tr>
-                        </thead>
-                        <tbody className="text-left text-base">
-                            {state.items.map((wish) => (
-                                <BannerHistoryRow
-                                    wish={wish}
-                                    key={wish.hoyoId}
-                                    bannerType={props.bannerType}
-                                />
-                            ))}
-                        </tbody>
-                    </table>
+                <div className="w-full overflow-x-hidden">
+                    <div className="w-full overflow-x-auto">
+                        <table className="bg-electro-900 mt-2 rounded wishTable w-full overflow-x-auto">
+                            <thead>
+                                <tr className="text-left text-xl font-bold">
+                                    <td className="p-2">Date</td>
+                                    <td className="p-2">Item</td>
+                                    <td className="text-center p-2">Rarity</td>
+                                    <td className="text-center p-0.5">50/50</td>
+                                    <td className="text-center p-2">Pity</td>
+                                    <td className="text-center p-2">Wish #</td>
+                                </tr>
+                            </thead>
+                            <tbody className="text-left text-base overflow-x-auto">
+                                {state.items.map((wish) => (
+                                    <BannerHistoryRow
+                                        wish={wish}
+                                        key={wish.hoyoId}
+                                        bannerType={props.bannerType}
+                                    />
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                     <div className="flex flex-row items-stretch justify-end w-full mt-2 gap-2">
                         <button
                             className={`flex items-center justify-center group text-lg font-bold cursor-pointer p-2 rounded hover:bg-electro-900/60 active:bg-electro-900/60 disabled:cursor-not-allowed disabled:bg-slate-500/60`}
@@ -130,7 +133,7 @@ export default function BannerHistory(props: {
                             />
                         </button>
                     </div>
-                </>
+                </div>
             ) : (
                 <div className="w-full flex items-center justify-center">
                     <LoadingLogo size="size-40" />

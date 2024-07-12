@@ -1,12 +1,9 @@
 "use client";
-import {
-    GENSHIN_MATERIAL_TYPE,
-    GenshinMaterial,
-    GENSHIN_MATERIAL_TEXT,
-} from "@/types/genshinTypes";
+import { GENSHIN_MATERIAL_TYPE, GenshinMaterial } from "@/types/genshinTypes";
 import MaterialShowcaseSection from "./materialShowcaseSection";
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import { GENSHIN_MATERIAL_TEXT } from "@/utils/constants";
 
 function MaterialTypeItem(props: {
     type: GENSHIN_MATERIAL_TYPE;
