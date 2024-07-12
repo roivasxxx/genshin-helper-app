@@ -164,11 +164,11 @@ export const wishImporter = async (
                     let won = false;
                     if (bannerType === WISH_HISTORY.WEAPON) {
                         won = currentBanner.weapons.fourStar.includes(
-                            el.itemId
+                            el.itemId.value
                         );
                     } else if (bannerType === WISH_HISTORY.CHARACTER) {
                         won = currentBanner.characters.fourStar.includes(
-                            el.itemId
+                            el.itemId.value
                         );
                     }
                     if (!won) {
@@ -188,8 +188,9 @@ export const wishImporter = async (
                 if (currentBanner) {
                     if (bannerType === WISH_HISTORY.WEAPON) {
                         const won =
-                            currentBanner.weapons.fiveStar1 === el.itemId ||
-                            currentBanner.weapons.fiveStar2 === el.itemId;
+                            currentBanner.weapons.fiveStar1 ===
+                                el.itemId.value ||
+                            currentBanner.weapons.fiveStar2 === el.itemId.value;
                         if (!won) {
                             fiftyFiftyStatus = "lost";
                             guaranteed5Star = true;
@@ -201,8 +202,10 @@ export const wishImporter = async (
                         }
                     } else if (bannerType === WISH_HISTORY.CHARACTER) {
                         const won =
-                            currentBanner.characters.fiveStar1 === el.itemId ||
-                            currentBanner.characters.fiveStar2 === el.itemId;
+                            currentBanner.characters.fiveStar1 ===
+                                el.itemId.value ||
+                            currentBanner.characters.fiveStar2 ===
+                                el.itemId.value;
                         if (!won) {
                             fiftyFiftyStatus = "lost";
                             guaranteed5Star = true;
@@ -288,6 +291,11 @@ const getHistory = async (
 ) => {
     url.searchParams.set("gacha_type", String(bannerCode));
     url.searchParams.set("size", "20");
+    if (lastId) {
+        url.searchParams.set("end_id", lastId);
+    } else {
+        url.searchParams.delete("end_id");
+    }
     try {
         // initial request
         const wishes = [];

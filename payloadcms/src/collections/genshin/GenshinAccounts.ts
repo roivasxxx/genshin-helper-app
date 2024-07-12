@@ -386,34 +386,72 @@ const GenshinAccounts: CollectionConfig = {
             ],
         },
         {
-            path: "/getOverview",
+            path: "/getBannerOverview",
             method: "get",
             handler: [
                 authMiddleware,
                 async (req: PayloadRequest, res: Response) => {
                     try {
-                        let accountId = await validateGenshinAccount(req);
+                        const accountId = await validateGenshinAccount(req);
                         if (!accountId) {
                             return res.status(403).send("Invalid accountId");
                         }
+                        const bannerId = req.query.bannerId;
+                        if (typeof bannerId !== "string") {
+                            return res.status(403).send("Invalid bannerId");
+                        }
 
-                        const acc: GenshinAccount = await req.payload.findByID({
-                            id: accountId,
-                            collection: "genshin-accounts",
-                        });
-
-                        const doc = {
-                            hoyoId: acc.hoyoId,
-                            region: acc.region,
-                            wishInfo: {
-                                ...acc.wishInfo,
-                            },
+                        const bannerInfo = {
+                            pulls: 0,
+                            fourStar: [],
+                            fiveStar: [],
                         };
 
-                        res.status(200).send(doc);
+                        const bannerReq = await req.payload.find({
+                            collection: "genshin-wishes",
+                            where: {
+                                and: [
+                                    { genshinAccount: { equals: accountId } },
+                                    { bannerId: { equals: bannerId } },
+                                ],
+                            },
+                            pagination: false,
+                        });
+
+                        if (bannerReq.docs.length > 0) {
+                            bannerInfo.pulls = bannerReq.docs.length;
+                            bannerInfo.fourStar = bannerReq.docs
+                                .filter((el) => el.rarity === 4)
+                                .map((el) => {
+                                    const doc = {
+                                        name: "",
+                                        pity: el.pity,
+                                        fiftyFiftyStatus: el.fiftyFiftyStatus,
+                                    };
+                                    if (typeof el.itemId.value !== "string") {
+                                        doc.name = el.itemId.value.name;
+                                    }
+                                    return doc;
+                                });
+                            bannerInfo.fiveStar = bannerReq.docs
+                                .filter((el) => el.rarity === 5)
+                                .map((el) => {
+                                    const doc = {
+                                        name: "",
+                                        pity: el.pity,
+                                        fiftyFiftyStatus: el.fiftyFiftyStatus,
+                                    };
+                                    if (typeof el.itemId.value !== "string") {
+                                        doc.name = el.itemId.value.name;
+                                    }
+                                    return doc;
+                                });
+                        }
+
+                        res.status(200).send(bannerInfo);
                     } catch (error) {
                         console.error(
-                            "genshin-accounts/getOverview threw an exception: ",
+                            "genshin-accounts/getBannerOverview threw an exception: ",
                             error
                         );
                         return res.status(500).send(error);
