@@ -1,4 +1,4 @@
-import { GenshinCharacterSubstats, GenshinWeapon } from "@/types/genshinTypes";
+import { GENSHIN_SUBSTAT, GenshinWeapon } from "@/types/genshinTypes";
 import { GENSHIN_WEAPON } from "@/utils/constants";
 import { getStarString } from "@/utils/utils";
 import Image from "next/image";
@@ -73,11 +73,7 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                         </tr>
                         <tr>
                             <td className="text-electro-50 text-xl text-left">
-                                {
-                                    GenshinCharacterSubstats[
-                                        weapon.stats.secondary.stat
-                                    ]
-                                }
+                                {GENSHIN_SUBSTAT[weapon.stats.secondary.stat]}
                             </td>
                             <td className="text-electro-50 text-lg text-left px-2">
                                 {weapon.stats.secondary.value}

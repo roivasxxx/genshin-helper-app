@@ -1,19 +1,19 @@
 import {
     GenshinMaterial,
-    GenshinMaterialLabel,
-    GenshinMaterialType,
+    GENSHIN_MATERIAL_TEXT,
+    GENSHIN_MATERIAL_TYPE,
 } from "@/types/genshinTypes";
 import MaterialShowcaseItem from "./materialShowcaseItem";
 
 export default function MaterialShowcaseSection(props: {
-    materialType: GenshinMaterialType;
+    materialType: GENSHIN_MATERIAL_TYPE;
     materials: GenshinMaterial[];
 }) {
     const { materialType, materials } = props;
     return (
         <div className="grid grid-cols-1 gap-2">
             <h2 className="text-2xl font-bold text-left">
-                {GenshinMaterialLabel[materialType]}
+                {GENSHIN_MATERIAL_TEXT[materialType]}
             </h2>
             {materials.map((material) => (
                 <MaterialShowcaseItem
