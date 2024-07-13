@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { WISH_REGIONS, WISH_REGION_TIMEZONES } from "./constants";
-import { GenshinEvent } from "../types/payload-types";
+import { GenshinEvent, GenshinWish } from "../types/payload-types";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -107,4 +107,21 @@ export const mapGenshinEvent = (doc: GenshinEvent) => {
         }
     }
     return mappedDoc;
+};
+
+export const wishItemWithPity = (el: GenshinWish) => {
+    const doc = {
+        name: "",
+        pity: el.pity,
+        fiftyFiftyStatus: el.fiftyFiftyStatus,
+        type: "",
+    };
+    if (typeof el.itemId.value !== "string") {
+        doc.type =
+            el.itemId.relationTo === "genshin-characters"
+                ? "character"
+                : "weapon";
+        doc.name = el.itemId.value.name;
+    }
+    return doc;
 };

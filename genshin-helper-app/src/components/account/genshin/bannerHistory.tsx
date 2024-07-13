@@ -7,7 +7,7 @@ import { BANNER_TYPE } from "@/utils/constants";
 import cmsRequest from "@/utils/fetchUtils";
 import { paginate } from "@/utils/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import BannerHistoryRow from "./bannerHistoryRow";
 import DialogModal from "@/components/dialog";
 import useClickOutside from "@/utils/hooks/useClickOutside";
@@ -31,6 +31,7 @@ export default function BannerHistory(props: {
         totalPages: 0,
         loading: true,
     });
+
     const { isVisible, ref, setVisibility } = useClickOutside(false, () =>
         setSelectedBanner("")
     );
@@ -40,12 +41,21 @@ export default function BannerHistory(props: {
     const pathname = usePathname();
     const router = useRouter();
 
-    const getData = useCallback(async (page: number) => {
+    const abortControllerRef = useRef<AbortController | null>(null);
+
+    const getPageData = useCallback(async (page: number) => {
         setState((state) => ({ ...state, loading: true }));
         try {
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+
+            abortControllerRef.current = new AbortController();
+
             const req = await cmsRequest({
                 method: HTTP_METHOD.GET,
                 path: `/api/genshin-accounts/getWishHistory?accountId=${accountId}&type=${bannerType}&offset=${page}`,
+                abortController: abortControllerRef.current,
             });
             const data = await req.json();
             setState(() => ({
@@ -60,14 +70,22 @@ export default function BannerHistory(props: {
                 params.set("page", page.toString());
                 router.push(`${pathname}?${params.toString()}`);
             }
-        } catch (error) {
+        } catch (error: any) {
+            if (error?.name === "AbortError") return;
+
             // redirect to account overview
             router.replace(`/me/genshin-impact/${accountId}`);
         }
     }, []);
 
     useEffect(() => {
-        getData(props.page);
+        getPageData(props.page);
+
+        return () => {
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+        };
     }, []);
 
     const showDialog = (bannerId: string) => {
@@ -80,7 +98,7 @@ export default function BannerHistory(props: {
     };
 
     return (
-        <div className="w-full flex flex-col bg-electro-800 rounded p-5">
+        <>
             <h1 className="text-2xl">Wish history</h1>
             {!state.loading ? (
                 <div className="w-full overflow-x-hidden">
@@ -112,7 +130,7 @@ export default function BannerHistory(props: {
                         <button
                             className={`flex items-center justify-center group text-lg font-bold cursor-pointer p-2 rounded hover:bg-electro-900/60 active:bg-electro-900/60 disabled:cursor-not-allowed disabled:bg-slate-500/60`}
                             disabled={state.currentPage === 1}
-                            onClick={() => getData(state.currentPage - 1)}
+                            onClick={() => getPageData(state.currentPage - 1)}
                         >
                             <Arrow size="small" className="rotate-[135deg]" />
                         </button>
@@ -121,7 +139,10 @@ export default function BannerHistory(props: {
                                 if (typeof el === "number") {
                                     return (
                                         <button
-                                            onClick={() => getData(el)}
+                                            onClick={() => {
+                                                getPageData(el);
+                                                getPageData(el);
+                                            }}
                                             disabled={state.currentPage === el}
                                             key={"page-" + el}
                                             className={`text-lg font-bold cursor-pointer p-2 rounded hover:text-electro-500 hover:bg-electro-900/60 active:text-electro-500 active:bg-electro-900/60 ${
@@ -142,7 +163,7 @@ export default function BannerHistory(props: {
                         <button
                             className={`flex items-center justify-center group text-lg font-bold cursor-pointer p-2 rounded hover:bg-electro-900/60 active:bg-electro-900/60 disabled:cursor-not-allowed disabled:bg-slate-500/60`}
                             disabled={state.currentPage === state.totalPages}
-                            onClick={() => getData(state.currentPage + 1)}
+                            onClick={() => getPageData(state.currentPage + 1)}
                         >
                             <Arrow
                                 size="small"
@@ -172,6 +193,6 @@ export default function BannerHistory(props: {
                     <LoadingLogo size="size-40" />
                 </div>
             )}
-        </div>
+        </>
     );
 }

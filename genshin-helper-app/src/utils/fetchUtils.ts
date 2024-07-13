@@ -21,7 +21,7 @@ const cmsRequest = async (
 ) => {
     const fetchOptions: {
         body?: string;
-        abortController?: typeof params.abortController;
+        signal?: AbortSignal;
         method: typeof params.method;
         credentials: "include";
         headers: Record<string, string>;
@@ -38,7 +38,7 @@ const cmsRequest = async (
         fetchOptions.headers["Content-Type"] = "application/json";
     }
     if (params.abortController) {
-        fetchOptions.abortController = params.abortController;
+        fetchOptions.signal = params.abortController.signal;
     }
     if (params.headers) {
         fetchOptions.headers = { ...fetchOptions.headers, ...params.headers };

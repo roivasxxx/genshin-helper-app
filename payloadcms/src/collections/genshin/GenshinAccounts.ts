@@ -11,7 +11,8 @@ import { agenda } from "../../agenda";
 import exportWishHistory from "../../api/wishes/exporter";
 import { testLink } from "../../api/wishes/importer";
 import { accessControls } from "../../api/accessControls";
-import { relationToDictionary } from "../../utils";
+import { relationToDictionary, wishItemWithPity } from "../../utils";
+import { GenshinAcountWishInfo } from "../../../types/types";
 
 const validateGenshinAccount = async (req: PayloadRequest) => {
     const user: PublicUser = await req.payload.findByID({
@@ -377,6 +378,98 @@ const GenshinAccounts: CollectionConfig = {
                     } catch (error) {
                         console.error(
                             `/genshin-accounts/getWishHistory/${type} threw an exception: `,
+                            error
+                        );
+                        return res.status(500).send(error);
+                    }
+                },
+            ],
+        },
+        {
+            path: "/getBannerTypeOverview",
+            method: "get",
+            handler: [
+                authMiddleware,
+                async (req: PayloadRequest, res: Response) => {
+                    try {
+                        const accountId = await validateGenshinAccount(req);
+                        let bannerType = req.query.bannerType;
+                        if (typeof bannerType !== "string") {
+                            bannerType = WISH_HISTORY.STANDARD;
+                        }
+
+                        const fourStarReq = await req.payload.find({
+                            collection: "genshin-wishes",
+                            pagination: false,
+                            where: {
+                                and: [
+                                    {
+                                        genshinAccount: {
+                                            equals: accountId,
+                                        },
+                                    },
+                                    {
+                                        bannerType: {
+                                            equals: bannerType,
+                                        },
+                                    },
+                                    {
+                                        rarity: {
+                                            equals: 4,
+                                        },
+                                    },
+                                ],
+                            },
+                            sort: "-wishNumber",
+                        });
+
+                        const fiveStarReq = await req.payload.find({
+                            collection: "genshin-wishes",
+                            pagination: false,
+                            where: {
+                                and: [
+                                    {
+                                        genshinAccount: {
+                                            equals: accountId,
+                                        },
+                                    },
+                                    {
+                                        bannerType: {
+                                            equals: bannerType,
+                                        },
+                                    },
+                                    {
+                                        rarity: {
+                                            equals: 5,
+                                        },
+                                    },
+                                ],
+                            },
+                            sort: "-wishNumber",
+                        });
+
+                        const account = await req.payload.findByID({
+                            collection: "genshin-accounts",
+                            id: accountId,
+                        });
+
+                        const wishInfo =
+                            account.wishInfo[
+                                bannerType as keyof GenshinAcountWishInfo
+                            ];
+
+                        return res.status(200).send({
+                            total: wishInfo.pullCount,
+                            fiveStar: fiveStarReq.docs.map(wishItemWithPity),
+                            fourStar: fourStarReq.docs.map(wishItemWithPity),
+                            fiveStarPity: wishInfo.pity5Star ?? 0,
+                            fourStarPity: wishInfo.pity4Star ?? 0,
+                            guaranteed4Star: wishInfo.guaranteed4Star ?? false,
+                            guaranteed5Star: wishInfo.guaranteed5Star ?? false,
+                        });
+                    } catch (error) {
+                        console.error(
+                            `/genshin-accounts/getBannerTypeOverview threw an exception: `,
                             error
                         );
                         return res.status(500).send(error);

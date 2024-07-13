@@ -284,3 +284,10 @@ export type WeaponBanner = BaseWish & {
 };
 
 export type Wish = StandardWish | CharacterBanner | WeaponBanner;
+
+export type ItemWithPity = {
+    pity: number;
+    name: string;
+    fiftyFiftyStatus: FIFTY_FIFTY_STATUS;
+    type: BANNER_TYPE.CHARACTER | BANNER_TYPE.WEAPON;
+};

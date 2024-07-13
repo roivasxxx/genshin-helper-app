@@ -70,3 +70,12 @@ input:-webkit-autofill {
     padding: 0.5rem;
     border-top: solid rgba(251, 249, 252, 0.5) 1px;
 }
+
+.chart:active,
+.chart:focus {
+    outline: none;
+}
+
+svg {
+    outline: none;
+}

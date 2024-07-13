@@ -1,23 +1,13 @@
 import BannerItemPreview from "@/components/game/genshin-impact/bannerItemPreview";
 import LoadingLogo from "@/components/loadingLogo";
 import { HTTP_METHOD } from "@/types";
-import {
-    FIFTY_FIFTY_STATUS,
-    NameIconWithIdDictionary,
-} from "@/types/genshinTypes";
+import { ItemWithPity, NameIconWithIdDictionary } from "@/types/genshinTypes";
 import { BANNER_TYPE, PRIMOS_PER_WISH, STAR_SYMBOL } from "@/utils/constants";
 import { DATE_TIME_FORMAT, formatEventDate } from "@/utils/dateUtils";
 import cmsRequest from "@/utils/fetchUtils";
 import { getFiftyFiftyColor } from "@/utils/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
-type ItemWithPity = {
-    pity: number;
-    name: string;
-    fiftyFiftyStatus: FIFTY_FIFTY_STATUS;
-    type: BANNER_TYPE.CHARACTER | BANNER_TYPE.WEAPON;
-};
 
 type BannerInfo = {
     pulls: number;

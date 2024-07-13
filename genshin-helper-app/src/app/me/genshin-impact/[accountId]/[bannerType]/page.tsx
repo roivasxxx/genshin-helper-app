@@ -1,10 +1,10 @@
-import BannerHistory from "@/components/account/genshin/bannerHistory";
+import Banner from "@/components/account/genshin/banner";
 import { BANNER_TYPE } from "@/utils/constants";
 import { isNumber } from "@/utils/utils";
 
 export const dynamic = "force-dynamic";
 
-export default function BannerHistoryPage(props: {
+export default function UserBannerPage(props: {
     params: {
         accountId: string;
         bannerType: BANNER_TYPE;
@@ -20,7 +20,7 @@ export default function BannerHistoryPage(props: {
     return (
         <main className="w-full mt-[7rem] mx-auto p-4 my-8 rounded items-start justify-center text-electro-50 font-exo lg:w-[75%] sm:flex">
             <div className="w-full flex flex-col justify-center">
-                <BannerHistory
+                <Banner
                     accountId={accountId}
                     bannerType={bannerType}
                     page={_page}
