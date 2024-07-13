@@ -6,12 +6,12 @@ import {
 } from "../../constants";
 import { Response } from "express";
 import authMiddleware from "../../api/authMiddleware";
-import { GenshinAccount, PublicUser } from "../../../types/payload-types";
+import { PublicUser } from "../../../types/payload-types";
 import { agenda } from "../../agenda";
 import exportWishHistory from "../../api/wishes/exporter";
 import { testLink } from "../../api/wishes/importer";
 import { accessControls } from "../../api/accessControls";
-import { mapGenshinEvent } from "../../utils";
+import { relationToDictionary } from "../../utils";
 
 const validateGenshinAccount = async (req: PayloadRequest) => {
     const user: PublicUser = await req.payload.findByID({
@@ -344,8 +344,7 @@ const GenshinAccounts: CollectionConfig = {
                             } = el;
                             const wish = { ...rest };
                             const value = el.itemId.value;
-                            let banner: ReturnType<typeof mapGenshinEvent> =
-                                null;
+                            let banner: string = "";
                             let _itemId = null;
                             if (
                                 value &&
@@ -365,7 +364,7 @@ const GenshinAccounts: CollectionConfig = {
                                 };
                             }
                             if (typeof bannerId !== "string") {
-                                banner = mapGenshinEvent(bannerId);
+                                banner = bannerId.id;
                             }
                             return { ...wish, item: _itemId, banner };
                         });
@@ -402,12 +401,57 @@ const GenshinAccounts: CollectionConfig = {
                         }
 
                         const bannerInfo = {
-                            pulls: 0,
+                            userData: {
+                                pulls: 0,
+                                fourStar: [],
+                                fiveStar: [],
+                            },
                             fourStar: [],
-                            fiveStar: [],
+                            fiveStar1: null,
+                            fiveStar2: null,
+                            start: "",
+                            end: "",
+                            bannerType: "",
+                            timezoneDependent: false,
                         };
 
-                        const bannerReq = await req.payload.find({
+                        const banner = await req.payload.findByID({
+                            collection: "genshin-events",
+                            id: bannerId,
+                        });
+
+                        if (banner.type === "banner") {
+                            bannerInfo.bannerType = banner.bannerType;
+                            bannerInfo.timezoneDependent =
+                                banner.timezoneDependent || false;
+                            bannerInfo.start = banner.start;
+                            bannerInfo.end = banner.end;
+                            if (banner.bannerType === "character") {
+                                bannerInfo.fiveStar1 = relationToDictionary(
+                                    banner.characters.fiveStar1
+                                );
+                                bannerInfo.fiveStar2 = relationToDictionary(
+                                    banner.characters.fiveStar2
+                                );
+                                bannerInfo.fourStar =
+                                    banner.characters.fourStar.map(
+                                        relationToDictionary
+                                    );
+                            } else {
+                                bannerInfo.fiveStar1 = relationToDictionary(
+                                    banner.weapons.fiveStar1
+                                );
+                                bannerInfo.fiveStar2 = relationToDictionary(
+                                    banner.weapons.fiveStar2
+                                );
+                                bannerInfo.fourStar =
+                                    banner.weapons.fourStar.map(
+                                        relationToDictionary
+                                    );
+                            }
+                        }
+
+                        const wishReq = await req.payload.find({
                             collection: "genshin-wishes",
                             where: {
                                 and: [
@@ -418,30 +462,42 @@ const GenshinAccounts: CollectionConfig = {
                             pagination: false,
                         });
 
-                        if (bannerReq.docs.length > 0) {
-                            bannerInfo.pulls = bannerReq.docs.length;
-                            bannerInfo.fourStar = bannerReq.docs
+                        if (wishReq.docs.length > 0) {
+                            bannerInfo.userData.pulls = wishReq.docs.length;
+                            bannerInfo.userData.fourStar = wishReq.docs
                                 .filter((el) => el.rarity === 4)
                                 .map((el) => {
                                     const doc = {
                                         name: "",
                                         pity: el.pity,
                                         fiftyFiftyStatus: el.fiftyFiftyStatus,
+                                        type: "",
                                     };
                                     if (typeof el.itemId.value !== "string") {
+                                        doc.type =
+                                            el.itemId.relationTo ===
+                                            "genshin-characters"
+                                                ? "character"
+                                                : "weapon";
                                         doc.name = el.itemId.value.name;
                                     }
                                     return doc;
                                 });
-                            bannerInfo.fiveStar = bannerReq.docs
+                            bannerInfo.userData.fiveStar = wishReq.docs
                                 .filter((el) => el.rarity === 5)
                                 .map((el) => {
                                     const doc = {
                                         name: "",
                                         pity: el.pity,
                                         fiftyFiftyStatus: el.fiftyFiftyStatus,
+                                        type: "",
                                     };
                                     if (typeof el.itemId.value !== "string") {
+                                        doc.type =
+                                            el.itemId.relationTo ===
+                                            "genshin-characters"
+                                                ? "character"
+                                                : "weapon";
                                         doc.name = el.itemId.value.name;
                                     }
                                     return doc;
