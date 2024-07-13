@@ -13,6 +13,8 @@ export default function BannerOverview(props: {
 }) {
     const { bannerType, accountId } = props;
 
+    const [focusBar, setFocusBar] = useState<number | null>(null);
+
     const [state, setState] = useState<{
         total: number;
         fourStar: ItemWithPity[];
@@ -131,8 +133,10 @@ export default function BannerOverview(props: {
             );
         }
 
-        return null;
+        return <></>;
     };
+
+    console.log(focusBar);
 
     return (
         <>
@@ -164,10 +168,18 @@ export default function BannerOverview(props: {
                                 {pieData.map((entry, index) => (
                                     <Cell
                                         key={`cell-${index}`}
-                                        fill={entry.color}
+                                        fill={
+                                            index === focusBar
+                                                ? entry.colorActive
+                                                : entry.color
+                                        }
                                         stroke={"none"}
                                         tabIndex={-1}
                                         className="chart"
+                                        onMouseEnter={() => {
+                                            setFocusBar(index);
+                                        }}
+                                        onMouseLeave={() => setFocusBar(null)}
                                     />
                                 ))}
                             </Pie>
