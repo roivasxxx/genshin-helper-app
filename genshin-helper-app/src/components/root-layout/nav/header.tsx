@@ -18,7 +18,7 @@ export default function Header() {
         ref: mobileNavRef,
         isVisible: isMobileMenuOpen,
         setVisibility: setIsMobileMenuOpen,
-    } = useClickOutside(false, ["hamburger"]);
+    } = useClickOutside(false, undefined, ["hamburger"]);
 
     const pathName = usePathname()?.split("/")[2] || "";
 
@@ -30,10 +30,6 @@ export default function Header() {
                         <div
                             className="inline md:hidden px-2"
                             onClick={() => {
-                                console.log(
-                                    "clicked, setting to",
-                                    !isMobileMenuOpen
-                                );
                                 setIsMobileMenuOpen(!isMobileMenuOpen);
                             }}
                         >

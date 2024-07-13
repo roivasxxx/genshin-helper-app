@@ -9,6 +9,9 @@ import { paginate } from "@/utils/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import BannerHistoryRow from "./bannerHistoryRow";
+import DialogModal from "@/components/dialog";
+import useClickOutside from "@/utils/hooks/useClickOutside";
+import HistoryBannerModal from "./historyBannerModal";
 
 export default function BannerHistory(props: {
     bannerType: BANNER_TYPE;
@@ -16,6 +19,7 @@ export default function BannerHistory(props: {
     page: number;
 }) {
     const { bannerType, accountId, page } = props;
+
     const [state, setState] = useState<{
         currentPage: number;
         items: Wish[];
@@ -27,28 +31,38 @@ export default function BannerHistory(props: {
         totalPages: 0,
         loading: true,
     });
+    const { isVisible, ref, setVisibility } = useClickOutside(false, () =>
+        setSelectedBanner("")
+    );
+    const [selectedBanner, setSelectedBanner] = useState<string>("");
+
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const router = useRouter();
 
     const getData = useCallback(async (page: number) => {
         setState((state) => ({ ...state, loading: true }));
-        const req = await cmsRequest({
-            method: HTTP_METHOD.GET,
-            path: `/api/genshin-accounts/getWishHistory?accountId=${accountId}&type=${bannerType}&offset=${page}`,
-        });
-        const data = await req.json();
-        setState(() => ({
-            items: data.history,
-            totalPages: data.totalPages,
-            currentPage: page,
-            loading: false,
-        }));
-        if (searchParams) {
-            // replace page search param
-            const params = new URLSearchParams(searchParams);
-            params.set("page", page.toString());
-            router.push(`${pathname}?${params.toString()}`);
+        try {
+            const req = await cmsRequest({
+                method: HTTP_METHOD.GET,
+                path: `/api/genshin-accounts/getWishHistory?accountId=${accountId}&type=${bannerType}&offset=${page}`,
+            });
+            const data = await req.json();
+            setState(() => ({
+                items: data.history,
+                totalPages: data.totalPages,
+                currentPage: page,
+                loading: false,
+            }));
+            if (searchParams) {
+                // replace page search param
+                const params = new URLSearchParams(searchParams);
+                params.set("page", page.toString());
+                router.push(`${pathname}?${params.toString()}`);
+            }
+        } catch (error) {
+            // redirect to account overview
+            router.replace(`/me/genshin-impact/${accountId}`);
         }
     }, []);
 
@@ -56,12 +70,14 @@ export default function BannerHistory(props: {
         getData(props.page);
     }, []);
 
-    // TOOD
-    // TOOD
-    // TOOD
-    // TOOD
-    // TOOD
-    // add pity counter, create modal, that will fetch stats about specific banner
+    const showDialog = (bannerId: string) => {
+        if (bannerType === BANNER_TYPE.STANDARD) {
+            // no banners
+            return;
+        }
+        setVisibility(true);
+        setSelectedBanner(bannerId);
+    };
 
     return (
         <div className="w-full flex flex-col bg-electro-800 rounded p-5">
@@ -86,6 +102,7 @@ export default function BannerHistory(props: {
                                         wish={wish}
                                         key={wish.hoyoId}
                                         bannerType={props.bannerType}
+                                        onClick={showDialog}
                                     />
                                 ))}
                             </tbody>
@@ -133,6 +150,22 @@ export default function BannerHistory(props: {
                             />
                         </button>
                     </div>
+                    {selectedBanner ? (
+                        <DialogModal
+                            setVisibility={() => {
+                                setVisibility(false);
+                                setSelectedBanner("");
+                            }}
+                            ref={ref}
+                        >
+                            <HistoryBannerModal
+                                accountId={accountId}
+                                bannerId={selectedBanner}
+                            />
+                        </DialogModal>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             ) : (
                 <div className="w-full flex items-center justify-center">

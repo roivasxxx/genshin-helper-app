@@ -1,5 +1,10 @@
 import Image from "next/image";
 
+/**
+ *
+ * @param props - size - the size of the logo,  eg. "size-40"
+ * @returns
+ */
 export default function LoadingLogo(props: { size: string }) {
     return (
         <div className={`${props.size} animate-spin`}>

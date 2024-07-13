@@ -1,15 +1,17 @@
-import { FIFTY_FIFTY_STATUS, Wish } from "@/types/genshinTypes";
+import { Wish } from "@/types/genshinTypes";
 import {
     BANNER_TYPE,
     FIFTY_FIFTY_TEXT_LONG,
     FIFTY_FIFTY_TEXT_SHORT,
     STAR_SYMBOL,
 } from "@/utils/constants";
+import { getFiftyFiftyColor } from "@/utils/utils";
 import Image from "next/image";
 
 export default function BannerHistoryRow(props: {
     wish: Wish;
     bannerType: BANNER_TYPE;
+    onClick: (bannerId: string) => void;
 }) {
     const { wish, bannerType } = props;
     let bgColor = "inherit";
@@ -28,22 +30,16 @@ export default function BannerHistoryRow(props: {
     const fiftyFiftyStatus = wish.fiftyFiftyStatus;
     const fiftyFiftyShort = FIFTY_FIFTY_TEXT_SHORT[wish.fiftyFiftyStatus];
     const fiftyFiftyLong = FIFTY_FIFTY_TEXT_LONG[wish.fiftyFiftyStatus];
-    let fiftyFiftyStatusColor = "text-sky-300";
-
-    switch (fiftyFiftyStatus) {
-        case FIFTY_FIFTY_STATUS.GUARANTEED:
-            fiftyFiftyStatusColor = "text-electro-5star-from";
-            break;
-        case FIFTY_FIFTY_STATUS.WON:
-            fiftyFiftyStatusColor = "text-green-500";
-            break;
-        case FIFTY_FIFTY_STATUS.LOST:
-            fiftyFiftyStatusColor = "text-red-500";
-            break;
-    }
+    const fiftyFiftyStatusColor = getFiftyFiftyColor(fiftyFiftyStatus);
 
     return (
-        <tr className={"text-lg font-bold " + bgColor}>
+        <tr
+            className={"text-lg font-bold " + bgColor}
+            onClick={() => {
+                if (bannerType === BANNER_TYPE.STANDARD) return;
+                props.onClick(wish.banner);
+            }}
+        >
             <td className="text-base">{wish.date}</td>
             <td className="">
                 {wish.item.icon ? (

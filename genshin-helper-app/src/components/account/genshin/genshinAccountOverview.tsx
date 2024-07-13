@@ -64,7 +64,6 @@ export default function GenshinAccountOverview(props: { accountId: string }) {
                 });
                 const result = await req.json();
                 setAccountData(result);
-                console.log(result);
             } catch (error) {
                 console.error(error);
                 router.replace("/me");
@@ -72,7 +71,6 @@ export default function GenshinAccountOverview(props: { accountId: string }) {
             setIsLoading(false);
 
             return () => {
-                console.log("unmount?");
                 abortController.abort();
                 if (
                     timerRef.current.abortController &&

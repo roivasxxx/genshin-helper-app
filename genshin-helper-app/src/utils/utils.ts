@@ -1,4 +1,5 @@
 import {
+    FIFTY_FIFTY_STATUS,
     GenshinCharacterBanner,
     GenshinEvent,
     GenshinWeaponBanner,
@@ -40,4 +41,21 @@ export const isWeaponBanner = (
 
 export const isNumber = (value?: string | number) => {
     return value != null && value !== "" && !isNaN(Number(value.toString()));
+};
+
+export const getFiftyFiftyColor = (status: FIFTY_FIFTY_STATUS) => {
+    let fiftyFiftyStatusColor = "text-sky-300";
+
+    switch (status) {
+        case FIFTY_FIFTY_STATUS.GUARANTEED:
+            fiftyFiftyStatusColor = "text-electro-5star-from";
+            break;
+        case FIFTY_FIFTY_STATUS.WON:
+            fiftyFiftyStatusColor = "text-green-500";
+            break;
+        case FIFTY_FIFTY_STATUS.LOST:
+            fiftyFiftyStatusColor = "text-red-500";
+            break;
+    }
+    return fiftyFiftyStatusColor;
 };

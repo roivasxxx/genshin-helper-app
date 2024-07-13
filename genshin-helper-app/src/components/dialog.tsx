@@ -13,7 +13,7 @@ const DialogModal = forwardRef<HTMLDivElement, Props>(function Dialog(
     ref
 ) {
     const dialogClass =
-        "fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-electro-850 w-10/12 rounded p-4 min-h-[250px] max-h-[60%] overflow-y-auto z-50" +
+        "fixed flex flex-col top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-electro-850 w-[90%] md:w-[60%] h-[60%] rounded p-4 z-50" +
         (props.dialogClass || "");
 
     return (
@@ -21,9 +21,11 @@ const DialogModal = forwardRef<HTMLDivElement, Props>(function Dialog(
             <div className={dialogClass} ref={ref}>
                 <button
                     onClick={props.setVisibility}
-                    className="absolute p-4 top-0 right-0 before:absolute before:border-b-2 before:w-6 before:left-0 before:top-[50%] before:rotate-45 after:absolute after:border-b-2 after:w-6 after:left-0 after:top-[50%] after:rotate-[-45deg] hover:before:border-electro-500 hover:after:border-electro-500 active:after:border-electro-500 active:before:border-electro-500"
+                    className="absolute top-0 right-0 p-4 before:absolute before:border-b-2 before:w-6 before:left-0 before:top-[50%] before:rotate-45 after:absolute after:border-b-2 after:w-6 after:left-0 after:top-[50%] after:rotate-[-45deg] hover:before:border-electro-500 hover:after:border-electro-500 active:after:border-electro-500 active:before:border-electro-500"
                 />
-                {props.children}
+                <div className="h-full mt-5 overflow-y-auto">
+                    {props.children}
+                </div>
             </div>
         </div>
     );

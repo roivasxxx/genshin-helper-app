@@ -149,12 +149,15 @@ export type GenshinGenericItem = GenshinMaterialBase & {
 };
 
 export type GenshinDomainMaterial = GenshinMaterialBase & {
-    type: Exclude<GENSHIN_MATERIAL_TYPE, "gem" | "specialty">;
+    type: Exclude<
+        GENSHIN_MATERIAL_TYPE,
+        GENSHIN_MATERIAL_TYPE.GEM | GENSHIN_MATERIAL_TYPE.SPECIALTY
+    >;
     domain: NameIconWithIdDictionary;
 };
 
 export type GenshinDayDependentMaterial = GenshinDomainMaterial & {
-    type: "book" | "weaponMat";
+    type: GENSHIN_MATERIAL_TYPE.BOOK | GENSHIN_MATERIAL_TYPE.WEAPON_MAT;
     days: string[];
     domain: { name: string; id: string };
 };
@@ -257,6 +260,7 @@ export interface BaseWish {
             url: string;
         };
     };
+    banner: string;
 }
 
 export enum FIFTY_FIFTY_STATUS {
@@ -267,18 +271,15 @@ export enum FIFTY_FIFTY_STATUS {
 }
 export type StandardWish = BaseWish & {
     type: BANNER_TYPE.STANDARD;
-    banner: null;
     fiftyFiftyStatus: FIFTY_FIFTY_STATUS.NONE;
 };
 
 export type CharacterBanner = BaseWish & {
     type: BANNER_TYPE.CHARACTER;
-    banner: GenshinCharacterBanner;
     fiftyFiftyStatus: FIFTY_FIFTY_STATUS;
 };
 export type WeaponBanner = BaseWish & {
     type: BANNER_TYPE.WEAPON;
-    banner: GenshinWeaponBanner;
     fiftyFiftyStatus: FIFTY_FIFTY_STATUS;
 };
 
