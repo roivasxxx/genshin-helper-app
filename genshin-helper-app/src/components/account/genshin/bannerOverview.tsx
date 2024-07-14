@@ -1,19 +1,18 @@
 import LoadingLogo from "@/components/loadingLogo";
 import { HTTP_METHOD } from "@/types";
-import { FIFTY_FIFTY_STATUS, ItemWithPity } from "@/types/genshinTypes";
+import { ItemWithPity } from "@/types/genshinTypes";
 import { BANNER_TYPE, STAR_SYMBOL } from "@/utils/constants";
 import cmsRequest from "@/utils/fetchUtils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import PullsByRarityChart from "./pullsByRarityChart";
+import ItemStats from "./itemStats";
 
 export default function BannerOverview(props: {
     bannerType: BANNER_TYPE;
     accountId: string;
 }) {
     const { bannerType, accountId } = props;
-
-    const [focusBar, setFocusBar] = useState<number | null>(null);
 
     const [state, setState] = useState<{
         total: number;
@@ -36,38 +35,6 @@ export default function BannerOverview(props: {
     });
 
     const router = useRouter();
-
-    const fourStarTotal = state.fourStar.length;
-    const fourStarCharacters = state.fourStar.filter(
-        (el) => el.type === BANNER_TYPE.CHARACTER
-    );
-    const fourStarWeapons = state.fourStar.filter(
-        (el) => el.type === BANNER_TYPE.WEAPON
-    );
-    const fourStarPityWon = state.fourStar.reduce((acc, item) => {
-        if (item.fiftyFiftyStatus === FIFTY_FIFTY_STATUS.WON) {
-            return acc + item.pity;
-        }
-        return acc;
-    }, 0);
-    const fourStarPityPercentage =
-        (fourStarPityWon / (fourStarTotal || 1)) * 100;
-
-    const fiveStarTotal = state.fiveStar.length;
-    const fiveStarCharacters = state.fiveStar.filter(
-        (el) => el.type === BANNER_TYPE.CHARACTER
-    );
-    const fiveStarWeapons = state.fiveStar.filter(
-        (el) => el.type === BANNER_TYPE.WEAPON
-    );
-    const fiveStarPityWon = state.fiveStar.reduce((acc, item) => {
-        if (item.fiftyFiftyStatus === FIFTY_FIFTY_STATUS.WON) {
-            return acc + item.pity;
-        }
-        return acc;
-    }, 0);
-    const fiveStarPityPercentage =
-        (fiveStarPityWon / (fiveStarTotal || 1)) * 100;
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -97,96 +64,71 @@ export default function BannerOverview(props: {
         };
     }, []);
 
-    const pieData = [
-        {
-            name: `3 ${STAR_SYMBOL}`,
-            value: state.total - fourStarTotal - fiveStarTotal,
-            color: "rgba(125,211,252,0.5)",
-            colorActive: "rgba(125,211,252,1)",
-        },
-        {
-            name: `4 ${STAR_SYMBOL}`,
-            value: fourStarTotal,
-            color: "rgba(210,143,214,0.5)",
-            colorActive: "rgba(210,143,214,1)",
-        },
-        {
-            name: `5 ${STAR_SYMBOL}`,
-            value: fiveStarTotal,
-            color: "rgba(255,177,63,0.5)",
-            colorActive: "rgba(255,177,63,1)",
-        },
-    ];
-
-    const CustomTooltip = ({ active: active, payload, label }: any) => {
-        if (active && payload && payload.length) {
-            const item = payload[0].payload;
-            return (
-                <div
-                    className="bg-electro-900 rounded p-2 chart"
-                    style={{
-                        color: item.colorActive,
-                    }}
-                >
-                    <p>{`${payload[0].name} : ${payload[0].value}`}</p>
-                </div>
-            );
-        }
-
-        return <></>;
-    };
-
-    console.log(focusBar);
-
     return (
         <>
             {!state.loading ? (
-                <div className="h-60">
-                    Overview
-                    <ResponsiveContainer
-                        width="100%"
-                        height="100%"
-                        className="chart"
-                    >
-                        <PieChart
-                            width={400}
-                            height={400}
-                            tabIndex={-1}
-                            className="chart"
-                        >
-                            <Pie
-                                data={pieData}
-                                outerRadius={80}
-                                cx="50%"
-                                cy="50%"
-                                labelLine={false}
-                                dataKey="value"
-                                tabIndex={-1}
-                                rootTabIndex={-1}
-                                className="chart"
-                            >
-                                {pieData.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={
-                                            index === focusBar
-                                                ? entry.colorActive
-                                                : entry.color
-                                        }
-                                        stroke={"none"}
-                                        tabIndex={-1}
-                                        className="chart"
-                                        onMouseEnter={() => {
-                                            setFocusBar(index);
-                                        }}
-                                        onMouseLeave={() => setFocusBar(null)}
-                                    />
-                                ))}
-                            </Pie>
-                            <Tooltip content={CustomTooltip} />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
+                <>
+                    <div className="h-max w-full grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+                        <div className="flex-1 bg-electro-900 rounded p-2 text-lg">
+                            <h2 className="text-xl font-bold">General Stats</h2>
+                            <table className="w-full">
+                                <tbody>
+                                    <tr>
+                                        <td className="text-left">
+                                            Total pulls
+                                        </td>
+                                        <td className="text-right">
+                                            {state.total}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="text-left">
+                                            {`5 ${STAR_SYMBOL} pity`}
+                                        </td>
+                                        <td className="text-right text-electro-5star-from">
+                                            {state.fiveStarPity}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="text-left">
+                                            {`4 ${STAR_SYMBOL} pity`}
+                                        </td>
+                                        <td className="text-right text-electro-4star-from">
+                                            {state.fourStarPity}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="text-left">
+                                            {`5 ${STAR_SYMBOL} 50/50 guaranteed: `}
+                                        </td>
+                                        <td className="text-right text-electro-5star-from">
+                                            {state.guaranted5Star ? "✓" : "✘"}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="text-left">
+                                            {`4 ${STAR_SYMBOL} 50/50 guaranteed: `}
+                                        </td>
+                                        <td className="text-right text-electro-4star-from">
+                                            {state.guaranted4Star ? "✓" : "✘"}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ItemStats
+                            bannerType={bannerType}
+                            fiveStar={state.fiveStar}
+                            fourStar={state.fourStar}
+                            total={state.total}
+                        />
+                        <PullsByRarityChart
+                            total={state.total}
+                            fiveStarTotal={state.fiveStar.length}
+                            fourStarTotal={state.fourStar.length}
+                        />
+                    </div>
+                </>
             ) : (
                 <div className="w-full flex items-center justify-center">
                     <LoadingLogo size="size-40" />

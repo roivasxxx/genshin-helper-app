@@ -1,18 +1,16 @@
 import {
     GenshinCharacterBanner,
     GenshinWeaponBanner,
-    NameIconDictionary,
 } from "@/types/genshinTypes";
 import { DATE_TIME_FORMAT, formatEventDate } from "@/utils/dateUtils";
-import { getStarString } from "@/utils/utils";
-import Image from "next/image";
 import BannerItemPreview from "../bannerItemPreview";
+import { BANNER_TYPE } from "@/utils/constants";
 
 export default function BannerItem(props: {
     item: GenshinCharacterBanner | GenshinWeaponBanner | null;
 }) {
     const item = props.item;
-    const isCharacter = item && item?.bannerType === "character";
+    const isCharacter = item && item?.bannerType === BANNER_TYPE.CHARACTER;
     const items = isCharacter ? item.characters : item?.weapons;
 
     return (

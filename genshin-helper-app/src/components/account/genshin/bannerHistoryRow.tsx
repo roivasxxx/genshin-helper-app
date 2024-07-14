@@ -40,8 +40,8 @@ export default function BannerHistoryRow(props: {
                 props.onClick(wish.banner);
             }}
         >
-            <td className="text-base">{wish.date}</td>
-            <td className="">
+            <td className="text-sm text-nowrap">{wish.date}</td>
+            <td className="text-nowrap">
                 {wish.item.icon ? (
                     <Image
                         src={wish.item.icon.url}

@@ -55,6 +55,7 @@ export enum GENSHIN_WEAPON {
 }
 
 export const STAR_SYMBOL = "\u2605";
+export const STEP_SYMBOL = "\u2514";
 
 export const PRIMOS_PER_WISH = 160;
 
@@ -111,4 +112,10 @@ export const GENSHIN_SUBSTAT_TEXT = {
     [GENSHIN_SUBSTAT.ANEMO_DMG]: "Anemo DMG Bonus",
     [GENSHIN_SUBSTAT.DEF]: "Def %",
     [GENSHIN_SUBSTAT.PHYSICAL_DMG]: "Physical DMG Bonus",
+};
+
+export const GENSHIN_BANNER_NAME = {
+    [BANNER_TYPE.CHARACTER]: "Character",
+    [BANNER_TYPE.WEAPON]: "Weapon",
+    [BANNER_TYPE.STANDARD]: "Standard",
 };

@@ -364,7 +364,7 @@ const GenshinAccounts: CollectionConfig = {
                                     value: value.name,
                                 };
                             }
-                            if (typeof bannerId !== "string") {
+                            if (bannerId && typeof bannerId !== "string") {
                                 banner = bannerId.id;
                             }
                             return { ...wish, item: _itemId, banner };

@@ -182,7 +182,7 @@ export type GenshinGameEvent = GenshinBaseEvent & {
 
 export type GenshinCharacterBanner = GenshinBaseEvent & {
     type: "banner";
-    bannerType: "character";
+    bannerType: BANNER_TYPE.CHARACTER;
     characters: {
         fiveStar1: NameIconWithIdDictionary;
         fiveStar2?: NameIconWithIdDictionary;
@@ -192,7 +192,7 @@ export type GenshinCharacterBanner = GenshinBaseEvent & {
 
 export type GenshinWeaponBanner = GenshinBaseEvent & {
     type: "banner";
-    bannerType: "weapon";
+    bannerType: BANNER_TYPE.WEAPON;
     weapons: {
         fiveStar1: NameIconWithIdDictionary;
         fiveStar2?: NameIconWithIdDictionary;

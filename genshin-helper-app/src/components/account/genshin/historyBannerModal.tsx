@@ -2,7 +2,12 @@ import BannerItemPreview from "@/components/game/genshin-impact/bannerItemPrevie
 import LoadingLogo from "@/components/loadingLogo";
 import { HTTP_METHOD } from "@/types";
 import { ItemWithPity, NameIconWithIdDictionary } from "@/types/genshinTypes";
-import { BANNER_TYPE, PRIMOS_PER_WISH, STAR_SYMBOL } from "@/utils/constants";
+import {
+    BANNER_TYPE,
+    PRIMOS_PER_WISH,
+    STAR_SYMBOL,
+    STEP_SYMBOL,
+} from "@/utils/constants";
 import { DATE_TIME_FORMAT, formatEventDate } from "@/utils/dateUtils";
 import cmsRequest from "@/utils/fetchUtils";
 import { getFiftyFiftyColor } from "@/utils/utils";
@@ -121,7 +126,7 @@ function UserPullInfo(props: BannerInfo) {
                     </tr>
 
                     <tr className="text-electro-4star-from border-t border-electro-50/20">
-                        <td className="pl-2 pr-5">{`${"\u2514"} Characters`}</td>
+                        <td className="pl-2 pr-5">{`${STEP_SYMBOL} Characters`}</td>
                         <td className="pr-2">{fourStarCharacters.length}</td>
                         <td className="pr-2">{`${fourStarCharacterPercentage.toFixed(
                             2
@@ -132,7 +137,7 @@ function UserPullInfo(props: BannerInfo) {
                     </tr>
 
                     <tr className="text-electro-4star-from border-t border-electro-50/20">
-                        <td className="pl-2 pr-5">{`${"\u2514"} Weapons`}</td>
+                        <td className="pl-2 pr-5">{`${STEP_SYMBOL} Weapons`}</td>
                         <td className="pr-2">{fourStarWeapons.length}</td>
                         <td className="pr-2">{`${fourStarWeaponPercentage.toFixed(
                             2

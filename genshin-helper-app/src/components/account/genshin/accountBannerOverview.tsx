@@ -1,6 +1,11 @@
 import HistoryIcon from "@/components/historyIcon";
 import { BannerInfo, WishInfo } from "@/types/genshinTypes";
-import { BANNER_TYPE, PRIMOS_PER_WISH, STAR_SYMBOL } from "@/utils/constants";
+import {
+    BANNER_TYPE,
+    GENSHIN_BANNER_NAME,
+    PRIMOS_PER_WISH,
+    STAR_SYMBOL,
+} from "@/utils/constants";
 import { capitalizeString } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +26,7 @@ function BannerItem(props: {
         >
             <div className="flex flex-row justify-between items-center">
                 <h2 className="text-xl font-bold text-left">
-                    {capitalizeString(props.type)} banner
+                    {GENSHIN_BANNER_NAME[props.type]} banner
                 </h2>
                 <HistoryIcon className="size-10 fill-electro-50 py-2 hover:fill-electro-500 active:fill-electro-500" />
             </div>
