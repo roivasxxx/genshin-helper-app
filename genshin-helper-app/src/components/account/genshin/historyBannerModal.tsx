@@ -186,7 +186,10 @@ export default function HistoryBannerModal(props: {
                         data,
                     };
                 });
-            } catch (error) {
+            } catch (error: any) {
+                if (error.name === "AbortError") {
+                    return;
+                }
                 setState((state) => {
                     return {
                         ...state,
