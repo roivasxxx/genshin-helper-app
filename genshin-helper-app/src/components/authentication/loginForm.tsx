@@ -7,13 +7,11 @@ import Link from "next/link";
 import Image from "next/image";
 import LoadingLogo from "../loadingLogo";
 import { emailValidator } from "@/utils/validationUtils";
-import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
     const [state, setState] = useState({ email: "", password: "" });
     const [errorState, setErrorState] = useState("");
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
 
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
@@ -21,7 +19,6 @@ export default function LoginForm() {
 
         const loginResult = await signIn("credentials", {
             ...state,
-            // redirect: true,
             callbackUrl: "/me",
         });
         setLoading(false);
@@ -29,7 +26,6 @@ export default function LoginForm() {
             setErrorState(loginResult?.error);
             return;
         }
-        // router.replace("/me");
     };
 
     const onChange = (

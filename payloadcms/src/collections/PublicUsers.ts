@@ -16,7 +16,27 @@ const PublicUsers: CollectionConfig = {
         // 30 days
         tokenExpiration: 60 * 60 * 24 * 30,
         maxLoginAttempts: 10,
-        lockTime: 300000, //5 minutes
+        lockTime: 300000, //5 minutes,
+        forgotPassword: {
+            generateEmailHTML: ({ req, token, user }) => {
+                // Use the token provided to allow your user to reset their password
+                const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+                const email = (user as any).email;
+                return `
+                        <!doctype html>
+                        <html>
+                            <body>
+                            <h1>Here is my custom email template!</h1>
+                            <p>Hello, ${email}!</p>
+                            <p>Click below to reset your password.</p>
+                            <p>
+                                <a href="${resetPasswordURL}">${resetPasswordURL}</a>
+                            </p>
+                            </body>
+                        </html>
+                        `;
+            },
+        },
     },
     admin: {
         useAsTitle: "email",
@@ -190,31 +210,6 @@ const PublicUsers: CollectionConfig = {
                     }
                 },
             ],
-        },
-        {
-            path: "/forgot-password",
-            method: "post",
-            handler: async (req: PayloadRequest, res: Response) => {
-                const { email } = req.body;
-                const user = await req.payload.find({
-                    collection: "public-users",
-                    where: {
-                        email: { equals: email },
-                    },
-                });
-                if (user.docs.length === 0) {
-                    return res.status(404).send("User not found");
-                }
-                // https://payloadcms.com/docs/authentication/operations#forgot-password
-                // const token = await req.payload.forgotPassword({
-                //     collection: "public-users",
-                //     data: {
-                //         email,
-                //     },
-                //     disableEmail: true,
-                // });
-                res.send("OK");
-            },
         },
     ],
     access: {

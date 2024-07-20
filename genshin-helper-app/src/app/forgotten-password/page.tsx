@@ -1,3 +1,9 @@
+import ForgottenPasswordForm from "@/components/authentication/forgottenPasswordForm";
+
 export default function ForgottenPassword() {
-    return <div></div>;
+    return (
+        <main className="w-full h-full">
+            <ForgottenPasswordForm />
+        </main>
+    );
 }
