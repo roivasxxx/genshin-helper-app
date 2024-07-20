@@ -9,48 +9,48 @@ export default function GuideSidebar(props: { article: GenshinGuide }) {
             <h2 className="text-xl">Table of Contents</h2>
             <p>
                 <Link href="#weapons">Weapons</Link>
-                {article.weapons.sections
-                    .filter((el) => el.title)
-                    .map((el, index) => {
-                        const key = normalizeName(el.title) + `-${index}`;
-                        return (
-                            <p key={key} className="pl-2 text-sm">
-                                <Link href={`#${key}`}>{el.title}</Link>
-                            </p>
-                        );
-                    })}
             </p>
+            {article.weapons.sections
+                .filter((el) => el.title)
+                .map((el, index) => {
+                    const key = normalizeName(el.title) + `-${index}`;
+                    return (
+                        <p key={key} className="pl-2 text-sm">
+                            <Link href={`#${key}`}>{el.title}</Link>
+                        </p>
+                    );
+                })}
             <p>
                 <Link href="#artifacts" scroll>
                     Artifacts
                 </Link>
-                {article.artifacts.sections
-                    .filter((el) => el.title)
-                    .map((el, index) => {
-                        const key = normalizeName(el.title) + `-${index}`;
-                        return (
-                            <p key={key} className="pl-2 text-sm">
-                                <Link href={`#${key}`}>{el.title}</Link>
-                            </p>
-                        );
-                    })}
             </p>
+            {article.artifacts.sections
+                .filter((el) => el.title)
+                .map((el, index) => {
+                    const key = normalizeName(el.title) + `-${index}`;
+                    return (
+                        <p key={key} className="pl-2 text-sm">
+                            <Link href={`#${key}`}>{el.title}</Link>
+                        </p>
+                    );
+                })}
             <p>
                 <Link href="#team-mates">Best Team Mates</Link>
             </p>
             <p>
                 <Link href="#comps">Comps</Link>
-                {article.comps.sections
-                    .filter((el) => el.title)
-                    .map((el, index) => {
-                        const key = normalizeName(el.title) + `-${index}`;
-                        return (
-                            <p key={key} className="pl-2 text-sm">
-                                <Link href={`#${key}`}>{el.title}</Link>
-                            </p>
-                        );
-                    })}
             </p>
+            {article.comps.sections
+                .filter((el) => el.title)
+                .map((el, index) => {
+                    const key = normalizeName(el.title) + `-${index}`;
+                    return (
+                        <p key={key} className="pl-2 text-sm">
+                            <Link href={`#${key}`}>{el.title}</Link>
+                        </p>
+                    );
+                })}
         </aside>
     );
 }
