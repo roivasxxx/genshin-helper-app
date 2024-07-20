@@ -380,6 +380,20 @@ export type GenshinGuide = {
     sections: ExtraSection[];
     createdAt: string;
     updatedAt: string;
-    type: string;
+    type: GENSHIN_ARTICLE_TYPE.GUIDE;
     character: NameIconWithIdDictionary;
 };
+
+type BaseGenshinArticle = {
+    id: string;
+    title: string;
+    updatedAt: string;
+    type: GENSHIN_ARTICLE_TYPE;
+};
+
+export type GenshinGuidePreview = BaseGenshinArticle & {
+    type: GENSHIN_ARTICLE_TYPE.GUIDE;
+    character: NameIconWithIdDictionary;
+};
+
+export type GenshinArticlePreview = GenshinGuidePreview | BaseGenshinArticle;

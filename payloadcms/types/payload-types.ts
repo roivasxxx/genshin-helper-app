@@ -390,7 +390,7 @@ export interface GenshinCharacter {
 }
 export interface GenshinElement {
   id: string;
-  name?: string | null;
+  name: string;
   icon: string | Media;
   updatedAt: string;
   createdAt: string;
@@ -487,17 +487,88 @@ export interface GenshinArticle {
         id?: string | null;
       }[]
     | null;
-  author?: (string | null) | PublicUser;
   type?: 'guide' | null;
   characterId?: (string | null) | GenshinCharacter;
-  content?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
-  comps?:
-    | {
-        comp?: {
+  weapons?: {
+    sections?:
+      | {
+          title?: string | null;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+    weaponsList?:
+      | {
+          weaponId?: (string | null) | GenshinWeapon;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  artifacts?: {
+    sections?:
+      | {
+          title?: string | null;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+    artifactList?:
+      | {
+          artifactIds?: (string | GenshinArtifact)[] | null;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  bestTeams?: {
+    description?:
+      | {
+          [k: string]: unknown;
+        }[]
+      | null;
+    teamMateList?:
+      | {
+          characterId?: (string | null) | GenshinCharacter;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  comps?: {
+    sections?:
+      | {
+          title?: string | null;
+          description?:
+            | {
+                [k: string]: unknown;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+    compsList?:
+      | {
           compName?: string | null;
           description?:
             | {
@@ -505,33 +576,19 @@ export interface GenshinArticle {
               }[]
             | null;
           characterIds?: (string | GenshinCharacter)[] | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  weapons?:
+          flexElements?: (string | GenshinElement)[] | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  sections?:
     | {
-        weapon?: {
-          weaponId?: (string | null) | GenshinWeapon;
-          description?:
-            | {
-                [k: string]: unknown;
-              }[]
-            | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  artifacts?:
-    | {
-        artifact?: {
-          artifactId?: (string | GenshinArtifact)[] | null;
-          description?:
-            | {
-                [k: string]: unknown;
-              }[]
-            | null;
-        };
+        title?: string | null;
+        content?:
+          | {
+              [k: string]: unknown;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;

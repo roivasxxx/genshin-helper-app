@@ -357,12 +357,22 @@ const GenshinArticles: CollectionConfig = {
                         pagination: false,
                     });
                     return res.status(200).send(
-                        articles.docs.map((doc) => ({
-                            id: doc.id,
-                            title: doc.title,
-                            character: relationToDictionary(doc.characterId),
-                            updatedAt: doc.updatedAt,
-                        }))
+                        articles.docs.map((doc) => {
+                            const article = {
+                                id: doc.id,
+                                title: doc.title,
+                                type: doc.type,
+                                updatedAt: doc.updatedAt,
+                            };
+
+                            if (doc.type === "guide") {
+                                article["character"] = relationToDictionary(
+                                    doc.characterId
+                                );
+                            }
+
+                            return article;
+                        })
                     );
                 } catch (error) {
                     console.error(

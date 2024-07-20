@@ -1,7 +1,10 @@
 import {
     FIFTY_FIFTY_STATUS,
+    GENSHIN_ARTICLE_TYPE,
+    GenshinArticlePreview,
     GenshinCharacterBanner,
     GenshinEvent,
+    GenshinGuidePreview,
     GenshinWeaponBanner,
 } from "@/types/genshinTypes";
 import { STAR_SYMBOL } from "./constants";
@@ -67,3 +70,9 @@ export const normalizeName = (name: string) => {
         .split(/\s+/)
         .join("_");
 };
+
+export function isGenshinGuidePreview(
+    article: GenshinArticlePreview
+): article is GenshinGuidePreview {
+    return article.type === GENSHIN_ARTICLE_TYPE.GUIDE;
+}

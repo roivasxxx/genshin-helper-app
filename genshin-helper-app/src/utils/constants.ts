@@ -1,5 +1,6 @@
 import {
     FIFTY_FIFTY_STATUS,
+    GENSHIN_ARTICLE_TYPE,
     GENSHIN_MATERIAL_TYPE,
     GENSHIN_SUBSTAT,
 } from "@/types/genshinTypes";
@@ -162,6 +163,11 @@ export const ARTICLE_KEY_VALUES = {
         },
         "5": {
             text: `5 ${STAR_SYMBOL}`,
+        },
+    },
+    articleType: {
+        [GENSHIN_ARTICLE_TYPE.GUIDE]: {
+            text: "Guide",
         },
     },
 };
