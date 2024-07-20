@@ -333,10 +333,13 @@ const GenshinWeapons: CollectionConfig = {
                         sort: "name",
                     });
 
-                    const weapons = weaponReq.docs.map(mapWeapon);
+                    const weapons = weaponReq.docs
+                        .filter((el) => el.refinements.text)
+                        .map(mapWeapon);
 
                     return res.status(200).send(weapons);
                 } catch (error) {
+                    console.log("getWeapons threw an error", error);
                     return res.status(500).send(error);
                 }
             },

@@ -291,3 +291,95 @@ export type ItemWithPity = {
     fiftyFiftyStatus: FIFTY_FIFTY_STATUS;
     type: BANNER_TYPE.CHARACTER | BANNER_TYPE.WEAPON;
 };
+
+export enum GENSHIN_ARTICLE_TYPE {
+    GUIDE = "guide",
+}
+
+export type RichText = RichTextItem[];
+
+export type RichTextItem = {
+    children: RichTextChild[];
+    type?: "h1" | "ul";
+};
+
+export type RichTextChild = {
+    text?: string;
+    bold?: boolean;
+    italic?: boolean;
+    underline?: boolean;
+    type?: "li";
+    children?: RichTextChild[];
+};
+
+export type Section = {
+    title: string;
+    description: RichText;
+    id: string;
+};
+
+export type ExtraSection = {
+    title: string;
+    content: RichText;
+};
+
+export type WeaponListItem = {
+    description: RichText;
+    weapon: NameIconWithIdDictionary;
+};
+
+export type Weapons = {
+    sections: Section[];
+    list: WeaponListItem[];
+};
+
+export type ArtifactListItem = {
+    description: RichText;
+    artifacts: NameIconWithIdDictionary[];
+};
+
+export type Artifacts = {
+    sections: Section[];
+    list: ArtifactListItem[];
+};
+
+export type TeamMateListItem = {
+    description: RichText;
+    character: NameIconWithIdDictionary;
+};
+
+export type BestTeams = {
+    description: RichText;
+    list: TeamMateListItem[];
+};
+
+export type CompListItem = {
+    flexElements: NameIconWithIdDictionary[];
+    characters: NameIconWithIdDictionary[];
+    compName: string;
+    description: RichText;
+};
+
+export type Comps = {
+    sections: Section[];
+    list: CompListItem[];
+};
+
+export const isExtraSection = (section: any): section is ExtraSection => {
+    return !!section.content;
+};
+
+export type GenshinGuide = {
+    id: string;
+    title: string;
+    changes: any[];
+    weapons: Weapons;
+    artifacts: Artifacts;
+    bestTeams: BestTeams;
+    comps: Comps;
+    sections: ExtraSection[];
+    createdAt: string;
+    updatedAt: string;
+    type: string;
+    character: NameIconWithIdDictionary;
+};

@@ -119,3 +119,49 @@ export const GENSHIN_BANNER_NAME = {
     [BANNER_TYPE.WEAPON]: "Weapon",
     [BANNER_TYPE.STANDARD]: "Standard",
 };
+
+export const ARTICLE_KEY_VALUES = {
+    element: {
+        electro: {
+            text: "electro",
+            className: "text-electro-elements-electro",
+        },
+        pyro: {
+            text: "pyro",
+            className: "text-electro-elements-pyro",
+        },
+        hydro: {
+            text: "hydro",
+            className: "text-electro-elements-hydro",
+        },
+        cryo: {
+            text: "cryo",
+            className: "text-electro-elements-cryo",
+        },
+        dendro: {
+            text: "dendro",
+            className: "text-electro-elements-dendro",
+        },
+        anemo: {
+            text: "anemo",
+            className: "text-electro-elements-anemo",
+        },
+        geo: {
+            text: "geo",
+            className: "text-electro-elements-geo",
+        },
+    },
+    reaction: {
+        aggravate: {
+            text: "aggravate",
+        },
+    },
+    rarity: {
+        "4": {
+            text: `4 ${STAR_SYMBOL}`,
+        },
+        "5": {
+            text: `5 ${STAR_SYMBOL}`,
+        },
+    },
+};

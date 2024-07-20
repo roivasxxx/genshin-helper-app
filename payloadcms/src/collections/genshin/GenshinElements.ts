@@ -12,6 +12,7 @@ const GenshinElements: CollectionConfig = {
         {
             name: "name",
             type: "text",
+            required: true,
         },
         {
             name: "icon",

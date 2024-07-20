@@ -113,3 +113,8 @@ export const dateMatches = (
 
     return date.isAfter(_start) && date.isBefore(_end);
 };
+
+export const formatDate = (date: string, format?: string) => {
+    format = format || DATE_FORMAT;
+    return dayjs(date).format(format);
+};

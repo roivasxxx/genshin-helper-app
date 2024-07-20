@@ -767,7 +767,9 @@ const GenshinCharacters: CollectionConfig = {
                             sort: "name",
                         });
                         if (chars.docs && chars.docs.length > 0) {
-                            const mappedChars = chars.docs.map(normalizeChar);
+                            const mappedChars = chars.docs
+                                .filter((el) => el.substat)
+                                .map(normalizeChar);
                             return res.send(mappedChars);
                         }
                         return res.send([]);

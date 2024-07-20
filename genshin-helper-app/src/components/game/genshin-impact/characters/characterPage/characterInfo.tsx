@@ -137,9 +137,12 @@ export default function CharacterInfo(props: {
                             Books
                         </td>
                         <td className="text-electro-50 text-md grid grid-cols-3 align-top">
-                            {character.books.map((book) => {
+                            {character.books.map((book, index) => {
                                 return (
-                                    <span key={book.name} title={book.name}>
+                                    <span
+                                        key={book.name + index}
+                                        title={book.name}
+                                    >
                                         {book.icon ? (
                                             <Image
                                                 src={book.icon}

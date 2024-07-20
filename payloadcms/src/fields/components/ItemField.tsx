@@ -5,7 +5,7 @@ import { Label, useFieldType } from "payload/components/forms";
 import { PaginatedDocs } from "payload/database";
 import qs from "qs";
 import ImageWithFallback from "./ImageWithFallback";
-
+import "./styles.scss";
 export default function ItemField(props) {
     const {
         path,
@@ -38,15 +38,14 @@ export default function ItemField(props) {
     useEffect(() => {
         const getElements = async () => {
             let stringifiedQuery = "";
+            let qsQuery = {
+                limit: 0,
+            };
             if (filter) {
                 const query = filter;
-                stringifiedQuery = qs.stringify(
-                    {
-                        where: query,
-                    },
-                    { addQueryPrefix: true }
-                );
+                qsQuery["where"] = query;
             }
+            stringifiedQuery = qs.stringify(qsQuery, { addQueryPrefix: true });
             const req = await fetch(
                 `${serverURL}/api/${collection}${stringifiedQuery}`,
                 {
@@ -201,6 +200,7 @@ export default function ItemField(props) {
                             "&:hover": {
                                 backgroundColor: "rgba(101,101,101,255)",
                             },
+                            overflow: "hidden",
                         }),
                         menuList: (baseStyles, styles) => ({
                             ...baseStyles,

@@ -10,6 +10,15 @@ const config: Config = {
     future: {
         hoverOnlyWhenSupported: true,
     },
+    safelist: [
+        "text-electro-elements-electro",
+        "text-electro-elements-pyro",
+        "text-electro-elements-hydro",
+        "text-electro-elements-cryo",
+        "text-electro-elements-dendro",
+        "text-electro-elements-anemo",
+        "text-electro-elements-geo",
+    ],
     theme: {
         extend: {
             width: {
@@ -51,6 +60,15 @@ const config: Config = {
                     "5star": {
                         from: "#FFB13F",
                         to: "#846332",
+                    },
+                    elements: {
+                        electro: "#D397F8",
+                        pyro: "#EC4923",
+                        hydro: "#00BFFF",
+                        dendro: "#608A00",
+                        cryo: "#4682B4",
+                        anemo: "#359697",
+                        geo: "#DEBD6C",
                     },
                 },
             },

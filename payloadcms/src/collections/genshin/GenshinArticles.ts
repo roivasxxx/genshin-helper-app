@@ -1,5 +1,6 @@
 import { CollectionConfig } from "payload/types";
 import { genshinSelectField } from "../../fields/fieldsConfig";
+import { relationToDictionary } from "../../utils";
 
 const isGuide = (data) => {
     return data.type === "guide";
@@ -38,15 +39,6 @@ const GenshinArticles: CollectionConfig = {
             defaultValue: [],
         },
         {
-            name: "author",
-            type: "relationship",
-            relationTo: "public-users",
-            defaultValue: ({ user }) => {
-                return user?.id || user?.uuid;
-            },
-            hidden: true,
-        },
-        {
             // for new possible article types
             name: "type",
             type: "select",
@@ -66,58 +58,26 @@ const GenshinArticles: CollectionConfig = {
             visible: isGuide,
         }),
         {
-            name: "content",
-            type: "richText",
-        },
-        {
-            name: "comps",
-            type: "array",
+            name: "weapons",
+            type: "group",
             fields: [
                 {
-                    name: "comp",
-                    type: "group",
+                    type: "array",
+                    name: "sections",
                     fields: [
                         {
-                            name: "compName",
+                            name: "title",
                             type: "text",
                         },
                         {
                             name: "description",
                             type: "richText",
                         },
-                        genshinSelectField({
-                            fieldName: "characterIds",
-                            collection: "genshin-characters",
-                            max: 3,
-                        }),
-                        // when the comp can have a character of flex element
-                        // for example any anemo character in a comp for vv, or any dendro character etc..
-                        // genshinItemConfig({
-                        //     fieldName: "flexElements",
-                        //     collection: "genshin-elements",
-                        //     visible: (_, siblingData) => {
-                        //         return (
-                        //             siblingData.characterIds &&
-                        //             siblingData.characterIds.length < 3
-                        //         );
-                        //     },
-                        // }),
                     ],
                 },
-            ],
-            admin: {
-                condition: (data) => {
-                    return isGuide(data) && data.characterId;
-                },
-            },
-        },
-        {
-            name: "weapons",
-            type: "array",
-            fields: [
                 {
-                    name: "weapon",
-                    type: "group",
+                    name: "weaponsList",
+                    type: "array",
                     fields: [
                         genshinSelectField({
                             fieldName: "weaponId",
@@ -136,14 +96,28 @@ const GenshinArticles: CollectionConfig = {
         },
         {
             name: "artifacts",
-            type: "array",
+            type: "group",
             fields: [
                 {
-                    name: "artifact",
-                    type: "group",
+                    type: "array",
+                    name: "sections",
+                    fields: [
+                        {
+                            name: "title",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "richText",
+                        },
+                    ],
+                },
+                {
+                    name: "artifactList",
+                    type: "array",
                     fields: [
                         genshinSelectField({
-                            fieldName: "artifactId",
+                            fieldName: "artifactIds",
                             collection: "genshin-artifacts",
                             // for combinations of 2/2
                             max: 2,
@@ -153,10 +127,250 @@ const GenshinArticles: CollectionConfig = {
                             type: "richText",
                         },
                     ],
+                    admin: {
+                        condition: isGuide,
+                    },
                 },
             ],
             admin: {
                 condition: isGuide,
+            },
+        },
+        {
+            name: "bestTeams",
+            type: "group",
+            fields: [
+                { name: "description", type: "richText" },
+                {
+                    name: "teamMateList",
+                    type: "array",
+                    fields: [
+                        genshinSelectField({
+                            fieldName: "characterId",
+                            collection: "genshin-characters",
+                        }),
+                        {
+                            type: "richText",
+                            name: "description",
+                        },
+                    ],
+                },
+            ],
+            admin: {
+                condition: isGuide,
+            },
+        },
+        {
+            name: "comps",
+            type: "group",
+            fields: [
+                {
+                    type: "array",
+                    name: "sections",
+                    fields: [
+                        {
+                            name: "title",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "richText",
+                        },
+                    ],
+                },
+                {
+                    name: "compsList",
+                    type: "array",
+                    fields: [
+                        {
+                            name: "compName",
+                            type: "text",
+                        },
+                        {
+                            name: "description",
+                            type: "richText",
+                        },
+                        genshinSelectField({
+                            fieldName: "characterIds",
+                            collection: "genshin-characters",
+                            max: 3,
+                        }),
+                        genshinSelectField({
+                            fieldName: "flexElements",
+                            collection: "genshin-elements",
+                            max: 3,
+                        }),
+                    ],
+                },
+            ],
+            admin: {
+                condition: isGuide,
+            },
+        },
+        {
+            name: "sections",
+            type: "array",
+            fields: [
+                {
+                    name: "title",
+                    type: "text",
+                },
+                {
+                    name: "content",
+                    type: "richText",
+                },
+            ],
+        },
+    ],
+    hooks: {
+        afterChange: [
+            async ({ doc }) => {
+                const revalidateUrl = `${process.env.FRONTEND_URL}/api/revalidate?path=article&articleId=${doc.id}&secret=${process.env.FRONTEND_REVALIDATE_SECRET}`;
+                const result = await fetch(revalidateUrl);
+                if (result.ok) {
+                    console.log(`Revalidated article ${doc.id}`);
+                } else {
+                    console.error(`Failed to revalidate article ${doc.id}`);
+                }
+
+                return doc;
+            },
+        ],
+    },
+    endpoints: [
+        {
+            path: "/getArticleIds",
+            method: "get",
+            handler: async (req, res) => {
+                try {
+                    const articles = await req.payload.find({
+                        collection: "genshin-articles",
+                        pagination: false,
+                    });
+                    return res
+                        .status(200)
+                        .json(articles.docs.map((doc) => doc.id));
+                } catch (error) {
+                    console.error(
+                        "/genshin-articles/getArticleIds threw an error: ",
+                        error
+                    );
+                }
+            },
+        },
+        {
+            path: "/getArticle",
+            method: "get",
+            handler: async (req, res) => {
+                try {
+                    const { id } = req.query;
+                    if (typeof id !== "string") {
+                        return res.status(400).send("Invalid id");
+                    }
+                    const _article = await req.payload.findByID({
+                        id,
+                        collection: "genshin-articles",
+                    });
+                    const { characterId, ...rest } = _article;
+
+                    const article: Record<string, any> = {
+                        character: relationToDictionary(characterId),
+                        changes: rest.changes,
+                        sections: rest.sections,
+                        createdAt: rest.createdAt,
+                        updatedAt: rest.updatedAt,
+                        type: rest.type,
+                        title: rest.title,
+                    };
+
+                    article.bestTeams = {
+                        description: rest.bestTeams.description,
+                        list: rest.bestTeams.teamMateList.map((teamMate) => {
+                            const { characterId, id, ...mate } = teamMate;
+                            return {
+                                ...mate,
+                                character: relationToDictionary(characterId),
+                            };
+                        }),
+                    };
+
+                    rest.comps.compsList.forEach((comp, index) => {
+                        rest.comps.compsList[index] = {
+                            //@ts-ignore
+                            flexElements: comp.flexElements.map((element) => {
+                                return relationToDictionary(element);
+                            }),
+                            //@ts-ignore
+                            characters: comp.characterIds.map((characterId) =>
+                                relationToDictionary(characterId)
+                            ),
+                            compName: comp.compName,
+                            description: comp.description,
+                        };
+                    });
+
+                    article.comps = {
+                        sections: rest.comps.sections,
+                        list: rest.comps.compsList,
+                    };
+
+                    article.artifacts = {
+                        sections: rest.artifacts.sections,
+                        list: rest.artifacts.artifactList.map((artifact) => {
+                            const { id, artifactIds, ...rest } = artifact;
+                            return {
+                                ...rest,
+                                artifacts: artifactIds.map((artifactId) =>
+                                    relationToDictionary(artifactId)
+                                ),
+                            };
+                        }),
+                    };
+
+                    article.weapons = {
+                        sections: rest.weapons.sections,
+                        list: rest.weapons.weaponsList.map((weapon) => {
+                            const { weaponId, id, ...rest } = weapon;
+                            return {
+                                ...rest,
+                                weapon: relationToDictionary(weapon.weaponId),
+                            };
+                        }),
+                    };
+
+                    return res.status(200).json(article);
+                } catch (error) {
+                    console.error(
+                        "/genshin-articles/getArticleIds threw an error: ",
+                        error
+                    );
+                }
+            },
+        },
+        {
+            path: "/getArticleOverview",
+            method: "get",
+            handler: async (req, res) => {
+                try {
+                    const articles = await req.payload.find({
+                        collection: "genshin-articles",
+                        pagination: false,
+                    });
+                    return res.status(200).send(
+                        articles.docs.map((doc) => ({
+                            id: doc.id,
+                            title: doc.title,
+                            character: relationToDictionary(doc.characterId),
+                            updatedAt: doc.updatedAt,
+                        }))
+                    );
+                } catch (error) {
+                    console.error(
+                        "/genshin-articles/getArticleIds threw an error: ",
+                        error
+                    );
+                    return res.status(500).send(error);
+                }
             },
         },
     ],
