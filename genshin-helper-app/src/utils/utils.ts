@@ -59,3 +59,11 @@ export const getFiftyFiftyColor = (status: FIFTY_FIFTY_STATUS) => {
     }
     return fiftyFiftyStatusColor;
 };
+
+export const normalizeName = (name: string) => {
+    return name
+        .replace(/[&\/\\#,+()$~%.'":*?<>{}-]/g, "")
+        .toLowerCase()
+        .split(/\s+/)
+        .join("_");
+};

@@ -16,7 +16,9 @@ export default function ItemWithIcon(props: {
             ) : (
                 <></>
             )}
-            <span className="text-md md:text-lg">{props.item.name}</span>
+            <span className="text-sm text-center md:text-lg">
+                {props.item.name}
+            </span>
         </div>
     );
 }

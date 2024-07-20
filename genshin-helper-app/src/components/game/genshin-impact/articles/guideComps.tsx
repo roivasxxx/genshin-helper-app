@@ -1,6 +1,7 @@
 import { GenshinGuide } from "@/types/genshinTypes";
 import ItemWithIcon from "./itemWithIcon";
 import RichTextContent from "./richTextContent";
+import GenshinGuideSection from "./section";
 
 export default function GuideComps(props: { comps: GenshinGuide["comps"] }) {
     const comps = props.comps;
@@ -9,6 +10,7 @@ export default function GuideComps(props: { comps: GenshinGuide["comps"] }) {
             <h2 className="text-xl font-bold" id="comps">
                 Comps
             </h2>
+            <GenshinGuideSection sections={comps.sections} keyString="comps" />
             <div className="flex flex-col gap-4 w-full bg-electro-900  my-2">
                 {comps.list.map((comp, index) => {
                     return (
