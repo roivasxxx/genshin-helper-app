@@ -1,4 +1,5 @@
 import {
+    ARTICLE_STATUS,
     FIFTY_FIFTY_STATUS,
     GENSHIN_ARTICLE_TYPE,
     GENSHIN_MATERIAL_TYPE,
@@ -168,6 +169,14 @@ export const ARTICLE_KEY_VALUES = {
     articleType: {
         [GENSHIN_ARTICLE_TYPE.GUIDE]: {
             text: "Guide",
+        },
+    },
+    articleStatus: {
+        [ARTICLE_STATUS.NEW]: {
+            text: "New",
+        },
+        [ARTICLE_STATUS.UPDATED]: {
+            text: "Updated",
         },
     },
 };

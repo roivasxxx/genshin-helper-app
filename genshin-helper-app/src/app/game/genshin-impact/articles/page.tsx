@@ -19,7 +19,8 @@ export default async function ArticlesPage() {
 
     return (
         <main className="w-full mt-[7rem] mx-auto p-4 my-8 bg-electro-800 rounded inline-block items-start justify-center font-exo lg:w-[75%] sm:flex">
-            <div className="flex-1 flex inline-block flex-col justify-center">
+            <div className="flex-1 flex inline-block flex-col justify-center text-electro-50">
+                <h1 className="text-2xl font-bold">Genshin Impact Articles</h1>
                 <ArticleOverview articles={articles} />
             </div>
         </main>

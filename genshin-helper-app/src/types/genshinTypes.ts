@@ -384,11 +384,17 @@ export type GenshinGuide = {
     character: NameIconWithIdDictionary;
 };
 
+export enum ARTICLE_STATUS {
+    "NEW" = "new",
+    "UPDATED" = "updated",
+}
+
 type BaseGenshinArticle = {
     id: string;
     title: string;
     updatedAt: string;
     type: GENSHIN_ARTICLE_TYPE;
+    status: ARTICLE_STATUS;
 };
 
 export type GenshinGuidePreview = BaseGenshinArticle & {

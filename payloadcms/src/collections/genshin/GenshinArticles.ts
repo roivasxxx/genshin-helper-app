@@ -1,9 +1,26 @@
 import { CollectionConfig } from "payload/types";
 import { genshinSelectField } from "../../fields/fieldsConfig";
 import { relationToDictionary } from "../../utils";
+import { GenshinArticle } from "../../../types/payload-types";
 
 const isGuide = (data) => {
     return data.type === "guide";
+};
+
+const mapArticleOverview = (doc: GenshinArticle) => {
+    const article = {
+        id: doc.id,
+        title: doc.title,
+        type: doc.type,
+        updatedAt: doc.updatedAt,
+        status: doc.updatedAt === doc.createdAt ? "new" : "updated",
+    };
+
+    if (doc.type === "guide") {
+        article["character"] = relationToDictionary(doc.characterId);
+    }
+
+    return article;
 };
 
 const GenshinArticles: CollectionConfig = {
@@ -356,24 +373,31 @@ const GenshinArticles: CollectionConfig = {
                         collection: "genshin-articles",
                         pagination: false,
                     });
-                    return res.status(200).send(
-                        articles.docs.map((doc) => {
-                            const article = {
-                                id: doc.id,
-                                title: doc.title,
-                                type: doc.type,
-                                updatedAt: doc.updatedAt,
-                            };
-
-                            if (doc.type === "guide") {
-                                article["character"] = relationToDictionary(
-                                    doc.characterId
-                                );
-                            }
-
-                            return article;
-                        })
+                    return res
+                        .status(200)
+                        .send(articles.docs.map(mapArticleOverview));
+                } catch (error) {
+                    console.error(
+                        "/genshin-articles/getArticleIds threw an error: ",
+                        error
                     );
+                    return res.status(500).send(error);
+                }
+            },
+        },
+        {
+            path: "/getRecentArticles",
+            method: "get",
+            handler: async (req, res) => {
+                try {
+                    const articles = await req.payload.find({
+                        collection: "genshin-articles",
+                        limit: 5,
+                        sort: "-updatedAt",
+                    });
+                    return res
+                        .status(200)
+                        .send(articles.docs.map(mapArticleOverview));
                 } catch (error) {
                     console.error(
                         "/genshin-articles/getArticleIds threw an error: ",
