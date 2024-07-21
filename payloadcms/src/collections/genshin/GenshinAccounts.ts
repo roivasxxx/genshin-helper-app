@@ -815,20 +815,31 @@ const GenshinAccounts: CollectionConfig = {
                         if (!accountId) {
                             return res.status(403).send("Invalid accountId");
                         }
-                        res.setHeader("Content-Type", "application/json");
+
+                        let fileType = req.query.fileType;
+                        if (typeof fileType !== "string") {
+                            fileType = "json";
+                        }
+
+                        res.setHeader(
+                            "Content-Type",
+                            "application/octet-stream"
+                        );
                         res.setHeader(
                             "Content-Disposition",
-                            "attachment; filename=data.json"
+                            `attachment; filename=wishHistory.${fileType}`
                         );
                         // checks if account exists
                         await req.payload.findByID({
                             collection: "genshin-accounts",
                             id: accountId,
                         });
-                        res.write("{");
-                        await exportWishHistory(accountId, res);
-                        res.write("}");
-                        res.end();
+
+                        await exportWishHistory(
+                            accountId,
+                            res,
+                            fileType as "json" | "xlsx"
+                        );
                     } catch (error) {
                         console.error(
                             "exportWishHistory threw an exception:",

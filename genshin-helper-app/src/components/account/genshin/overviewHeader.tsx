@@ -1,4 +1,3 @@
-import CSVIcon from "@/components/csvIcon";
 import DialogModal from "@/components/dialog";
 import JsonIcon from "@/components/jsonIcon";
 import { GenshinAccount, IMPORT_STATUS } from "@/types/genshinTypes";
@@ -10,6 +9,8 @@ import FloatingLabelInput from "@/components/floatingLabelInput";
 import dayjs from "dayjs";
 import { DATE_TIME_FORMAT } from "@/utils/dateUtils";
 import { linkValidator } from "@/utils/validationUtils";
+import ENV from "@/utils/env-utils";
+import XLSXIcon from "@/components/xlsxIcon";
 
 export default function OverviewHeader(props: {
     accountData: GenshinAccount;
@@ -140,18 +141,22 @@ export default function OverviewHeader(props: {
                 <div className="flex flex-row items-start items-center gap-2 p-2">
                     <h2 className="text-xl">Export</h2>
                     <div className="flex flex-1 gap-2 justify-end">
-                        <button
+                        <a
+                            href={`${ENV.BACKEND_URL}/api/genshin-accounts/exportWishHistory?accountId=${props.accountData.accountId}&fileType=json`}
+                            download
                             className="bg-electro-900 p-2 rounded hover:bg-electro-900/60 active:bg-electro-900/60 flex items-center"
                             title="Export to JSON"
                         >
                             <JsonIcon className="fill-electro-50 size-7" />
-                        </button>
-                        <button
+                        </a>
+                        <a
+                            href={`${ENV.BACKEND_URL}/api/genshin-accounts/exportWishHistory?accountId=${props.accountData.accountId}&fileType=xlsx`}
+                            download
                             className="bg-electro-900 p-2 rounded hover:bg-electro-900/60 active:bg-electro-900/60"
-                            title="Export to CSV"
+                            title="Export to XLSX"
                         >
-                            <CSVIcon className="fill-electro-50 size-7" />
-                        </button>
+                            <XLSXIcon className="fill-electro-50 size-7" />
+                        </a>
                     </div>
                 </div>
             </div>
