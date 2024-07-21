@@ -3,9 +3,20 @@ import payload from "payload";
 import { mediaManagement } from "@roivasxxx/payload-cloudinary-plugin";
 import { initAgenda } from "./agenda";
 import { initializeMongo } from "./mongo";
+import nodemailer from "nodemailer";
 
 require("dotenv").config();
 const app = express();
+
+const transport = nodemailer.createTransport({
+    host: "in-v3.mailjet.com",
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.MAILJET_API_KEY,
+        pass: process.env.MAILJET_SECRET,
+    },
+});
 
 // use cloudinary plugin
 app.use(
@@ -34,6 +45,11 @@ const start = async () => {
         onInit: async () => {
             payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`);
         },
+        email: {
+            fromName: "Electro Mains",
+            fromAddress: process.env.SERVICE_EMAIL,
+            transport,
+        },
     });
 
     // auth middleware
@@ -42,10 +58,6 @@ const start = async () => {
     app.listen(process.env.PAYLOAD_PUBLIC_PORT);
     await initAgenda();
     await initializeMongo();
-    // create cron jobs here
-    // payload.find({ collection: "public-users" }).then((docs) => {
-    //     console.log(`FOUND ${docs.docs.length} public users!`);
-    // });
 };
 
 start();
