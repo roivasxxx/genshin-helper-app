@@ -1,8 +1,26 @@
 import Banner from "@/components/account/genshin/banner";
-import { BANNER_TYPE } from "@/utils/constants";
+import { BANNER_TYPE, GENSHIN_BANNER_NAME } from "@/utils/constants";
 import { isNumber } from "@/utils/utils";
+import { Metadata, ResolvingMetadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+type Props = {
+    params: { bannerType: BANNER_TYPE };
+    searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+    { params, searchParams }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const id = params.bannerType;
+    let title = `${GENSHIN_BANNER_NAME[id]} banner`;
+
+    return {
+        title: title,
+    };
+}
 
 export default function UserBannerPage(props: {
     params: {

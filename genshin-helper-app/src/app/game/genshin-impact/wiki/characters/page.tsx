@@ -1,10 +1,15 @@
 import CharacterShowcase from "@/components/game/genshin-impact/characterShowcase";
 import { HTTP_METHOD } from "@/types";
 import cmsRequest from "@/utils/fetchUtils";
+import { Metadata } from "next";
 
 export const dynamic = "force-static";
 
-export default async function GenshinRoot() {
+export const metadata: Metadata = {
+    title: "Characters",
+};
+
+export default async function Characters() {
     let characters = [];
     let elements = [];
     try {

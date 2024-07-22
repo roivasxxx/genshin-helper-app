@@ -6,6 +6,7 @@ import { ExtraGenshinCharacter } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 import Image from "next/image";
 import React from "react";
+import type { Metadata, ResolvingMetadata } from "next";
 
 export async function generateStaticParams() {
     let characters = [];
@@ -24,6 +25,31 @@ export async function generateStaticParams() {
     return characters.map((el: any) => {
         return { characterId: el.id };
     });
+}
+
+type Props = {
+    params: { characterId: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+    { params, searchParams }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const id = params.characterId;
+    let title = "Character";
+    try {
+        const data = await cmsRequest({
+            path: `/api/genshin-characters/getCharacterName?id=${id}&skipRateLimitKey=${process.env.SKIP_RATE_LIMIT_KEY}`,
+            method: HTTP_METHOD.GET,
+        });
+        title = await data.text();
+    } catch (error) {
+        console.error("CharacterSlug - generateMetadata threw an error", error);
+    }
+    return {
+        title: title,
+    };
 }
 
 export default async function CharacterSlug(props: {

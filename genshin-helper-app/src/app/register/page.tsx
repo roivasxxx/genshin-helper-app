@@ -12,6 +12,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useState } from "react";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Register",
+};
+
 export default function Register() {
     const [state, setState] = useState({ email: "", password: "" });
     const [errorState, setErrorState] = useState("");

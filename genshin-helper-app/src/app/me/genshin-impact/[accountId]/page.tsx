@@ -1,6 +1,11 @@
 import GenshinAccountOverview from "@/components/account/genshin/genshinAccountOverview";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+    title: "Genshin account",
+};
 
 export default function GenshinAccount(props: {
     params: {

@@ -1,8 +1,13 @@
 // import Test from "@/components/test";
 
 import AccountInfo from "@/components/account/accountInfo";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+    title: "My account"
+};
 
 export default async function Me() {
     return (

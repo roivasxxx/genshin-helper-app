@@ -2,6 +2,7 @@ import WeaponInfo from "@/components/game/genshin-impact/weapons/weaponPage/weap
 import { HTTP_METHOD } from "@/types";
 import { GenshinWeapon } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
+import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 
 export async function generateStaticParams() {
@@ -21,6 +22,31 @@ export async function generateStaticParams() {
     return weapons.map((el: any) => {
         return { weaponId: el.id };
     });
+}
+
+type Props = {
+    params: { weaponId: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+    { params, searchParams }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const id = params.weaponId;
+    let title = "Weapon";
+    try {
+        const data = await cmsRequest({
+            path: `/api/genshin-weapons/getWeaponName?id=${id}&skipRateLimitKey=${process.env.SKIP_RATE_LIMIT_KEY}`,
+            method: HTTP_METHOD.GET,
+        });
+        title = await data.text();
+    } catch (error) {
+        console.error("WeaponSlug - generateMetadata threw an error", error);
+    }
+    return {
+        title: title,
+    };
 }
 
 export default async function WeaponSlug(props: {

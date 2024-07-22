@@ -811,6 +811,26 @@ const GenshinCharacters: CollectionConfig = {
                 },
             ],
         },
+        {
+            path: "/getCharacterName",
+            method: "get",
+            handler: async (req: PayloadRequest, res: Response) => {
+                try {
+                    const { id } = req.query;
+                    if (typeof id !== "string") {
+                        return res.status(400).send("Invalid id");
+                    }
+                    const character = await req.payload.findByID({
+                        collection: "genshin-characters",
+                        id: id,
+                    });
+                    return res.send(character.name);
+                } catch (error) {
+                    console.error("/getCharacterName threw an error: ", error);
+                    return res.status(500).send(error);
+                }
+            },
+        },
     ],
 };
 

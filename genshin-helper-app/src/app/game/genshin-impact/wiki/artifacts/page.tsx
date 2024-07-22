@@ -2,8 +2,13 @@ import ArtifactsShowcase from "@/components/game/genshin-impact/artifacts/artifa
 import { HTTP_METHOD } from "@/types";
 import { GenshinArtifact } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
+import { Metadata } from "next";
 
 export const dynamic = "force-static";
+
+export const metadata: Metadata = {
+    title: "Artifacts",
+};
 
 export default async function ArtifactsPage() {
     let artifacts: GenshinArtifact[] = [];

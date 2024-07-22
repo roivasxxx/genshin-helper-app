@@ -407,6 +407,29 @@ const GenshinArticles: CollectionConfig = {
                 }
             },
         },
+        {
+            path: "/getArticleTitle",
+            method: "get",
+            handler: async (req, res) => {
+                try {
+                    const { id } = req.query;
+                    if (typeof id !== "string") {
+                        return res.status(400).send("Invalid id");
+                    }
+                    const _article = await req.payload.findByID({
+                        id,
+                        collection: "genshin-articles",
+                    });
+                    return res.status(200).send(_article.title);
+                } catch (error) {
+                    console.error(
+                        "/genshin-articles/getArticleTitle threw an error: ",
+                        error
+                    );
+                    return res.status(500).send(error);
+                }
+            },
+        },
     ],
 };
 

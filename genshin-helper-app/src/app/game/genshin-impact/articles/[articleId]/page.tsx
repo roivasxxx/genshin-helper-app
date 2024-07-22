@@ -3,8 +3,34 @@ import GuideSidebar from "@/components/game/genshin-impact/articles/guideSidebar
 import { HTTP_METHOD } from "@/types";
 import { GenshinGuide } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
+import { Metadata, ResolvingMetadata } from "next";
 
 export const dynamic = "force-static";
+
+type Props = {
+    params: { articleId: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+    { params, searchParams }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const id = params.articleId;
+    let title = "Article";
+    try {
+        const data = await cmsRequest({
+            path: `/api/genshin-articles/getArticleTitle?id=${id}&skipRateLimitKey=${process.env.SKIP_RATE_LIMIT_KEY}`,
+            method: HTTP_METHOD.GET,
+        });
+        title = await data.text();
+    } catch (error) {
+        console.error("ArticleSlug - generateMetadata threw an error", error);
+    }
+    return {
+        title: title,
+    };
+}
 
 export async function generateStaticParams() {
     let articleIds = [];

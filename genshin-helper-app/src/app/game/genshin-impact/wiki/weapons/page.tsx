@@ -2,8 +2,13 @@ import WeaponShowcase from "@/components/game/genshin-impact/weapons/weaponShowc
 import { HTTP_METHOD } from "@/types";
 import { GenshinWeapon } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
+import { Metadata } from "next";
 
 export const dynamic = "force-static";
+
+export const metadata: Metadata = {
+    title: "Weapons",
+};
 
 export default async function Weapons() {
     let weapons: GenshinWeapon[] = [];

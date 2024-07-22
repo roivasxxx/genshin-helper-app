@@ -364,6 +364,26 @@ const GenshinWeapons: CollectionConfig = {
                 }
             },
         },
+        {
+            path: "/getWeaponName",
+            method: "get",
+            handler: async (req: PayloadRequest, res: Response) => {
+                try {
+                    const { id } = req.query;
+                    if (typeof id !== "string") {
+                        return res.status(400).send("Invalid id");
+                    }
+                    const weapon = await req.payload.findByID({
+                        collection: "genshin-weapons",
+                        id: id,
+                    });
+                    return res.send(weapon.name);
+                } catch (error) {
+                    console.error("/getWeaponName threw an error: ", error);
+                    return res.status(500).send(error);
+                }
+            },
+        },
     ],
 };
 

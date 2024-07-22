@@ -2,8 +2,13 @@ import ArticleOverview from "@/components/game/genshin-impact/articles/articleOv
 import { HTTP_METHOD } from "@/types";
 import { GenshinArticlePreview } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
+import { Metadata } from "next";
 
 export const dynamic = "force-static";
+
+export const metadata: Metadata = {
+    title: "Genshin articles",
+};
 
 export default async function ArticlesPage() {
     let articles: GenshinArticlePreview[] = [];
