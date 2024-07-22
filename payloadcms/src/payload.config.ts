@@ -47,23 +47,18 @@ export default buildConfig({
             },
         }),
     },
-    // rateLimit: {
-    //     implement custom express rate limiter, that can be set up on a per route basis
-    //     max: 1,
-    //     window: 500,
-    //     // https://payloadcms.com/docs/production/preventing-abuse
-    // },
     rateLimit: {
         skip(req: PayloadRequest) {
             // skip rate limit for requests with skipRateLimitKey
             // these request are made when the frontend is building SSG pages
-            // TODO: add allowed endpoint list here
             return (
                 req.query &&
                 req.query.skipRateLimitKey &&
                 req.query.skipRateLimitKey === process.env.SKIP_RATE_LIMIT_KEY
             );
         },
+        max: 100,
+        window: 60,
     },
     editor: slateEditor({}),
     collections: collections,
