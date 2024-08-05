@@ -11,31 +11,6 @@ require("dotenv").config();
 
 let agenda: Agenda;
 
-const notifyConfig: NotificationConfig[] = [
-    {
-        // 6 am in Europe/Berlin
-        region: WISH_REGIONS.EUROPE,
-        startDate: "0 8 * * *",
-        timezone: "Europe/Berlin",
-    },
-    {
-        // 6 am in America/New_York
-        region: WISH_REGIONS.AMERICA,
-        startDate: "0 8 * * *",
-        timezone: "America/New_York",
-    },
-    {
-        // 6 am in Asia/Hong_Kong
-        region: WISH_REGIONS.ASIA,
-        startDate: "0 8 * * *",
-        timezone: "Asia/Hong_Kong",
-    },
-
-    // diff ASIA - EU = 21600000
-    // EU + 21600000 = NA
-    // EU - 21600000 = ASIA
-];
-
 async function defineNotificationJobs() {
     agenda.define("sendNotifications", async (job, done) => {
         await notifyUsers();
