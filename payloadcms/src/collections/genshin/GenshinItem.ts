@@ -3,6 +3,7 @@ import { CollectionConfig, PayloadRequest } from "payload/types";
 import { relationToDictionary } from "../../utils";
 import { RecordWithIcon, SimpleRecord } from "../../../types/types";
 import { GenshinItem } from "../../../types/payload-types";
+import { accessControls } from "../../api/accessControls";
 
 const mapGenshinItem = (item: GenshinItem) => {
     const { sibling, domain, days, ...rest } = item;
@@ -54,6 +55,7 @@ const mapGenshinItem = (item: GenshinItem) => {
 
 const GenshinItems: CollectionConfig = {
     slug: "genshin-items",
+    access: accessControls,
     fields: [
         {
             name: "id",

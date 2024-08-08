@@ -3,6 +3,7 @@ import { GENSHIN_SUBSTATS } from "../../constants";
 import { relationToDictionary } from "../../utils";
 import { Response } from "express";
 import { GenshinWeapon } from "../../../types/payload-types";
+import { accessControls } from "../../api/accessControls";
 
 const mapWeapon = (weapon: GenshinWeapon) => {
     const mappedWeapon = {
@@ -41,6 +42,7 @@ const mapWeapon = (weapon: GenshinWeapon) => {
 
 const GenshinWeapons: CollectionConfig = {
     slug: "genshin-weapons",
+    access: accessControls,
     fields: [
         {
             name: "id",

@@ -1,6 +1,6 @@
 import { CollectionConfig, PayloadRequest } from "payload/types";
-import authMiddleware from "../../api/authMiddleware";
 import { Response } from "express";
+import { accessControls } from "../../api/accessControls";
 
 const GenshinElements: CollectionConfig = {
     slug: "genshin-elements",
@@ -21,6 +21,7 @@ const GenshinElements: CollectionConfig = {
             required: true,
         },
     ],
+    access: accessControls,
     endpoints: [
         {
             path: "/getElements",

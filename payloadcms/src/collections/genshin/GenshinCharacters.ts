@@ -3,51 +3,7 @@ import { GENSHIN_REGIONS, RARITY_LABELS } from "../../constants";
 import { Response } from "express";
 import { GenshinCharacter } from "../../../types/payload-types";
 import payload from "payload";
-import { slateEditor } from "@payloadcms/richtext-slate";
-import wruTextColorLeaf from "@wru/payloadcms-slate-plugin-textcolor-leaf";
-
-const editor = slateEditor({
-    admin: {
-        elements: ["h1", "h2", "h3", "h4", "ul", "ol"],
-        leaves: [
-            "bold",
-            "italic",
-            wruTextColorLeaf({
-                name: "color_picker",
-                colorList: [
-                    {
-                        label: "Geo",
-                        color: "#FFD780FF",
-                    },
-                    {
-                        label: "Anemo",
-                        color: "#80FFD7FF",
-                    },
-                    {
-                        label: "Electro",
-                        color: "#FFACFFFF",
-                    },
-                    {
-                        label: "Hydro",
-                        color: "#80C0FFFF",
-                    },
-                    {
-                        label: "Pyro",
-                        color: "#FF9999FF",
-                    },
-                    {
-                        label: "Cryo",
-                        color: "#99FFFFFF",
-                    },
-                    {
-                        label: "Dendro",
-                        color: "#99FF88FF",
-                    },
-                ],
-            }),
-        ],
-    },
-});
+import { accessControls } from "../../api/accessControls";
 
 const addCharExtra = async (
     char: GenshinCharacter,
@@ -245,6 +201,7 @@ const normalizeChar = (char: GenshinCharacter) => {
 
 const GenshinCharacters: CollectionConfig = {
     slug: "genshin-characters",
+    access: accessControls,
     fields: [
         {
             name: "name",

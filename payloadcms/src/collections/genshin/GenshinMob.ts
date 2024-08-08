@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import { accessControls } from "../../api/accessControls";
 
 const GenshinMob: CollectionConfig = {
     slug: "genshin-mobs",
@@ -42,6 +43,7 @@ const GenshinMob: CollectionConfig = {
             ],
         },
     ],
+    access: accessControls,
 };
 
 export default GenshinMob;

@@ -1,6 +1,7 @@
 import { CollectionConfig, GroupField } from "payload/types";
 import { genshinSelectField } from "../../fields/fieldsConfig";
 import { DAYS } from "../../constants";
+import { accessControls } from "../../api/accessControls";
 
 const details = (): GroupField[] => {
     return Object.values(DAYS).map((day) => {
@@ -27,6 +28,7 @@ const details = (): GroupField[] => {
 
 const GenshinDomain: CollectionConfig = {
     slug: "genshin-domains",
+    access: accessControls,
     fields: [
         { name: "id", type: "text" },
         { name: "region", type: "text" },

@@ -2,6 +2,7 @@ import { CollectionConfig } from "payload/types";
 import { genshinSelectField } from "../../fields/fieldsConfig";
 import { relationToDictionary } from "../../utils";
 import { GenshinArticle } from "../../../types/payload-types";
+import { accessControls } from "../../api/accessControls";
 
 const isGuide = (data) => {
     return data.type === "guide";
@@ -25,6 +26,7 @@ const mapArticleOverview = (doc: GenshinArticle) => {
 
 const GenshinArticles: CollectionConfig = {
     slug: "genshin-articles",
+    access: accessControls,
     fields: [
         {
             name: "title",

@@ -1,7 +1,9 @@
 import { CollectionConfig } from "payload/types";
+import { accessControls } from "../api/accessControls";
 
 const Releases: CollectionConfig = {
     slug: "releases",
+    access: accessControls,
     fields: [
         {
             name: "allowImport",

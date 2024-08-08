@@ -2,6 +2,7 @@ import { CollectionConfig, PayloadRequest } from "payload/types";
 import { RARITY_LABELS } from "../../constants";
 import { Response } from "express";
 import { relationToDictionary } from "../../utils";
+import { accessControls } from "../../api/accessControls";
 
 const GenshinArtifact: CollectionConfig = {
     slug: "genshin-artifacts",
@@ -89,6 +90,7 @@ const GenshinArtifact: CollectionConfig = {
             },
         },
     ],
+    access: accessControls,
 };
 
 export default GenshinArtifact;

@@ -1,7 +1,9 @@
 import { CollectionConfig } from "payload/types";
+import { accessControls } from "../../api/accessControls";
 
 const Jobs: CollectionConfig = {
     slug: "jobs",
+    access: accessControls,
     fields: [
         {
             name: "status",

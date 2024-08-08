@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import { accessControls } from "../api/accessControls";
 
 const Users: CollectionConfig = {
     slug: "users",
@@ -27,7 +28,7 @@ const Users: CollectionConfig = {
             ],
         },
     ],
-    endpoints: [],
+    access: accessControls,
 };
 
 export default Users;

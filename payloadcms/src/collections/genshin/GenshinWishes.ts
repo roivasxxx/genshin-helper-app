@@ -1,7 +1,9 @@
 import { CollectionConfig } from "payload/types";
+import { accessControls } from "../../api/accessControls";
 
 const GenshinWishes: CollectionConfig = {
     slug: "genshin-wishes",
+    access: accessControls,
     fields: [
         {
             name: "bannerType",

@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import { accessControls } from "../api/accessControls";
 
 export const Media: CollectionConfig = {
     slug: "media",
@@ -41,4 +42,5 @@ export const Media: CollectionConfig = {
             type: "text",
         },
     ],
+    access: accessControls,
 };

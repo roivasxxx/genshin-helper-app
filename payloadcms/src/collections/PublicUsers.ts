@@ -1,8 +1,7 @@
 import { Response } from "express";
 import { CollectionConfig, PayloadRequest } from "payload/types";
 import authMiddleware from "../api/authMiddleware";
-import payload from "payload";
-import { notifyUser } from "../notifications";
+import { isAllowed } from "../api/accessControls";
 
 const PublicUsers: CollectionConfig = {
     slug: "public-users",
@@ -214,10 +213,8 @@ const PublicUsers: CollectionConfig = {
     ],
     access: {
         create: () => true,
-        read: () => true,
-        update: ({ req }) => {
-            return true;
-        },
+        read: isAllowed,
+        update: () => false,
         delete: () => false,
         admin: () => false,
         unlock: () => false,

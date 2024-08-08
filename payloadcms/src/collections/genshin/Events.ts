@@ -1,9 +1,11 @@
 import { CollectionConfig, PayloadRequest } from "payload/types";
 import { Response } from "express";
 import { mapGenshinEvent } from "../../utils";
+import { accessControls } from "../../api/accessControls";
 
 const Events: CollectionConfig = {
     slug: "genshin-events",
+    access: accessControls,
     fields: [
         {
             name: "name",
