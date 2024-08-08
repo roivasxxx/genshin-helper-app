@@ -21,7 +21,6 @@
         "@payloadcms/plugin-cloud": "^3.0.0",
         "@payloadcms/richtext-slate": "^1.0.0",
         "@roivasxxx/payload-cloudinary-plugin": "^0.0.1",
-        "@wru/payloadcms-slate-plugin-textcolor-leaf": "^0.1.0",
         "agenda": "^5.0.0",
         "axios": "^1.6.8",
         "cross-env": "^7.0.3",
