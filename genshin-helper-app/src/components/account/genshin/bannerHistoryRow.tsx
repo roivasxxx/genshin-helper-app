@@ -1,3 +1,4 @@
+import ImageWithLoader from "@/components/imageWithLoader";
 import { Wish } from "@/types/genshinTypes";
 import {
     BANNER_TYPE,
@@ -6,7 +7,6 @@ import {
     STAR_SYMBOL,
 } from "@/utils/constants";
 import { getFiftyFiftyColor } from "@/utils/utils";
-import Image from "next/image";
 
 export default function BannerHistoryRow(props: {
     wish: Wish;
@@ -43,13 +43,12 @@ export default function BannerHistoryRow(props: {
             <td className="text-sm text-nowrap">{wish.date}</td>
             <td className="text-nowrap">
                 {wish.item.icon ? (
-                    <Image
+                    <ImageWithLoader
                         src={wish.item.icon.url}
                         alt={wish.item.value}
                         width={40}
                         height={40}
                         className="md:inline"
-                        loader={({ src }) => src}
                     />
                 ) : (
                     <></>

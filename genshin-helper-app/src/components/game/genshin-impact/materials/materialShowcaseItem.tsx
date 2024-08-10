@@ -1,9 +1,9 @@
 "use client";
 import ArrowToggle from "@/components/arrowToggle";
+import ImageWithLoader from "@/components/imageWithLoader";
 import { GenshinMaterial } from "@/types/genshinTypes";
 import { WEEKDAYS } from "@/utils/dateUtils";
 import { capitalizeString } from "@/utils/utils";
-import Image from "next/image";
 import { useState } from "react";
 
 function ShowcaseItemRow(props: { item: GenshinMaterial["value"][number] }) {
@@ -12,13 +12,12 @@ function ShowcaseItemRow(props: { item: GenshinMaterial["value"][number] }) {
         <div className="flex flex-row items-center w-[85%] md:w-full">
             <div className="min-h-10 min-w-10">
                 {item.icon ? (
-                    <Image
+                    <ImageWithLoader
                         src={item.icon}
                         alt={item.name}
                         height={60}
                         width={60}
                         sizes="100%"
-                        loader={({ src }) => src}
                     />
                 ) : (
                     <></>

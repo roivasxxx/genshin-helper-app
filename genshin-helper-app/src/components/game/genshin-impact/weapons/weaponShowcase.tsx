@@ -7,6 +7,7 @@ import Image from "next/image";
 import { capitalizeString } from "@/utils/utils";
 import CloseIcon from "@/components/closeIcon";
 import Link from "next/link";
+import ImageWithLoader from "@/components/imageWithLoader";
 
 export default function WeaponShowcase(props: { weapons: GenshinWeapon[] }) {
     const { weapons } = props;
@@ -149,7 +150,7 @@ export default function WeaponShowcase(props: { weapons: GenshinWeapon[] }) {
                                     className={`relative w-4/5 h-full rounded p-2 ${bgColor}`}
                                 >
                                     {weapon.icon ? (
-                                        <Image
+                                        <ImageWithLoader
                                             src={weapon.icon}
                                             alt={weapon.id}
                                             width={0}
@@ -157,7 +158,6 @@ export default function WeaponShowcase(props: { weapons: GenshinWeapon[] }) {
                                             sizes="100%"
                                             priority
                                             className="object-contain w-full h-full"
-                                            loader={({ src }) => src}
                                         />
                                     ) : (
                                         <></>

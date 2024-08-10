@@ -4,9 +4,9 @@ import SkillsAndConstellations from "@/components/game/genshin-impact/characters
 import { HTTP_METHOD } from "@/types";
 import { ExtraGenshinCharacter } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
-import Image from "next/image";
 import React from "react";
 import type { Metadata, ResolvingMetadata } from "next";
+import ImageWithLoader from "@/components/imageWithLoader";
 
 export async function generateStaticParams() {
     let characters = [];
@@ -85,7 +85,7 @@ export default async function CharacterSlug(props: {
                     <CharacterInfo character={character} />
                     <div className="w-full overflow-clip h-[calc(100vh-4rem)] max-h-[600px] z-0 ">
                         {character.splash ? (
-                            <Image
+                            <ImageWithLoader
                                 src={character.splash}
                                 alt={character.id + "_splash"}
                                 width={0}
@@ -93,7 +93,6 @@ export default async function CharacterSlug(props: {
                                 priority
                                 sizes="100%"
                                 className="h-[calc(100vh-4rem)] max-h-[600px] object-cover w-auto mx-auto"
-                                loader={({ src }) => src}
                             />
                         ) : (
                             <></>

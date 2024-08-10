@@ -1,7 +1,7 @@
+import ImageWithLoader from "@/components/imageWithLoader";
 import { ExtraGenshinCharacter } from "@/types/genshinTypes";
 import { GENSHIN_SUBSTAT_TEXT } from "@/utils/constants";
 import { capitalizeString, getStarString } from "@/utils/utils";
-import Image from "next/image";
 
 export default function CharacterInfo(props: {
     character: ExtraGenshinCharacter;
@@ -23,13 +23,12 @@ export default function CharacterInfo(props: {
                 </span>
                 {character.element.icon ? (
                     <div className="relative size-10 mx-2">
-                        <Image
+                        <ImageWithLoader
                             alt={character.element.name}
                             src={character.element.icon}
                             fill={true}
                             sizes="100%"
                             className="object-scale-down"
-                            loader={({ src }) => src}
                         />
                     </div>
                 ) : (
@@ -76,13 +75,12 @@ export default function CharacterInfo(props: {
                         </td>
                         <td className="text-electro-50 text-md flex">
                             {character.specialty.icon ? (
-                                <Image
+                                <ImageWithLoader
                                     src={character.specialty.icon}
                                     alt={character.specialty.name}
                                     height={40}
                                     width={40}
                                     title={character.specialty.name}
-                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 character.specialty.name
@@ -95,13 +93,12 @@ export default function CharacterInfo(props: {
                         </td>
                         <td className="text-electro-50 text-md">
                             {character.boss && character.boss.icon ? (
-                                <Image
+                                <ImageWithLoader
                                     src={character.boss.icon}
                                     alt={character.boss.name}
                                     height={40}
                                     width={40}
                                     title={character.boss.name}
-                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 // traveler does not need any boss drop
@@ -115,13 +112,12 @@ export default function CharacterInfo(props: {
                         </td>
                         <td className="text-electro-50 text-md">
                             {character.gem.icon ? (
-                                <Image
+                                <ImageWithLoader
                                     src={character.gem.icon}
                                     alt={character.gem.name}
                                     height={40}
                                     width={40}
                                     title={character.gem.name}
-                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 character.gem.name
@@ -148,12 +144,11 @@ export default function CharacterInfo(props: {
                                         title={book.name}
                                     >
                                         {book.icon ? (
-                                            <Image
+                                            <ImageWithLoader
                                                 src={book.icon}
                                                 alt={book.name}
                                                 height={40}
                                                 width={40}
-                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             book.name
@@ -169,13 +164,12 @@ export default function CharacterInfo(props: {
                         </td>
                         <td className="text-electro-50 text-md align-top">
                             {character.trounce.icon ? (
-                                <Image
+                                <ImageWithLoader
                                     src={character.trounce.icon}
                                     alt={character.trounce.name}
                                     height={40}
                                     width={40}
                                     title={character.trounce.name}
-                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 character.trounce.name
@@ -188,13 +182,12 @@ export default function CharacterInfo(props: {
                         </td>
                         <td className="text-electro-50 text-md align-top">
                             {character.talent.icon ? (
-                                <Image
+                                <ImageWithLoader
                                     src={character.talent.icon}
                                     alt={character.talent.name}
                                     height={40}
                                     width={40}
                                     title={character.talent.name}
-                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 character.talent.name

@@ -1,6 +1,6 @@
+import ImageWithLoader from "@/components/imageWithLoader";
 import { NameIconDictionary } from "@/types/genshinTypes";
 import { getStarString } from "@/utils/utils";
-import Image from "next/image";
 
 export default function BannerItemPreview(props: {
     item: NameIconDictionary;
@@ -10,7 +10,7 @@ export default function BannerItemPreview(props: {
     return (
         <div className="flex flex-col items-center min-w-[72px] shrink-0 max-w-[140px]">
             {item.icon ? (
-                <Image
+                <ImageWithLoader
                     src={item.icon}
                     alt={item.name}
                     width={0}
@@ -18,7 +18,6 @@ export default function BannerItemPreview(props: {
                     sizes="100%"
                     className={"w-20 h-20"}
                     title={item.name}
-                    loader={({ src }) => src}
                 />
             ) : (
                 <></>

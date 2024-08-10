@@ -11,6 +11,7 @@ import CloseIcon from "@/components/closeIcon";
 import Image from "next/image";
 import { capitalizeString } from "@/utils/utils";
 import Link from "next/link";
+import ImageWithLoader from "@/components/imageWithLoader";
 
 export default function CharacterShowcase(props: {
     characters: GenshinCharacter[];
@@ -78,7 +79,7 @@ export default function CharacterShowcase(props: {
                             title={capitalizeString(element.name)}
                         >
                             {element.icon ? (
-                                <Image
+                                <ImageWithLoader
                                     src={element.icon}
                                     width={40}
                                     height={40}
@@ -182,14 +183,13 @@ export default function CharacterShowcase(props: {
                                             : "bg-electro-5star-from/50"
                                     }`}
                                 >
-                                    <Image
+                                    <ImageWithLoader
                                         src={character.icon}
                                         alt={character.id}
                                         fill={true}
                                         sizes="100%"
                                         priority
                                         className="object-contain"
-                                        loader={({ src }) => src}
                                     />
                                 </div>
                             </div>
@@ -200,14 +200,13 @@ export default function CharacterShowcase(props: {
                                 <div className="flex flex-row items-center">
                                     <div className="relative w-9 h-9">
                                         {character.element.icon ? (
-                                            <Image
+                                            <ImageWithLoader
                                                 alt={character.element.name}
                                                 src={character.element.icon}
                                                 fill={true}
                                                 sizes="100%"
                                                 priority
                                                 className="object-contain"
-                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             <></>

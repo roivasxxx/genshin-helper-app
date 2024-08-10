@@ -1,6 +1,6 @@
+import ImageWithLoader from "@/components/imageWithLoader";
 import { GenshinGameEvent } from "@/types/genshinTypes";
 import { DATE_TIME_FORMAT, formatEventDate } from "@/utils/dateUtils";
-import Image from "next/image";
 
 export default function GameEvents(props: {
     events: GenshinGameEvent[] | null;
@@ -42,14 +42,13 @@ export default function GameEvents(props: {
                         {...(el.url ? { href: el.url } : {})}
                     >
                         {el.icon ? (
-                            <Image
+                            <ImageWithLoader
                                 src={el.icon}
                                 alt={el.name}
                                 width={300}
                                 height={150}
                                 className="h-full h-full rounded object-fill"
                                 sizes="100%"
-                                loader={({ src }) => src}
                             />
                         ) : (
                             <></>

@@ -1,5 +1,5 @@
+import ImageWithLoader from "@/components/imageWithLoader";
 import { NameIconWithDescriptionDictionary } from "@/types/genshinTypes";
-import Image from "next/image";
 
 export default function PassiveConstellation(props: {
     item: NameIconWithDescriptionDictionary;
@@ -11,14 +11,13 @@ export default function PassiveConstellation(props: {
             <div className="flex flex-row items-center">
                 <div className="w-16 flex-shrink-0 md:mr-2">
                     {item?.icon ? (
-                        <Image
+                        <ImageWithLoader
                             alt={item.name}
                             src={item.icon}
                             height={0}
                             width={0}
                             sizes="100%"
                             className="h-10 w-auto md:h-16"
-                            loader={({ src }) => src}
                         />
                     ) : (
                         <></>

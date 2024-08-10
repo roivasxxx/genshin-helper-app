@@ -1,3 +1,4 @@
+import ImageWithLoader from "@/components/imageWithLoader";
 import { GenshinWeapon } from "@/types/genshinTypes";
 import { GENSHIN_SUBSTAT_TEXT, GENSHIN_WEAPON } from "@/utils/constants";
 import { getStarString } from "@/utils/utils";
@@ -112,12 +113,11 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                                         title={domainDrop.name}
                                     >
                                         {domainDrop.icon ? (
-                                            <Image
+                                            <ImageWithLoader
                                                 src={domainDrop.icon}
                                                 alt={domainDrop.name}
                                                 height={40}
                                                 width={40}
-                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             domainDrop.name
@@ -139,12 +139,11 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                                         title={mobDrop.name}
                                     >
                                         {mobDrop.icon ? (
-                                            <Image
+                                            <ImageWithLoader
                                                 src={mobDrop.icon}
                                                 alt={mobDrop.name}
                                                 height={40}
                                                 width={40}
-                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             mobDrop.name
@@ -167,12 +166,11 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                                         title={mobDrop.name}
                                     >
                                         {mobDrop.icon ? (
-                                            <Image
+                                            <ImageWithLoader
                                                 src={mobDrop.icon}
                                                 alt={mobDrop.name}
                                                 height={40}
                                                 width={40}
-                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             mobDrop.name

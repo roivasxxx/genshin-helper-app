@@ -1,5 +1,5 @@
+import ImageWithLoader from "@/components/imageWithLoader";
 import { NameIconWithDescriptionDictionary } from "@/types/genshinTypes";
-import Image from "next/image";
 
 export default function CharacterSkill(props: {
     skill: NameIconWithDescriptionDictionary;
@@ -10,14 +10,13 @@ export default function CharacterSkill(props: {
             <div className="flex flex-row items-center">
                 <div className="w-16 flex-shrink-0 md:mr-2">
                     {skill.icon ? (
-                        <Image
+                        <ImageWithLoader
                             alt={skill.name}
                             src={skill.icon}
                             height={0}
                             width={0}
                             sizes="100%"
                             className="h-10 w-auto md:h-16"
-                            loader={({ src }) => src}
                         />
                     ) : (
                         <></>

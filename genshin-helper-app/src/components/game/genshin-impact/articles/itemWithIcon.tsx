@@ -1,5 +1,5 @@
+import ImageWithLoader from "@/components/imageWithLoader";
 import { NameIconWithIdDictionary } from "@/types/genshinTypes";
-import Image from "next/image";
 
 export default function ItemWithIcon(props: {
     item: NameIconWithIdDictionary;
@@ -7,12 +7,11 @@ export default function ItemWithIcon(props: {
     return (
         <div className="flex flex-col items-center break-all">
             {props.item.icon ? (
-                <Image
+                <ImageWithLoader
                     src={props.item.icon}
                     alt={props.item.name}
                     height={80}
                     width={80}
-                    loader={({ src }) => src}
                 />
             ) : (
                 <></>

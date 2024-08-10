@@ -2,10 +2,9 @@ import Arrow from "@/components/arrow";
 import { GenshinArticlePreview } from "@/types/genshinTypes";
 import { formatDate } from "@/utils/dateUtils";
 import { isGenshinGuidePreview } from "@/utils/utils";
-import Image from "next/image";
 import Link from "next/link";
-import { GENSHIN_ARTICLE_TYPE } from "@/types/genshinTypes";
 import { ARTICLE_KEY_VALUES } from "@/utils/constants";
+import ImageWithLoader from "@/components/imageWithLoader";
 
 function Bubble(props: { text: string; className: string }) {
     const { text, className } = props;
@@ -29,12 +28,11 @@ export default function ArticleOverview(props: {
                         <div className="flex flex-row items-center gap-2">
                             {isGenshinGuidePreview(article) &&
                             article.character.icon ? (
-                                <Image
+                                <ImageWithLoader
                                     src={article.character.icon}
                                     alt={article.character.name}
                                     width={75}
                                     height={75}
-                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 <></>

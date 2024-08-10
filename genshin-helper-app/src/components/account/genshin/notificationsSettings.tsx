@@ -4,12 +4,11 @@ import { GenshinAccountState, useAccount } from "../accountProvider";
 import cmsRequest from "@/utils/fetchUtils";
 import { HTTP_METHOD } from "@/types";
 import dayjs from "dayjs";
-import NotificationSwitch from "./notificationSwitch";
 import LoadingLogo from "@/components/loadingLogo";
 import SuccessCheckmark from "@/components/successCheckmark";
 import { GenshinDayDependentMaterial } from "@/types/genshinTypes";
-import Image from "next/image";
 import { SHORT_DAYS } from "@/utils/dateUtils";
+import ImageWithLoader from "@/components/imageWithLoader";
 
 export default function GenshinNotificationSettings() {
     const { state, setNotificationSettings, saveNotificationSettings } =
@@ -151,16 +150,13 @@ export default function GenshinNotificationSettings() {
                                                     }
                                                 >
                                                     {value.icon ? (
-                                                        <Image
+                                                        <ImageWithLoader
                                                             src={value.icon}
                                                             sizes="100%"
                                                             alt={value.name}
                                                             width={0}
                                                             height={0}
                                                             className="w-10 h-10"
-                                                            loader={({ src }) =>
-                                                                src
-                                                            }
                                                         />
                                                     ) : (
                                                         <></>
@@ -217,16 +213,13 @@ export default function GenshinNotificationSettings() {
                                                     }
                                                 >
                                                     {value.icon ? (
-                                                        <Image
+                                                        <ImageWithLoader
                                                             src={value.icon}
                                                             sizes="100%"
                                                             alt={value.name}
                                                             width={0}
                                                             height={0}
                                                             className="w-10 h-10"
-                                                            loader={({ src }) =>
-                                                                src
-                                                            }
                                                         />
                                                     ) : (
                                                         <></>

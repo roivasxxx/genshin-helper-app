@@ -1,7 +1,7 @@
 "use client";
+import ImageWithLoader from "@/components/imageWithLoader";
 import { GenshinDayDependentMaterial } from "@/types/genshinTypes";
 import dayjs from "dayjs";
-import Image from "next/image";
 
 function DomainItemWrapper(props: { items: GenshinDayDependentMaterial[] }) {
     const items = props.items;
@@ -24,14 +24,13 @@ function DomainItemWrapper(props: { items: GenshinDayDependentMaterial[] }) {
                                     key={`value-${value.id}`}
                                 >
                                     {value.icon ? (
-                                        <Image
+                                        <ImageWithLoader
                                             src={value.icon}
                                             alt={value.name}
                                             height={0}
                                             width={0}
                                             sizes="100%"
                                             className="w-full h-full"
-                                            loader={({ src }) => src}
                                         />
                                     ) : (
                                         <></>

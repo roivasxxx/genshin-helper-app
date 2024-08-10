@@ -1,9 +1,9 @@
 "use client";
 import ArrowToggle from "@/components/arrowToggle";
+import ImageWithLoader from "@/components/imageWithLoader";
 import { GenshinArtifact } from "@/types/genshinTypes";
 import { STAR_SYMBOL } from "@/utils/constants";
-import Image from "next/image";
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 
 export default function ArtifactShowcaseElement(props: {
     artifact: GenshinArtifact;
@@ -75,14 +75,13 @@ export default function ArtifactShowcaseElement(props: {
                 <h2 className="bold text-xl text-center">{artifact.name}</h2>
                 <div className="w-16 h-16">
                     {artifact.icon ? (
-                        <Image
+                        <ImageWithLoader
                             src={artifact.icon}
                             alt={artifact.name}
                             width={0}
                             height={0}
                             sizes="100%"
                             className="object-contain w-full h-full"
-                            loader={({ src }) => src}
                         />
                     ) : (
                         <></>
