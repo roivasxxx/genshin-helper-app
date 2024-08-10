@@ -333,6 +333,21 @@ const GenshinItems: CollectionConfig = {
             },
         },
     ],
+    hooks: {
+        afterChange: [
+            async ({ doc }) => {
+                const revalidateUrl = `${process.env.FRONTEND_URL}/api/revalidate?path=materials&secret=${process.env.FRONTEND_REVALIDATE_SECRET}`;
+                const result = await fetch(revalidateUrl);
+                if (result.ok) {
+                    console.log(`Revalidated materials`);
+                } else {
+                    console.error(`Failed to revalidate materials`);
+                }
+
+                return doc;
+            },
+        ],
+    },
 };
 
 export default GenshinItems;

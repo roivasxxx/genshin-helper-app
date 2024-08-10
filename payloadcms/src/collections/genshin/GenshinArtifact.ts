@@ -91,6 +91,21 @@ const GenshinArtifact: CollectionConfig = {
         },
     ],
     access: accessControls,
+    hooks: {
+        afterChange: [
+            async ({ doc }) => {
+                const revalidateUrl = `${process.env.FRONTEND_URL}/api/revalidate?path=artifacts&secret=${process.env.FRONTEND_REVALIDATE_SECRET}`;
+                const result = await fetch(revalidateUrl);
+                if (result.ok) {
+                    console.log(`Revalidated artifacts`);
+                } else {
+                    console.error(`Failed to revalidate artifacts`);
+                }
+
+                return doc;
+            },
+        ],
+    },
 };
 
 export default GenshinArtifact;
