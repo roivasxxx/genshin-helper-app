@@ -789,6 +789,21 @@ const GenshinCharacters: CollectionConfig = {
             },
         },
     ],
+    hooks: {
+        afterChange: [
+            async ({ doc }) => {
+                const revalidateUrl = `${process.env.FRONTEND_URL}/api/revalidate?path=character&characterId=${doc.id}&secret=${process.env.FRONTEND_REVALIDATE_SECRET}`;
+                const result = await fetch(revalidateUrl);
+                if (result.ok) {
+                    console.log(`Revalidated character ${doc.id}`);
+                } else {
+                    console.error(`Failed to revalidate character ${doc.id}`);
+                }
+
+                return doc;
+            },
+        ],
+    },
 };
 
 export default GenshinCharacters;

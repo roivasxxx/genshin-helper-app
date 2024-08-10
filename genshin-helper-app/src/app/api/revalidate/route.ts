@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-const PATHS_TO_REVALIDATE = ["articles", "article"];
+const PATHS_TO_REVALIDATE = ["articles", "article", "character", "weapon"];
 // needs to be dynamic in order to revalidate path
 export async function GET(request: Request) {
     // TODO: add a secret that needs to be sent along with the request (path param)
@@ -32,6 +32,33 @@ export async function GET(request: Request) {
                 });
             }
             revalidatePath(`/game/genshin-impact/articles/${articleId}`);
+            revalidatePath("/game/genshin-impact/articles");
+            break;
+        case "character":
+            const characterId = search.get("characterId");
+            if (!characterId) {
+                console.error("Invalid characterId: ", characterId);
+                return NextResponse.json({
+                    revalidated: false,
+                    now: new Date(),
+                });
+            }
+            revalidatePath(
+                `/game/genshin-impact/wiki/characters/${characterId}`
+            );
+            revalidatePath("/game/genshin-impact/wiki/characters");
+            break;
+        case "weapon":
+            const weaponId = search.get("weaponId");
+            if (!weaponId) {
+                console.error("Invalid weaponId: ", weaponId);
+                return NextResponse.json({
+                    revalidated: false,
+                    now: new Date(),
+                });
+            }
+            revalidatePath(`/game/genshin-impact/wiki/weapons/${weaponId}`);
+            revalidatePath("/game/genshin-impact/wiki/weapons");
             break;
     }
 

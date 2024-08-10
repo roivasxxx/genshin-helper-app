@@ -387,6 +387,21 @@ const GenshinWeapons: CollectionConfig = {
             },
         },
     ],
+    hooks: {
+        afterChange: [
+            async ({ doc }) => {
+                const revalidateUrl = `${process.env.FRONTEND_URL}/api/revalidate?path=weapon&weaponId=${doc.id}&secret=${process.env.FRONTEND_REVALIDATE_SECRET}`;
+                const result = await fetch(revalidateUrl);
+                if (result.ok) {
+                    console.log(`Revalidated weapon ${doc.id}`);
+                } else {
+                    console.error(`Failed to revalidate weapon ${doc.id}`);
+                }
+
+                return doc;
+            },
+        ],
+    },
 };
 
 export default GenshinWeapons;
