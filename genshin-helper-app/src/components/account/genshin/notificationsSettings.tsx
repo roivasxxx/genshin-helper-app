@@ -158,6 +158,9 @@ export default function GenshinNotificationSettings() {
                                                             width={0}
                                                             height={0}
                                                             className="w-10 h-10"
+                                                            loader={({ src }) =>
+                                                                src
+                                                            }
                                                         />
                                                     ) : (
                                                         <></>
@@ -221,6 +224,9 @@ export default function GenshinNotificationSettings() {
                                                             width={0}
                                                             height={0}
                                                             className="w-10 h-10"
+                                                            loader={({ src }) =>
+                                                                src
+                                                            }
                                                         />
                                                     ) : (
                                                         <></>

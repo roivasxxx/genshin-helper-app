@@ -117,6 +117,7 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                                                 alt={domainDrop.name}
                                                 height={40}
                                                 width={40}
+                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             domainDrop.name
@@ -143,6 +144,7 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                                                 alt={mobDrop.name}
                                                 height={40}
                                                 width={40}
+                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             mobDrop.name
@@ -170,6 +172,7 @@ export default function WeaponInfo(props: { weapon: GenshinWeapon }) {
                                                 alt={mobDrop.name}
                                                 height={40}
                                                 width={40}
+                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             mobDrop.name

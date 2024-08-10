@@ -82,6 +82,7 @@ export default async function WeaponSlug(props: {
                                 priority
                                 sizes="100%"
                                 className="h-[calc(100vh-4rem)] max-h-[256px] object-cover w-auto mx-auto"
+                                loader={({ src }) => src}
                             />
                         ) : (
                             <></>

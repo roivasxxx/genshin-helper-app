@@ -49,6 +49,7 @@ export default function GameEvents(props: {
                                 height={150}
                                 className="h-full h-full rounded object-fill"
                                 sizes="100%"
+                                loader={({ src }) => src}
                             />
                         ) : (
                             <></>

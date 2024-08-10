@@ -20,6 +20,7 @@ export default function BannerCharacterPreview(props: {
                     fill={true}
                     sizes="100%"
                     title={char.name}
+                    loader={({ src }) => src}
                 />
             ) : (
                 <>fiveStar.name</>

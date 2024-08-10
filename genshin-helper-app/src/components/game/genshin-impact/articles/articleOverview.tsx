@@ -34,6 +34,7 @@ export default function ArticleOverview(props: {
                                     alt={article.character.name}
                                     width={75}
                                     height={75}
+                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 <></>

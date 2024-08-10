@@ -18,6 +18,7 @@ export default function BannerItemPreview(props: {
                     sizes="100%"
                     className={"w-20 h-20"}
                     title={item.name}
+                    loader={({ src }) => src}
                 />
             ) : (
                 <></>

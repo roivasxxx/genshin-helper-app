@@ -12,6 +12,7 @@ export default function ItemWithIcon(props: {
                     alt={props.item.name}
                     height={80}
                     width={80}
+                    loader={({ src }) => src}
                 />
             ) : (
                 <></>

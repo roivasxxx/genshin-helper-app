@@ -18,6 +18,7 @@ export default function PassiveConstellation(props: {
                             width={0}
                             sizes="100%"
                             className="h-10 w-auto md:h-16"
+                            loader={({ src }) => src}
                         />
                     ) : (
                         <></>

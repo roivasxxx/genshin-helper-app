@@ -189,6 +189,7 @@ export default function CharacterShowcase(props: {
                                         sizes="100%"
                                         priority
                                         className="object-contain"
+                                        loader={({ src }) => src}
                                     />
                                 </div>
                             </div>
@@ -206,6 +207,7 @@ export default function CharacterShowcase(props: {
                                                 sizes="100%"
                                                 priority
                                                 className="object-contain"
+                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             <></>

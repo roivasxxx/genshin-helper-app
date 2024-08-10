@@ -93,6 +93,7 @@ export default async function CharacterSlug(props: {
                                 priority
                                 sizes="100%"
                                 className="h-[calc(100vh-4rem)] max-h-[600px] object-cover w-auto mx-auto"
+                                loader={({ src }) => src}
                             />
                         ) : (
                             <></>

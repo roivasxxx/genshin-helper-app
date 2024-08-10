@@ -82,6 +82,7 @@ export default function ArtifactShowcaseElement(props: {
                             height={0}
                             sizes="100%"
                             className="object-contain w-full h-full"
+                            loader={({ src }) => src}
                         />
                     ) : (
                         <></>

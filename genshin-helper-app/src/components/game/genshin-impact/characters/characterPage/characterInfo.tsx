@@ -29,6 +29,7 @@ export default function CharacterInfo(props: {
                             fill={true}
                             sizes="100%"
                             className="object-scale-down"
+                            loader={({ src }) => src}
                         />
                     </div>
                 ) : (
@@ -81,6 +82,7 @@ export default function CharacterInfo(props: {
                                     height={40}
                                     width={40}
                                     title={character.specialty.name}
+                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 character.specialty.name
@@ -99,6 +101,7 @@ export default function CharacterInfo(props: {
                                     height={40}
                                     width={40}
                                     title={character.boss.name}
+                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 // traveler does not need any boss drop
@@ -118,6 +121,7 @@ export default function CharacterInfo(props: {
                                     height={40}
                                     width={40}
                                     title={character.gem.name}
+                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 character.gem.name
@@ -149,6 +153,7 @@ export default function CharacterInfo(props: {
                                                 alt={book.name}
                                                 height={40}
                                                 width={40}
+                                                loader={({ src }) => src}
                                             />
                                         ) : (
                                             book.name
@@ -170,6 +175,7 @@ export default function CharacterInfo(props: {
                                     height={40}
                                     width={40}
                                     title={character.trounce.name}
+                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 character.trounce.name
@@ -188,6 +194,7 @@ export default function CharacterInfo(props: {
                                     height={40}
                                     width={40}
                                     title={character.talent.name}
+                                    loader={({ src }) => src}
                                 />
                             ) : (
                                 character.talent.name

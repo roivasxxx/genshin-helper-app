@@ -18,6 +18,7 @@ function ShowcaseItemRow(props: { item: GenshinMaterial["value"][number] }) {
                         height={60}
                         width={60}
                         sizes="100%"
+                        loader={({ src }) => src}
                     />
                 ) : (
                     <></>

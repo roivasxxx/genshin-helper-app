@@ -157,6 +157,7 @@ export default function WeaponShowcase(props: { weapons: GenshinWeapon[] }) {
                                             sizes="100%"
                                             priority
                                             className="object-contain w-full h-full"
+                                            loader={({ src }) => src}
                                         />
                                     ) : (
                                         <></>

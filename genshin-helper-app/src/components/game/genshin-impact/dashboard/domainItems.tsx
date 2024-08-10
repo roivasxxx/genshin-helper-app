@@ -31,6 +31,7 @@ function DomainItemWrapper(props: { items: GenshinDayDependentMaterial[] }) {
                                             width={0}
                                             sizes="100%"
                                             className="w-full h-full"
+                                            loader={({ src }) => src}
                                         />
                                     ) : (
                                         <></>

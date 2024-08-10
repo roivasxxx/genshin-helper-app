@@ -49,6 +49,7 @@ export default function BannerHistoryRow(props: {
                         width={40}
                         height={40}
                         className="md:inline"
+                        loader={({ src }) => src}
                     />
                 ) : (
                     <></>
