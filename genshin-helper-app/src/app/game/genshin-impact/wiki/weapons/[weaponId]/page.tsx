@@ -1,9 +1,9 @@
 import WeaponInfo from "@/components/game/genshin-impact/weapons/weaponPage/weaponInfo";
+import ImageWithLoader from "@/components/imageWithLoader";
 import { HTTP_METHOD } from "@/types";
 import { GenshinWeapon } from "@/types/genshinTypes";
 import cmsRequest from "@/utils/fetchUtils";
 import { Metadata, ResolvingMetadata } from "next";
-import Image from "next/image";
 
 export async function generateStaticParams() {
     let weapons = [];
@@ -74,7 +74,7 @@ export default async function WeaponSlug(props: {
                     <WeaponInfo weapon={weapon} />
                     <div className="w-full overflow-clip h-[calc(100vh-4rem)] max-h-[600px] z-0 ">
                         {weapon.icon ? (
-                            <Image
+                            <ImageWithLoader
                                 src={weapon.icon}
                                 alt={weapon.id + "icon"}
                                 width={0}
@@ -82,7 +82,6 @@ export default async function WeaponSlug(props: {
                                 priority
                                 sizes="100%"
                                 className="h-[calc(100vh-4rem)] max-h-[256px] object-cover w-auto mx-auto"
-                                loader={({ src }) => src}
                             />
                         ) : (
                             <></>
