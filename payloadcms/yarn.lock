@@ -2312,11 +2312,6 @@
   resolved "https://registry.npmjs.org/@webpack-cli/serve/-/serve-1.7.0.tgz"
   integrity sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==
 
-"@wru/payloadcms-slate-plugin-textcolor-leaf@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/@wru/payloadcms-slate-plugin-textcolor-leaf/-/payloadcms-slate-plugin-textcolor-leaf-0.1.0.tgz"
-  integrity sha512-iWUa2ZC2WG9zyU8j1pL9+ePCaUOqeKAWb2oN4qViCBTI9MJ81LAmxEolRSclSaCpy7d3prxlRBa+3eZH5gaqYA==
-
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.npmjs.org/@xtuc/ieee754/-/ieee754-1.2.0.tgz"
