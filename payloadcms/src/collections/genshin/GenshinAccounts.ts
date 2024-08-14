@@ -260,7 +260,7 @@ const GenshinAccounts: CollectionConfig = {
                         const currentAccounts = (currentUser.genshinAccounts ||
                             []) as string[];
 
-                        req.payload.update({
+                        await req.payload.update({
                             id: req.user.id,
                             collection: "public-users",
                             data: {

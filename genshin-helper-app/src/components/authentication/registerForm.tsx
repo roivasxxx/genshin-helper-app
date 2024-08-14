@@ -8,6 +8,7 @@ import {
     emailValidator,
     passwordValidator,
 } from "@/utils/validationUtils";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useState } from "react";
@@ -25,7 +26,15 @@ export default function RegisterForm() {
                 method: HTTP_METHOD.POST,
                 body: state,
             });
-            result.status;
+            if (result.status === 200) {
+                const user = await result.json();
+                if (user.token) {
+                    await signIn("credentials", {
+                        ...state,
+                        callbackUrl: "/me",
+                    });
+                }
+            }
         } catch (error) {
             let errorMessage = "Something went wrong!";
             if (error instanceof HttpError) {
